@@ -1,0 +1,13 @@
+main: com.blackoutburst.workshop.Main
+name: Workshop
+version: 0.1
+api-version: 1.13
+author: Blackoutburst
+description: Party Game Workshop Practice
+commands:
+  play:
+    description: Start the game
+    usage: /play
+  l:
+    description: End the game
+    usage: /l
