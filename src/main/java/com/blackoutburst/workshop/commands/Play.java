@@ -4,6 +4,7 @@ import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.GameUtils;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +19,6 @@ public class Play implements CommandExecutor {
             if (wsplayer == null || wsplayer.isInGame()) return true;
 
             wsplayer.getPlayer().sendMessage("Game running");
-            wsplayer.setInGame(true);
 
             for (PlayArea area : Main.playAreas) {
                 if (area.isBusy()) continue;
@@ -29,6 +29,8 @@ public class Play implements CommandExecutor {
                 GameUtils.loadMaterials(wsplayer, area.getType());
                 GameUtils.spawnEntities(wsplayer, area.getType());
                 GameUtils.startRound(wsplayer);
+                wsplayer.setInGame(true);
+                wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
                 return true;
             }
             wsplayer.getPlayer().sendMessage("No game available");
