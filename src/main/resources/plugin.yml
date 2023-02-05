@@ -13,14 +13,29 @@ commands:
     description: End the game
     usage: /l
   scanwand:
+    permission: workshop.admin
     description: Give the scanwand
     usage: /scanwand
   logicscan:
+    permission: workshop.admin
     description: Make a logic scan
     usage: /logicscan
   decoscan:
+    permission: workshop.admin
     description: Make a deco scan
     usage: /decoscan
   pastemap:
+    permission: workshop.admin
     description: Paste a map
     usage: /pastemap
+  setspawn:
+    permission: workshop.admin
+    description: Set the spawn
+    usage: /setspawn
+  spawn:
+    description: Go to spawn
+    usage: /spawn
+
+  permissions:
+    workshop.admin:
+      default: op

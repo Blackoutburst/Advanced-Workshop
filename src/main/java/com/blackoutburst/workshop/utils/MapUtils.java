@@ -95,6 +95,15 @@ public class MapUtils {
         }
     }
 
+    public static void loadSpawn() {
+        try {
+            String[] data = Files.readAllLines(Paths.get("./plugins/Workshop/spawn")).get(0).split(", ");
+            Main.spawn = new Location(Bukkit.getWorld(data[0]), Float.parseFloat(data[1]), Float.parseFloat(data[2]), Float.parseFloat(data[3]), Float.parseFloat(data[4]), Float.parseFloat(data[5]));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void restoreArea(WSPlayer wsplayer) {
         if (wsplayer.getPlayArea() == null) return;
 

@@ -9,6 +9,7 @@ import com.blackoutburst.workshop.core.MaterialBlock;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.nms.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -231,12 +232,13 @@ public class GameUtils {
     public static void loadCraft(WSPlayer wsPlayer, String type) {
         wsPlayer.getCrafts().clear();
 
+        String name = null;
         try {
             List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + type + ".craft"));
 
             for (String line : lines) {
                 String[] data = line.split(", ");
-                String name = data[0];
+                name = data[0];
                 ItemStack requiredItem = getItem(data[1]);
 
                 ItemStack[] craftingTable = new ItemStack[] {
@@ -248,6 +250,7 @@ public class GameUtils {
                 wsPlayer.getCrafts().add(new Craft(name, requiredItem, craftingTable));
             }
         } catch (Exception e) {
+            Bukkit.broadcastMessage("Error loading craft: " + name);
             e.printStackTrace();
         }
     }

@@ -7,6 +7,7 @@ import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.GameUtils;
 import com.blackoutburst.workshop.utils.MapUtils;
+import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends JavaPlugin {
+
+    public static Location spawn;
 
     public static List<PlayArea> playAreas = new ArrayList<>();
 
@@ -30,7 +33,10 @@ public class Main extends JavaPlugin {
         getCommand("logicscan").setExecutor(new LogicScan());
         getCommand("decoscan").setExecutor(new DecoScan());
         getCommand("pastemap").setExecutor(new PasteMap());
+        getCommand("setspawn").setExecutor(new SetSpawn());
+        getCommand("spawn").setExecutor(new Spawn());
         MapUtils.loadPlayAreas();
+        MapUtils.loadSpawn();
         SkinLoader.loadSkinFromUUID(0, "92deafa9430742d9b00388601598d6c0");
 
         new BukkitRunnable() {
