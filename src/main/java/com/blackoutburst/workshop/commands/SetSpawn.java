@@ -20,7 +20,7 @@ public class SetSpawn implements CommandExecutor {
 
             try {
                 PrintWriter writer = new PrintWriter("./plugins/Workshop/spawn");
-                writer.write(location.getWorld().getName() + ", " + location.getX() + ", " + location.getY() + "," + location.getZ() + ", " + location.getYaw() + ", " + location.getPitch());
+                writer.write(location.getWorld().getName() + ", " + location.getX() + ", " + location.getY() + ", " + location.getZ() + ", " + location.getYaw() + ", " + location.getPitch());
                 writer.close();
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
