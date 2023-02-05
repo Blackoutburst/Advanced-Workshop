@@ -1,8 +1,5 @@
 package com.blackoutburst.workshop.core.events;
 
-import com.blackoutburst.workshop.Main;
-import com.blackoutburst.workshop.commands.Play;
-import com.blackoutburst.workshop.core.BrokenBlock;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.GameUtils;
 import com.blackoutburst.workshop.utils.MapUtils;
@@ -11,9 +8,6 @@ import org.bukkit.block.Furnace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.Random;
 
 public class Interaction {
 

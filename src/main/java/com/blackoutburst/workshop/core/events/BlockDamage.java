@@ -1,7 +1,8 @@
 package com.blackoutburst.workshop.core.events;
 
-import com.blackoutburst.workshop.core.BrokenBlock;
+import com.blackoutburst.workshop.core.MaterialBlock;
 import com.blackoutburst.workshop.core.WSPlayer;
+import com.blackoutburst.workshop.utils.GameUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -18,29 +19,19 @@ public class BlockDamage {
      */
     private static void breakBlock(Block block, WSPlayer wsplayer) {
         Player player = wsplayer.getPlayer();
+        if (wsplayer.getPlayArea() == null) return;
 
-        switch (block.getType()) {
-            case GOLD_ORE: player.getInventory().addItem(new ItemStack(Material.GOLD_ORE)); break;
-            case LEAVES: player.getInventory().addItem(new ItemStack(Material.APPLE)); break;
-            case SUGAR_CANE_BLOCK: {
-                for (int y = block.getY(); y < block.getY() + 3; y++) {
-                    Block sugarCane = block.getWorld().getBlockAt(block.getX(), y, block.getZ());
-                    if (sugarCane.getType().equals(Material.SUGAR_CANE_BLOCK)) {
-                        wsplayer.getBrokenBlocks().add(new BrokenBlock(sugarCane.getType(), sugarCane.getData(), sugarCane.getLocation(), sugarCane.getWorld()));
-                        player.getInventory().addItem(new ItemStack(Material.SUGAR_CANE));
-                    }
-                }
-            } break;
-            case COCOA: player.getInventory().addItem(new ItemStack(Material.INK_SACK,1, (short) 3)); break;
-            case PUMPKIN: player.getInventory().addItem(new ItemStack(Material.PUMPKIN)); break;
-            case POTATO: player.getInventory().addItem(new ItemStack(Material.POTATO_ITEM)); break;
-            case CARROT: player.getInventory().addItem(new ItemStack(Material.CARROT_ITEM)); break;
-            case CROPS: player.getInventory().addItem(new ItemStack(Material.WHEAT)); break;
-            case MELON_BLOCK: player.getInventory().addItem(new ItemStack(Material.MELON)); break;
-            case SKULL: player.getInventory().addItem(new ItemStack(Material.EGG)); break;
-            default: return;
+        MaterialBlock materialBlock = GameUtils.getMaterialBlock(wsplayer, block.getLocation());
+        if (materialBlock == null) return;
+
+        player.getInventory().addItem(new ItemStack(materialBlock.getType(), 1, materialBlock.getData()));
+
+        for (int y = materialBlock.getLocation().getBlockY() + 1; y < materialBlock.getLocation().getBlockY() + 4; y++) {
+            Block sugarCane = materialBlock.getWorld().getBlockAt(materialBlock.getLocation().getBlockX(), y, materialBlock.getLocation().getBlockZ());
+            if (sugarCane.getType().equals(Material.SUGAR_CANE_BLOCK)) {
+                player.getInventory().addItem(new ItemStack(materialBlock.getType(), 1, materialBlock.getData()));
+            }
         }
-        wsplayer.getBrokenBlocks().add(new BrokenBlock(block.getType(), block.getData(), block.getLocation(), block.getWorld()));
         block.breakNaturally();
     }
 

@@ -11,3 +11,15 @@ commands:
   l:
     description: End the game
     usage: /l
+  scanwand:
+    description: Give the scanwand
+    usage: /scanwand
+  logicscan:
+    description: Make a logic scan
+    usage: /logicscan
+  decoscan:
+    description: Make a deco scan
+    usage: /decoscan
+  pastemap:
+    description: Paste a map
+    usage: /pastemap

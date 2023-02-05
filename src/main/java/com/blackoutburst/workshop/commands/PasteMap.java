@@ -1,6 +1,5 @@
 package com.blackoutburst.workshop.commands;
 
-import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.MapUtils;
 import org.bukkit.command.Command;
@@ -8,25 +7,20 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class L implements CommandExecutor {
+public class PasteMap implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
-            if (wsplayer == null || !wsplayer.isInGame()) return true;
+            if (wsplayer == null) return true;
 
-            wsplayer.setInGame(false);
+            if (args.length != 1) {
+                wsplayer.getPlayer().sendMessage("§cYou must enter a valid map name");
+                return true;
+            }
 
-            wsplayer.setCurrentCraft(null);
-
-            MapUtils.restoreArea(wsplayer);
-
-            PlayArea area = wsplayer.getPlayArea();
-            if (area != null)
-                area.setBusy(false);
-
-            wsplayer.getPlayer().sendMessage("Game stopped");
+            MapUtils.pasteMap(wsplayer, args[0]);
 
         }
         return true;

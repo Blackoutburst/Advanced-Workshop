@@ -1,28 +1,19 @@
 package com.blackoutburst.workshop.core;
 
-import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.events.*;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Furnace;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.Random;
 
 public class EventListener implements Listener {
 
@@ -39,7 +30,6 @@ public class EventListener implements Listener {
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         FoodLevelChange.execute(event);
-
     }
 
     @EventHandler
@@ -64,6 +54,11 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
+    public void onEntityInteract(EntityInteractEvent event) {
+        EntityInteract.execute(event);
+    }
+
+    @EventHandler
     public void onBlockDamage(BlockDamageEvent event) {
         BlockDamage.execute(event);
     }
@@ -76,5 +71,10 @@ public class EventListener implements Listener {
     @EventHandler
     public void onInteraction(PlayerInteractEvent event) {
         Interaction.execute(event);
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        PlayerInteract.execute(event);
     }
 }

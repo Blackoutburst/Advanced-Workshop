@@ -2,6 +2,7 @@ package com.blackoutburst.workshop.core;
 
 import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -11,8 +12,16 @@ public class WSPlayer {
 
     protected Player player;
 
+    protected Location scanWand1;
+    protected Location scanWand2;
+
+    protected PlayArea playArea;
+
+    protected List<Craft> crafts = new ArrayList<>();
+
+    protected List<MaterialBlock> materialBlocks = new ArrayList<>();
+
     protected boolean inGame = false;
-    protected List<BrokenBlock> brokenBlocks = new ArrayList<>();
     protected Craft currentCraft = null;
 
     public WSPlayer(Player player) {
@@ -26,10 +35,6 @@ public class WSPlayer {
             }
         }
         return (null);
-    }
-
-    public List<BrokenBlock> getBrokenBlocks() {
-        return brokenBlocks;
     }
 
     public Craft getCurrentCraft() {
@@ -50,5 +55,37 @@ public class WSPlayer {
 
     public void setInGame(boolean inGame) {
         this.inGame = inGame;
+    }
+
+    public Location getScanWand1() {
+        return scanWand1;
+    }
+
+    public Location getScanWand2() {
+        return scanWand2;
+    }
+
+    public void setScanWand1(Location scanWand1) {
+        this.scanWand1 = scanWand1;
+    }
+
+    public void setScanWand2(Location scanWand2) {
+        this.scanWand2 = scanWand2;
+    }
+
+    public List<Craft> getCrafts() {
+        return crafts;
+    }
+
+    public PlayArea getPlayArea() {
+        return playArea;
+    }
+
+    public void setPlayArea(PlayArea playArea) {
+        this.playArea = playArea;
+    }
+
+    public List<MaterialBlock> getMaterialBlocks() {
+        return materialBlocks;
     }
 }

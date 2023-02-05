@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 
-public class BrokenBlock {
+public class MaterialBlock {
 
     protected Material type;
     protected byte data;
@@ -12,7 +12,7 @@ public class BrokenBlock {
 
     protected World world;
 
-    public BrokenBlock(Material type, byte data, Location location, World world) {
+    public MaterialBlock(Material type, byte data, Location location, World world) {
         this.type = type;
         this.data = data;
         this.location = location;
