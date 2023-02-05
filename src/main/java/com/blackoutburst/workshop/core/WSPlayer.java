@@ -3,6 +3,7 @@ package com.blackoutburst.workshop.core;
 import com.blackout.npcapi.core.NPC;
 import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
+import com.blackoutburst.workshop.nms.NMSEntities;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -14,6 +15,8 @@ public class WSPlayer {
     protected boolean nextRound;
 
     protected Player player;
+
+    protected NMSEntities[] itemFrames = new NMSEntities[9];
 
     protected List<NPC> npcs = new ArrayList<>();
 
@@ -108,5 +111,9 @@ public class WSPlayer {
 
     public void setNextRound(boolean nextRound) {
         this.nextRound = nextRound;
+    }
+
+    public NMSEntities[] getItemFrames() {
+        return itemFrames;
     }
 }

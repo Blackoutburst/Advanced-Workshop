@@ -96,6 +96,8 @@ public class MapUtils {
     }
 
     public static void restoreArea(WSPlayer wsplayer) {
+        if (wsplayer.getPlayArea() == null) return;
+
         try {
             List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + wsplayer.getPlayArea().getType() + ".deco"));
             Player player = wsplayer.getPlayer();

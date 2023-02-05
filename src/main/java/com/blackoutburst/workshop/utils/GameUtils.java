@@ -8,6 +8,7 @@ import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.MaterialBlock;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
+import com.blackoutburst.workshop.nms.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -67,15 +68,6 @@ public class GameUtils {
         }.runTaskTimer(Main.getPlugin(Main.class), 1L, 0L);
     }
 
-    public static void npcUse(Player player) {
-        WSPlayer wsplayer = WSPlayer.getFromPlayer(player);
-        if (wsplayer == null) return;
-
-        if (player.getInventory().containsAtLeast(wsplayer.getCurrentCraft().getItemRequired(), 1)) {
-            GameUtils.startRound(wsplayer);
-            MapUtils.restoreArea(wsplayer);
-        }
-    }
 
     private static void teleportPlayerToArea(Player player, String[] data, PlayArea area) {
         float x = Integer.parseInt(data[2]) + area.getAnchor().getBlockX() + 0.5f;
@@ -114,6 +106,26 @@ public class GameUtils {
         wsPlayer.getNpcs().add(npc);
     }
 
+    private static void spawnItemFrame(WSPlayer wsPlayer, String[] data, PlayArea area, int id) {
+        int x = Integer.parseInt(data[2]) + area.getAnchor().getBlockX();
+        int y = Integer.parseInt(data[3]) + area.getAnchor().getBlockY();
+        int z = Integer.parseInt(data[4]) + area.getAnchor().getBlockZ();
+        NMSEnumDirection.Direction direction = NMSEnumDirection.Direction.NORTH;
+        switch (BlockFace.valueOf(data[5])) {
+            case NORTH: direction = NMSEnumDirection.Direction.NORTH; break;
+            case SOUTH: direction = NMSEnumDirection.Direction.SOUTH; break;
+            case EAST: direction = NMSEnumDirection.Direction.EAST; break;
+            case WEST: direction = NMSEnumDirection.Direction.WEST; break;
+        }
+
+        NMSBlockPosition position = new NMSBlockPosition(x, y, z);
+        NMSEnumDirection facingDirection = new NMSEnumDirection(direction);
+        NMSEntities itemFrame = new NMSEntities(wsPlayer.getPlayer().getWorld(), NMSEntities.EntityType.ITEM_FRAME, position.position, facingDirection.direction);
+        NMSSpawnEntity.send(wsPlayer.getPlayer(), itemFrame, 2);
+        NMSEntityMetadata.send(wsPlayer.getPlayer(), itemFrame);
+        wsPlayer.getItemFrames()[id] = itemFrame;
+    }
+
     public static void spawnEntities(WSPlayer wsPlayer, String type) {
         try {
             List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + type + ".logic"));
@@ -136,6 +148,12 @@ public class GameUtils {
                         SkinLoader.loadSkinFromUUID(skinID, wsPlayer.getPlayer().getUniqueId().toString().replace("-", ""));
                         spawnNPC("villager", skinID, wsPlayer, data, area);
                     }
+
+                    if (data[1].equals("1") || data[1].equals("2") || data[1].equals("3") ||
+                        data[1].equals("4") || data[1].equals("5") || data[1].equals("6") ||
+                        data[1].equals("7") || data[1].equals("8") || data[1].equals("9")) {
+                        spawnItemFrame(wsPlayer, data, area, Integer.parseInt(data[1]) - 1);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -156,6 +174,11 @@ public class GameUtils {
         wsplayer.setCurrentCraft(wsplayer.getCrafts().get(rng.nextInt(wsplayer.getCrafts().size())));
         wsplayer.getPlayer().sendMessage("You must craft: " + wsplayer.getCurrentCraft().getName());
         player.getInventory().clear();
+        for (int i = 0; i < 9; i++) {
+            NMSEntities frame = wsplayer.getItemFrames()[i];
+            ItemStack item = wsplayer.getCurrentCraft().getCraftingTable()[i];
+            NMSItemFrame.setItem(player, frame, item);
+        }
     }
 
     private static ItemStack getItem(String data) {

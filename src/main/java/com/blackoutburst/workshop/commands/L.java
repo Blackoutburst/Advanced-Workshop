@@ -4,6 +4,8 @@ import com.blackout.npcapi.core.NPC;
 import com.blackout.npcapi.utils.NPCManager;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
+import com.blackoutburst.workshop.nms.NMSEntities;
+import com.blackoutburst.workshop.nms.NMSEntityDestroy;
 import com.blackoutburst.workshop.utils.MapUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,6 +34,11 @@ public class L implements CommandExecutor {
 
             for (NPC npc : wsplayer.getNpcs()) {
                 NPCManager.deleteNPC(wsplayer.getPlayer(), npc);
+            }
+            wsplayer.getNpcs().clear();
+
+            for (NMSEntities frames : wsplayer.getItemFrames()) {
+                NMSEntityDestroy.send(wsplayer.getPlayer(), frames.getID());
             }
 
         }
