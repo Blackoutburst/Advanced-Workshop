@@ -1,5 +1,6 @@
 package com.blackoutburst.workshop.core.events;
 
+import com.blackout.npcapi.core.PacketInteractListener;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
@@ -17,6 +18,6 @@ public class Quit {
         if (area != null)
             area.setBusy(false);
         Main.players.remove(WSPlayer.getFromPlayer(event.getPlayer()));
-
+        PacketInteractListener.remove(event.getPlayer());
     }
 }

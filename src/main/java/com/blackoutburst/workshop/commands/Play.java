@@ -22,10 +22,12 @@ public class Play implements CommandExecutor {
 
             for (PlayArea area : Main.playAreas) {
                 if (area.isBusy()) continue;
+                if (args.length > 0 && !args[0].equals(area.getType())) continue;
                 area.setBusy(true);
                 wsplayer.setPlayArea(area);
                 GameUtils.loadCraft(wsplayer, area.getType());
                 GameUtils.loadMaterials(wsplayer, area.getType());
+                GameUtils.spawnEntities(wsplayer, area.getType());
                 GameUtils.startRound(wsplayer);
                 return true;
             }

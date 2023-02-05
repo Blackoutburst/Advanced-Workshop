@@ -47,5 +47,6 @@ configurations {
 
 dependencies {
     priority 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
-
+    implementation files('lib/craftbukkit-1.8.8-R0.1-SNAPSHOT.jar')
+    implementation files('lib/NPC-API.jar')
 }

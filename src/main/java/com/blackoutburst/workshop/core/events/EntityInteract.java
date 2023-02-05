@@ -15,7 +15,5 @@ public class EntityInteract {
                     event.setCancelled(player.isInGame());
             }
         }
-
     }
-
 }

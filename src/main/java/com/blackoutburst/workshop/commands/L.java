@@ -1,5 +1,7 @@
 package com.blackoutburst.workshop.commands;
 
+import com.blackout.npcapi.core.NPC;
+import com.blackout.npcapi.utils.NPCManager;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.MapUtils;
@@ -27,6 +29,10 @@ public class L implements CommandExecutor {
                 area.setBusy(false);
 
             wsplayer.getPlayer().sendMessage("Game stopped");
+
+            for (NPC npc : wsplayer.getNpcs()) {
+                NPCManager.deleteNPC(wsplayer.getPlayer(), npc);
+            }
 
         }
         return true;

@@ -1,5 +1,6 @@
 package com.blackoutburst.workshop.core;
 
+import com.blackout.npcapi.core.NPC;
 import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
 import org.bukkit.Location;
@@ -10,7 +11,11 @@ import java.util.List;
 
 public class WSPlayer {
 
+    protected boolean nextRound;
+
     protected Player player;
+
+    protected List<NPC> npcs = new ArrayList<>();
 
     protected Location scanWand1;
     protected Location scanWand2;
@@ -29,7 +34,11 @@ public class WSPlayer {
     }
 
     public static WSPlayer getFromPlayer(Player p) {
-        for (WSPlayer qp : Main.players) {
+        int size = Main.players.size();
+
+        for (int i = 0; i < size; i++) {
+            WSPlayer qp = Main.players.get(i);
+            if (qp == null) break;
             if (qp.player.getUniqueId().equals(p.getUniqueId())) {
                 return (qp);
             }
@@ -87,5 +96,17 @@ public class WSPlayer {
 
     public List<MaterialBlock> getMaterialBlocks() {
         return materialBlocks;
+    }
+
+    public List<NPC> getNpcs() {
+        return npcs;
+    }
+
+    public boolean isNextRound() {
+        return nextRound;
+    }
+
+    public void setNextRound(boolean nextRound) {
+        this.nextRound = nextRound;
     }
 }
