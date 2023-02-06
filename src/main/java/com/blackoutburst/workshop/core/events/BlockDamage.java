@@ -26,10 +26,16 @@ public class BlockDamage {
 
         player.getInventory().addItem(new ItemStack(materialBlock.getType(), 1, materialBlock.getData()));
 
-        for (int y = materialBlock.getLocation().getBlockY() + 1; y < materialBlock.getLocation().getBlockY() + 4; y++) {
+        for (int y = materialBlock.getLocation().getBlockY() + 1; y < materialBlock.getLocation().getBlockY() + 6; y++) {
             Block sugarCane = materialBlock.getWorld().getBlockAt(materialBlock.getLocation().getBlockX(), y, materialBlock.getLocation().getBlockZ());
             if (sugarCane.getType().equals(Material.SUGAR_CANE_BLOCK)) {
-                player.getInventory().addItem(new ItemStack(materialBlock.getType(), 1, materialBlock.getData()));
+                player.getInventory().addItem(new ItemStack(sugarCane.getType(), 1, materialBlock.getData()));
+            }
+        }
+        for (int y = materialBlock.getLocation().getBlockY() + 1; y < materialBlock.getLocation().getBlockY() + 6; y++) {
+            Block cactus = materialBlock.getWorld().getBlockAt(materialBlock.getLocation().getBlockX(), y, materialBlock.getLocation().getBlockZ());
+            if (cactus.getType().equals(Material.CACTUS)) {
+                player.getInventory().addItem(new ItemStack(cactus.getType(), 1, materialBlock.getData()));
             }
         }
         block.breakNaturally();
