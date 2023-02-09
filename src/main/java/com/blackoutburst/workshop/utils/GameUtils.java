@@ -12,6 +12,7 @@ import com.blackoutburst.workshop.nms.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Furnace;
 import org.bukkit.entity.Player;
@@ -19,11 +20,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GameUtils {
 
@@ -35,6 +40,7 @@ public class GameUtils {
     public static void instantSmelt(Furnace furnace) {
         new BukkitRunnable() {
             int count = 0;
+
             @Override
             public void run() {
                 if (count >= 200) {
@@ -43,25 +49,64 @@ public class GameUtils {
                 ItemStack stack = furnace.getInventory().getSmelting();
                 if (stack != null) {
                     switch (stack.getType()) {
-                        case POTATO_ITEM: fastCook(furnace, stack, Material.BAKED_POTATO, 0); break;
-                        case RAW_CHICKEN: fastCook(furnace, stack, Material.COOKED_CHICKEN, 0); break;
-                        case RAW_FISH: fastCook(furnace, stack, Material.COOKED_FISH, 0); break;
-                        case PORK: fastCook(furnace, stack, Material.GRILLED_PORK, 0); break;
-                        case RAW_BEEF: fastCook(furnace, stack, Material.COOKED_BEEF, 0); break;
-                        case CLAY_BALL: fastCook(furnace, stack, Material.CLAY_BRICK, 0); break;
-                        case SAND: fastCook(furnace, stack, Material.GLASS, 0); break;
-                        case GOLD_ORE: fastCook(furnace, stack, Material.GOLD_INGOT, 0); break;
-                        case IRON_ORE: fastCook(furnace, stack, Material.IRON_INGOT, 0); break;
-                        case NETHERRACK: fastCook(furnace, stack, Material.NETHER_BRICK_ITEM, 0); break;
-                        case COBBLESTONE: fastCook(furnace, stack, Material.STONE, 0); break;
-                        case CACTUS: fastCook(furnace, stack, Material.INK_SACK, 2); break;
-                        case LOG: case LOG_2: fastCook(furnace, stack, Material.COAL, 1); break;
-                        case COAL_ORE: fastCook(furnace, stack, Material.COAL, 0); break;
-                        case DIAMOND_ORE: fastCook(furnace, stack, Material.DIAMOND, 0); break;
-                        case EMERALD_ORE: fastCook(furnace, stack, Material.EMERALD, 0); break;
-                        case LAPIS_ORE: fastCook(furnace, stack, Material.INK_SACK, 4); break;
-                        case QUARTZ_ORE: fastCook(furnace, stack, Material.QUARTZ, 0); break;
-                        case REDSTONE_ORE: fastCook(furnace, stack, Material.REDSTONE, 0); break;
+                        case POTATO_ITEM:
+                            fastCook(furnace, stack, Material.BAKED_POTATO, 0);
+                            break;
+                        case RAW_CHICKEN:
+                            fastCook(furnace, stack, Material.COOKED_CHICKEN, 0);
+                            break;
+                        case RAW_FISH:
+                            fastCook(furnace, stack, Material.COOKED_FISH, 0);
+                            break;
+                        case PORK:
+                            fastCook(furnace, stack, Material.GRILLED_PORK, 0);
+                            break;
+                        case RAW_BEEF:
+                            fastCook(furnace, stack, Material.COOKED_BEEF, 0);
+                            break;
+                        case CLAY_BALL:
+                            fastCook(furnace, stack, Material.CLAY_BRICK, 0);
+                            break;
+                        case SAND:
+                            fastCook(furnace, stack, Material.GLASS, 0);
+                            break;
+                        case GOLD_ORE:
+                            fastCook(furnace, stack, Material.GOLD_INGOT, 0);
+                            break;
+                        case IRON_ORE:
+                            fastCook(furnace, stack, Material.IRON_INGOT, 0);
+                            break;
+                        case NETHERRACK:
+                            fastCook(furnace, stack, Material.NETHER_BRICK_ITEM, 0);
+                            break;
+                        case COBBLESTONE:
+                            fastCook(furnace, stack, Material.STONE, 0);
+                            break;
+                        case CACTUS:
+                            fastCook(furnace, stack, Material.INK_SACK, 2);
+                            break;
+                        case LOG:
+                        case LOG_2:
+                            fastCook(furnace, stack, Material.COAL, 1);
+                            break;
+                        case COAL_ORE:
+                            fastCook(furnace, stack, Material.COAL, 0);
+                            break;
+                        case DIAMOND_ORE:
+                            fastCook(furnace, stack, Material.DIAMOND, 0);
+                            break;
+                        case EMERALD_ORE:
+                            fastCook(furnace, stack, Material.EMERALD, 0);
+                            break;
+                        case LAPIS_ORE:
+                            fastCook(furnace, stack, Material.INK_SACK, 4);
+                            break;
+                        case QUARTZ_ORE:
+                            fastCook(furnace, stack, Material.QUARTZ, 0);
+                            break;
+                        case REDSTONE_ORE:
+                            fastCook(furnace, stack, Material.REDSTONE, 0);
+                            break;
                     }
                 }
                 count++;
@@ -76,10 +121,18 @@ public class GameUtils {
         float z = Integer.parseInt(data[4]) + area.getAnchor().getBlockZ() + 0.5f;
         int yaw = 0;
         switch (BlockFace.valueOf(data[5])) {
-            case NORTH: yaw = 180; break;
-            case SOUTH: yaw = 0; break;
-            case EAST: yaw = -90; break;
-            case WEST: yaw = 90; break;
+            case NORTH:
+                yaw = 180;
+                break;
+            case SOUTH:
+                yaw = 0;
+                break;
+            case EAST:
+                yaw = -90;
+                break;
+            case WEST:
+                yaw = 90;
+                break;
         }
 
         player.teleport(new Location(player.getWorld(), x, y, z, yaw, 0));
@@ -91,10 +144,18 @@ public class GameUtils {
         float z = Integer.parseInt(data[4]) + area.getAnchor().getBlockZ() + 0.5f;
         int yaw = 0;
         switch (BlockFace.valueOf(data[5])) {
-            case NORTH: yaw = 180; break;
-            case SOUTH: yaw = 0; break;
-            case EAST: yaw = -90; break;
-            case WEST: yaw = 90; break;
+            case NORTH:
+                yaw = 180;
+                break;
+            case SOUTH:
+                yaw = 0;
+                break;
+            case EAST:
+                yaw = -90;
+                break;
+            case WEST:
+                yaw = 90;
+                break;
         }
 
         NPC npc = new NPC(UUID.randomUUID(), name)
@@ -113,10 +174,18 @@ public class GameUtils {
         int z = Integer.parseInt(data[4]) + area.getAnchor().getBlockZ();
         NMSEnumDirection.Direction direction = NMSEnumDirection.Direction.NORTH;
         switch (BlockFace.valueOf(data[5])) {
-            case NORTH: direction = NMSEnumDirection.Direction.NORTH; break;
-            case SOUTH: direction = NMSEnumDirection.Direction.SOUTH; break;
-            case EAST: direction = NMSEnumDirection.Direction.EAST; break;
-            case WEST: direction = NMSEnumDirection.Direction.WEST; break;
+            case NORTH:
+                direction = NMSEnumDirection.Direction.NORTH;
+                break;
+            case SOUTH:
+                direction = NMSEnumDirection.Direction.SOUTH;
+                break;
+            case EAST:
+                direction = NMSEnumDirection.Direction.EAST;
+                break;
+            case WEST:
+                direction = NMSEnumDirection.Direction.WEST;
+                break;
         }
 
         NMSBlockPosition position = new NMSBlockPosition(x, y, z);
@@ -151,8 +220,8 @@ public class GameUtils {
                     }
 
                     if (data[1].equals("1") || data[1].equals("2") || data[1].equals("3") ||
-                        data[1].equals("4") || data[1].equals("5") || data[1].equals("6") ||
-                        data[1].equals("7") || data[1].equals("8") || data[1].equals("9")) {
+                            data[1].equals("4") || data[1].equals("5") || data[1].equals("6") ||
+                            data[1].equals("7") || data[1].equals("8") || data[1].equals("9")) {
                         spawnItemFrame(wsPlayer, data, area, Integer.parseInt(data[1]) - 1);
                     }
                 }
@@ -165,9 +234,10 @@ public class GameUtils {
     public static boolean isWand(PlayerInventory inv) {
         ItemStack item = inv.getItemInHand();
 
-        return(item.getType() == Material.BLAZE_ROD &&
+        return (item.getType() == Material.BLAZE_ROD &&
                 item.getItemMeta().getDisplayName().equals("§6Scan wand"));
     }
+
     public static void startRound(WSPlayer wsplayer) {
         Player player = wsplayer.getPlayer();
         Random rng = new Random();
@@ -193,9 +263,9 @@ public class GameUtils {
     public static MaterialBlock getMaterialBlock(WSPlayer wsPlayer, Location location) {
         for (MaterialBlock block : wsPlayer.getMaterialBlocks()) {
             if (location.getWorld().getName().equals(block.getWorld().getName()) &&
-                location.getBlockX() == block.getLocation().getBlockX() &&
-                location.getBlockY() == block.getLocation().getBlockY() &&
-                location.getBlockZ() == block.getLocation().getBlockZ()) {
+                    location.getBlockX() == block.getLocation().getBlockX() &&
+                    location.getBlockY() == block.getLocation().getBlockY() &&
+                    location.getBlockZ() == block.getLocation().getBlockZ()) {
                 return block;
             }
         }
@@ -241,7 +311,7 @@ public class GameUtils {
                 name = data[0];
                 ItemStack requiredItem = getItem(data[1]);
 
-                ItemStack[] craftingTable = new ItemStack[] {
+                ItemStack[] craftingTable = new ItemStack[]{
                         getItem(data[2]), getItem(data[3]), getItem(data[4]),
                         getItem(data[5]), getItem(data[6]), getItem(data[7]),
                         getItem(data[8]), getItem(data[9]), getItem(data[10])
@@ -252,6 +322,84 @@ public class GameUtils {
         } catch (Exception e) {
             Bukkit.broadcastMessage("Error loading craft: " + name);
             e.printStackTrace();
+        }
+    }
+
+    private static boolean hasLostSupport(char direction, boolean solid, int id, byte data) {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/supports.txt"));
+            String pattern = direction + ",([0-9]+):?([0-9]+)?";
+
+            Pattern regexPattern = Pattern.compile(pattern);
+
+            if ((id == 132) && (!solid)) {
+                return false;
+            }
+
+            for (String line : lines) {
+                Matcher patternMatcher = regexPattern.matcher(line);
+                if (!patternMatcher.matches()) {
+                    continue;
+                }
+                int checkID = Integer.parseInt(patternMatcher.group(1));
+
+                if (!(checkID == id)) {
+                    continue;
+                }
+                if (patternMatcher.group(2) == null) {
+                    return true;
+                }
+                byte checkData = (byte) Integer.parseInt(patternMatcher.group(2));
+
+                if (data == checkData) {
+                    return true;
+                }
+            }
+            return false;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static void supportIterator (Location location, WSPlayer wsplayer, char direction) {
+        Player player = wsplayer.getPlayer();
+        Block supporter = location.getWorld().getBlockAt(location);
+
+        boolean solid = supporter.getType().isSolid();
+
+        char[] directions = {'U','N','E','S','W','D'};
+        char[] oppositeDirections = {'D','S','W','N','E','U'};
+        int[][] relativeCoords = {
+                {0,1,0},
+                {0,0,-1},
+                {1,0,0},
+                {0,0,1},
+                {-1,0,0},
+                {0,-1,0}
+        };
+
+        for (int i = 0; i < directions.length; i++) {
+            int xChange = relativeCoords[i][0];
+            int yChange = relativeCoords[i][1];
+            int zChange = relativeCoords[i][2];
+            Location newLocation = location.clone();
+            newLocation.add(xChange,yChange,zChange);
+
+            Block testBlock = newLocation.getWorld().getBlockAt(newLocation);
+            int id = testBlock.getTypeId();
+            byte data = testBlock.getData();
+
+            if (hasLostSupport(directions[i], solid, id, data) && direction != oppositeDirections[i]) {
+                MaterialBlock materialBlock = GameUtils.getMaterialBlock(wsplayer, newLocation);
+
+                if (materialBlock != null) {
+                    ItemStack item = new ItemStack(materialBlock.getType(), 1, materialBlock.getData());
+                    player.getInventory().addItem(item);
+                }
+                supportIterator (newLocation, wsplayer, directions[i]);
+            }
         }
     }
 }
