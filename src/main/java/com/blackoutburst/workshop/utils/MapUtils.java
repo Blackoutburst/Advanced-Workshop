@@ -71,9 +71,15 @@ public class MapUtils {
                         if (b.getType().equals(Material.DROPPER)) {
                             Dropper dropper = (Dropper) b.getState();
                             ItemStack[] items = dropper.getInventory().getContents();
-                            if (items.length == 0) continue;
 
-                            writer.write("D, " + items[0].getTypeId() + ":" + items[0].getData().getData() + ", "+ (x - Math.min(x1, x2)) + ", " + (y - Math.min(y1, y2)) + ", " + (z - Math.min(z1, z2)) + "\n");
+                            int id = 0;
+                            int data = 0;
+                            if (items[0] != null) {
+                                id = items[0].getTypeId();
+                                data = items[0].getData().getData();
+                            }
+
+                            writer.write("D, " + id + ":" + data + ", "+ (x - Math.min(x1, x2)) + ", " + (y - Math.min(y1, y2)) + ", " + (z - Math.min(z1, z2)) + "\n");
                         }
                         if (b.getType().equals(Material.SIGN) || b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
                             Sign sign = (Sign) b.getState();
