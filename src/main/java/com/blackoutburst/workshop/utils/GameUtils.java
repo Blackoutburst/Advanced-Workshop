@@ -282,11 +282,6 @@ public class GameUtils {
                     String[] itemData = data[1].split(":");
                     Material itemType = Material.getMaterial(Integer.parseInt(itemData[0]));
                     byte itemDataType = Byte.parseByte(itemData[1]);
-
-                    Bukkit.broadcastMessage(line);
-                    Bukkit.broadcastMessage(String.valueOf(data));
-                    Bukkit.broadcastMessage("-----------");
-
                     List<Integer> tools = new ArrayList<>();
                     for (int i = 5; i < data.length; i++) {
                         tools.add(Integer.parseInt(data[i]));
@@ -409,10 +404,6 @@ public class GameUtils {
     }
 
     public static boolean canBreak(MaterialBlock materialBlock, Player player) {
-
-        Bukkit.broadcastMessage(String.valueOf(materialBlock.getTools()));
-        Bukkit.broadcastMessage(String.valueOf(player.getItemInHand().getTypeId()));
-
         if (materialBlock.getTools().size() == 0) {
             return true;
         }
