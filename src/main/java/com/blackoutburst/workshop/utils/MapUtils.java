@@ -64,16 +64,43 @@ public class MapUtils {
 
             World world = wsplayer.getScanWand1().getWorld();
 
-            for (int x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
-                for (int y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
-                    for (int z = Math.min(z1, z2); z <= Math.max(z1, z2); z++) {
+            int minX = Math.min(x1, x2);
+            int minY = Math.min(y1, y2);
+            int minZ = Math.min(z1, z2);
+
+            int maxX = Math.max(x1, x2);
+            int maxY = Math.max(y1, y2);
+            int maxZ = Math.max(z1, z2);
+
+            for (int x = minX; x <= maxX; x++) {
+                for (int y = minY; y <= maxY; y++) {
+                    for (int z = minZ; z <= maxZ; z++) {
                         Block b = world.getBlockAt(x, y, z);
+
+                        int relX = x - minX;
+                        int relY = y - minY;
+                        int relZ = z - minZ;
+
                         if (b.getType().equals(Material.DROPPER)) {
                             Dropper dropper = (Dropper) b.getState();
                             ItemStack[] items = dropper.getInventory().getContents();
-                            if (items.length == 0) continue;
 
-                            writer.write("D, " + items[0].getTypeId() + ":" + items[0].getData().getData() + ", "+ (x - Math.min(x1, x2)) + ", " + (y - Math.min(y1, y2)) + ", " + (z - Math.min(z1, z2)) + "\n");
+                            int id = 0;
+                            int data = 0;
+                            if (items[0] != null) {
+                                id = items[0].getTypeId();
+                                data = items[0].getData().getData();
+                            }
+
+                            StringBuilder tools = new StringBuilder();
+                            for (int i=1; i<items.length; i++) {
+                                if (items[i] != null) {
+                                    tools.append(", " + items[i].getTypeId());
+                                }
+                            }
+
+
+                            writer.write("D, " + id + ":" + data + ", " + relX + ", " + relY + ", " + relZ + tools + "\n");
                         }
                         if (b.getType().equals(Material.SIGN) || b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
                             Sign sign = (Sign) b.getState();
@@ -83,7 +110,7 @@ public class MapUtils {
                             org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign) sign.getData();
                             BlockFace directionFacing = sign2.getFacing();
 
-                            writer.write("S, " + text + ", "+ (x - Math.min(x1, x2)) + ", " + (y - Math.min(y1, y2)) + ", " + (z - Math.min(z1, z2))+ ", " + directionFacing.toString() + "\n");
+                            writer.write("S, " + text + ", " + relX + ", " + relY + ", " + relZ + ", " + directionFacing.toString() + "\n");
                         }
                     }
                 }

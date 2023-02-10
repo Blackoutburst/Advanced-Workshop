@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.blackoutburst'
-version '1.6-SNAPSHOT'
+version '1.8.0-SNAPSHOT'
 
 compileJava {
     sourceCompatibility = '1.8'
@@ -46,6 +46,7 @@ configurations {
 }
 
 dependencies {
+    implementation 'org.jetbrains:annotations:23.0.0'
     priority 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
     implementation files('lib/craftbukkit-1.8.8-R0.1-SNAPSHOT.jar')
     implementation files('lib/NPC-API.jar')
