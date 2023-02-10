@@ -1,8 +1,7 @@
 package com.blackoutburst.workshop.commands;
 
-import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.guis.CraftGUI;
+import com.blackoutburst.workshop.guis.CraftSelectorGUI;
 import com.blackoutburst.workshop.utils.GameUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,7 +23,7 @@ public class RecipeAdd implements CommandExecutor {
 
             GameUtils.loadCraft(wsplayer, args[0]);
             wsplayer.setInventoryType(args[0]);
-            CraftGUI.open(wsplayer);
+            CraftSelectorGUI.open(wsplayer);
         }
         return true;
     }
