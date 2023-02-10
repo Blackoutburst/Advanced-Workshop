@@ -1,6 +1,7 @@
 package com.blackoutburst.workshop.guis;
 
 import com.blackoutburst.workshop.Main;
+import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.GUIUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,7 +21,7 @@ public class CraftGUI {
 
         return false;
     }
-    public static void open(Player p) {
+    public static void open(WSPlayer p) {
         Inventory inv = Main.getPlugin(Main.class).getServer().createInventory(null, 54, NAME);
 
         for (int i = 0; i < 54; i++) {
@@ -34,7 +35,7 @@ public class CraftGUI {
         setItem(inv, Material.STAINED_CLAY, 14, "§cDelete", 49);
         setItem(inv, Material.STAINED_CLAY, 14, "§cDelete", 50);
 
-        p.openInventory(inv);
+        p.getPlayer().openInventory(inv);
     }
 
     private static void setItem(Inventory inv, Material mat, int data, String name, int slot) {
@@ -46,15 +47,18 @@ public class CraftGUI {
     }
 
     public static boolean click(Inventory inv, int slot, Player p) {
-        if (!inv.getName().equals(NAME)) return false;
+        WSPlayer wsplayer = WSPlayer.getFromPlayer(p);
+        if (wsplayer == null) return true;
+
+        if (inv == null || !inv.getName().equals(NAME)) return false;
 
         if (slot == 46 || slot == 47) {
-            GUIUtils.saveCraft();
+            GUIUtils.saveCraft(inv, wsplayer);
             return true;
         }
 
         if (slot == 49 || slot == 50) {
-            GUIUtils.deleteCraft();
+            GUIUtils.deleteCraft(inv, wsplayer);
             return true;
         }
 
