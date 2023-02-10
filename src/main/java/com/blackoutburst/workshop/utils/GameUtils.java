@@ -20,13 +20,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -286,12 +282,21 @@ public class GameUtils {
                     String[] itemData = data[1].split(":");
                     Material itemType = Material.getMaterial(Integer.parseInt(itemData[0]));
                     byte itemDataType = Byte.parseByte(itemData[1]);
+
+                    Bukkit.broadcastMessage(line);
+                    Bukkit.broadcastMessage(String.valueOf(data));
+                    Bukkit.broadcastMessage("-----------");
+
+                    List<Integer> tools = new ArrayList<>();
+                    for (int i = 5; i < data.length; i++) {
+                        tools.add(Integer.parseInt(data[i]));
+                    }
                     int x = Integer.parseInt(data[2]) + area.getAnchor().getBlockX();
                     int y = Integer.parseInt(data[3]) + area.getAnchor().getBlockY();
                     int z = Integer.parseInt(data[4]) + area.getAnchor().getBlockZ();
 
                     Location location = new Location(wsPlayer.getPlayer().getWorld(), x, y, z);
-                    wsPlayer.getMaterialBlocks().add(new MaterialBlock(itemType, itemDataType, location, location.getWorld()));
+                    wsPlayer.getMaterialBlocks().add(new MaterialBlock(itemType, itemDataType, location, location.getWorld(), tools));
                 }
             }
         } catch (Exception e) {
@@ -401,5 +406,21 @@ public class GameUtils {
                 supportIterator (newLocation, wsplayer, directions[i]);
             }
         }
+    }
+
+    public static boolean canBreak(MaterialBlock materialBlock, Player player) {
+
+        Bukkit.broadcastMessage(String.valueOf(materialBlock.getTools()));
+        Bukkit.broadcastMessage(String.valueOf(player.getItemInHand().getTypeId()));
+
+        if (materialBlock.getTools().size() == 0) {
+            return true;
+        }
+        for (int tool : materialBlock.getTools()) {
+            if (player.getItemInHand().getTypeId() == tool) {
+                return true;
+            }
+        }
+        return false;
     }
 }

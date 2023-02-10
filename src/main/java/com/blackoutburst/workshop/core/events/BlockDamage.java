@@ -25,6 +25,10 @@ public class BlockDamage {
         MaterialBlock materialBlock = GameUtils.getMaterialBlock(wsplayer, block.getLocation());
         if (materialBlock == null) return;
 
+        if (!(GameUtils.canBreak(materialBlock,player))) {
+            return;
+        }
+
         player.getInventory().addItem(new ItemStack(materialBlock.getType(), 1, materialBlock.getData()));
 
         GameUtils.supportIterator(block.getLocation(), wsplayer, '0');
