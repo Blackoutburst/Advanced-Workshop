@@ -317,7 +317,17 @@ public class GameUtils {
                         getItem(data[8]), getItem(data[9]), getItem(data[10])
                 };
 
-                wsPlayer.getCrafts().add(new Craft(name, requiredItem, craftingTable));
+                List<ItemStack> materials = new ArrayList<>();
+                for (int i = 11; i < data.length; i++) {
+                    String[] subData = data[i].split(":");
+                    Material itemType = Material.getMaterial(Integer.parseInt(subData[0]));
+                    int itemAmount = Integer.parseInt(subData[2]);
+                    short itemData = Short.parseShort(subData[1]);
+
+                    materials.add(new ItemStack(itemType, itemAmount, itemData));
+                }
+
+                wsPlayer.getCrafts().add(new Craft(name, requiredItem, craftingTable, materials));
             }
         } catch (Exception e) {
             Bukkit.broadcastMessage("Error loading craft: " + name);

@@ -35,6 +35,7 @@ public class Main extends JavaPlugin {
         getCommand("pastemap").setExecutor(new PasteMap());
         getCommand("setspawn").setExecutor(new SetSpawn());
         getCommand("spawn").setExecutor(new Spawn());
+        getCommand("recipeadd").setExecutor(new RecipeAdd());
         MapUtils.loadPlayAreas();
         MapUtils.loadSpawn();
         SkinLoader.loadSkinFromUUID(0, "92deafa9430742d9b00388601598d6c0");
