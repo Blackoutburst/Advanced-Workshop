@@ -3,6 +3,7 @@ package com.blackoutburst.workshop.utils;
 import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.guis.CraftSelectorGUI;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
