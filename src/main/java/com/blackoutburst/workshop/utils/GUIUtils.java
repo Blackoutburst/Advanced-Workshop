@@ -20,7 +20,11 @@ public class GUIUtils {
             PrintWriter writer = new PrintWriter("./plugins/Workshop/" + p.getInventoryType() + ".craft");
 
             ItemStack reqItem = inv.getItem(23);
-            if (reqItem == null) throw new Exception();
+            if (reqItem == null) {
+                GameUtils.loadCraft(p, p.getInventoryType());
+                CraftSelectorGUI.open(p, 0);
+                return;
+            }
 
             for (int i = 0; i < p.getCrafts().size(); i++) {
                 Craft c = p.getCrafts().get(i);
