@@ -23,7 +23,7 @@ public class RecipeAdd implements CommandExecutor {
 
             GameUtils.loadCraft(wsplayer, args[0]);
             wsplayer.setInventoryType(args[0]);
-            CraftSelectorGUI.open(wsplayer);
+            CraftSelectorGUI.open(wsplayer, 0);
         }
         return true;
     }

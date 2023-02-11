@@ -35,7 +35,7 @@ public class GUIUtils {
             if (!removed) {
                 p.getPlayer().sendMessage("§cThis craft doesn't exist");
                 GameUtils.loadCraft(p, p.getInventoryType());
-                CraftSelectorGUI.open(p);
+                CraftSelectorGUI.open(p, 0);
                 return;
             }
 
@@ -59,7 +59,7 @@ public class GUIUtils {
         }
 
         GameUtils.loadCraft(p, p.getInventoryType());
-        CraftSelectorGUI.open(p);
+        CraftSelectorGUI.open(p, 0);
     }
 
     public static void saveCraft(Inventory inv, WSPlayer p) {
@@ -130,6 +130,6 @@ public class GUIUtils {
         }
 
         GameUtils.loadCraft(p, p.getInventoryType());
-        CraftSelectorGUI.open(p);
+        CraftSelectorGUI.open(p, 0);
     }
 }

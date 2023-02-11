@@ -15,6 +15,8 @@ public class CraftSelectorGUI {
 
     public static final String NAME = "Craft Selector";
 
+    private static int page = 0;
+
     private static Craft getCorrectCraft(WSPlayer p, ItemStack reqItem) {
         for (int i = 0; i < p.getCrafts().size(); i++) {
             Craft c = p.getCrafts().get(i);
@@ -26,12 +28,14 @@ public class CraftSelectorGUI {
         return null;
     }
 
-    public static void open(WSPlayer p) {
+    public static void open(WSPlayer player, int p) {
+        page = p;
+
         Inventory inv = Main.getPlugin(Main.class).getServer().createInventory(null, 54, NAME);
 
         for (int i = 0; i < 36; i++) {
-            if (i >= p.getCrafts().size()) break;
-            Craft c = p.getCrafts().get(i);
+            if (i + (36 * page) >= player.getCrafts().size()) break;
+            Craft c = player.getCrafts().get(i + (36 * page));
 
             ItemStack item = c.getItemRequired();
 
@@ -46,7 +50,14 @@ public class CraftSelectorGUI {
         setItem(inv, Material.STAINED_CLAY, 13, "§aAdd recipe", 49);
         setItem(inv, Material.STAINED_CLAY, 13, "§aAdd recipe", 50);
 
-        p.getPlayer().openInventory(inv);
+        if (page > 0)
+            setItem(inv, Material.ARROW, 0, "§ePrevious Page", 45);
+
+        if (player.getCrafts().size() > 36 * (page + 1)) {
+            setItem(inv, Material.ARROW, 0, "§eNext Page", 53);
+        }
+
+        player.getPlayer().openInventory(inv);
     }
 
     private static void setItem(Inventory inv, Material mat, int data, String name, int slot) {
@@ -67,6 +78,18 @@ public class CraftSelectorGUI {
 
         if (slot >= 0 && slot < 36 && inv.getItem(slot) != null) {
             CraftGUI.open(wsplayer, getCorrectCraft(wsplayer, inv.getItem(slot)));
+        }
+
+        if (slot == 53 && wsplayer.getCrafts().size() > 36 * (page + 1)) {
+            page++;
+            CraftSelectorGUI.open(wsplayer, page);
+            return true;
+        }
+
+        if (slot == 45 && page > 0) {
+            page--;
+            CraftSelectorGUI.open(wsplayer, page);
+            return true;
         }
 
         if (slot == 48 || slot == 49 || slot == 50) {
