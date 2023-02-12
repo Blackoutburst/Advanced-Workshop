@@ -51,4 +51,8 @@ dependencies {
     priority 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
     implementation files('lib/craftbukkit-1.8.8-R0.1-SNAPSHOT.jar')
     implementation files('lib/NPC-API.jar')
+    implementation files('lib/item-nbt-api-plugin-2.11.1.jar')
+    implementation 'com.google.code.gson:gson:2.9.0'
 }
+sourceCompatibility = JavaVersion.VERSION_15
+targetCompatibility = JavaVersion.VERSION_15

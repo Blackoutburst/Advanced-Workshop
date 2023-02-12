@@ -9,6 +9,11 @@ import com.blackoutburst.workshop.core.MaterialBlock;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.nms.*;
+import de.tr7zw.nbtapi.NBT;
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtapi.NBTContainer;
+import de.tr7zw.nbtapi.NBTItem;
+import de.tr7zw.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,10 +23,13 @@ import org.bukkit.block.Furnace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
+import com.google.gson.Gson;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Array;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -246,6 +254,7 @@ public class GameUtils {
             ItemStack item = wsplayer.getCurrentCraft().getCraftingTable()[i];
             NMSItemFrame.setItem(player, frame, item);
         }
+        MapUtils.restoreArea(wsplayer);
     }
 
     private static ItemStack getItem(String data) {
@@ -277,21 +286,66 @@ public class GameUtils {
             List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + type + ".logic"));
 
             for (String line : lines) {
-                if (line.startsWith("D")) {
-                    String[] data = line.split(", ");
-                    String[] itemData = data[1].split(":");
-                    Material itemType = Material.getMaterial(Integer.parseInt(itemData[0]));
-                    byte itemDataType = Byte.parseByte(itemData[1]);
-                    List<Integer> tools = new ArrayList<>();
-                    for (int i = 5; i < data.length; i++) {
-                        tools.add(Integer.parseInt(data[i]));
+
+                if ((line.startsWith("R")) || (line.startsWith("P"))) {
+                    String[] data = line.split(";",-1);
+
+                    int relX = Integer.parseInt(data[1].split(",")[0]);
+                    int relY = Integer.parseInt(data[1].split(",")[1]);
+                    int relZ = Integer.parseInt(data[1].split(",")[2]);
+
+                    String[] items = data[2].split(",");
+                    String[] neededItems = {};
+                    String[] tools = {};
+
+                    if (!(data[3].equals(""))) {
+                        neededItems = data[3].split(",");
                     }
-                    int x = Integer.parseInt(data[2]) + area.getAnchor().getBlockX();
-                    int y = Integer.parseInt(data[3]) + area.getAnchor().getBlockY();
-                    int z = Integer.parseInt(data[4]) + area.getAnchor().getBlockZ();
+                    if (!(data[4].equals(""))) {
+                        tools = data[4].split(",");
+                    }
+
+                    List<Material> allItems = new ArrayList<>();
+                    List<MaterialData> allItemData = new ArrayList<>();
+
+                    for (String item : items) {
+                        String id = item.split(" ")[0];
+                        int itemData = Integer.parseInt(item.split(" ")[1]);
+
+                        ReadWriteNBT nbtObject = NBT.createNBTObject();
+                        nbtObject.setString("id",id);
+                        nbtObject.setInteger("Damage",itemData);
+                        nbtObject.setInteger("Count",1);
+                        ItemStack convertedItem = NBTItem.convertNBTtoItem((NBTCompound) nbtObject);
+                        allItems.add(convertedItem.getType());
+                        allItemData.add(convertedItem.getData());
+                    }
+                    if ((neededItems.length != 0) && !(neededItems[0].equals(""))) {
+                        for (String item : neededItems) {
+                            String id = item.split(" ")[0];
+                            int itemData = Integer.parseInt(item.split(" ")[1]);
+
+                            ReadWriteNBT nbtObject = NBT.createNBTObject();
+                            nbtObject.setString("id", id);
+                            nbtObject.setInteger("Damage", itemData);
+                            nbtObject.setInteger("Count", 1);
+                            ItemStack convertedItem = NBTItem.convertNBTtoItem((NBTCompound) nbtObject);
+                            allItems.add(convertedItem.getType());
+                            allItemData.add(convertedItem.getData());
+                        }
+                    }
+                    Material[] itemArray = allItems.toArray(new Material[]{});
+                    MaterialData[] dataArray = allItemData.toArray(new MaterialData[]{});
+
+                    Location offset = area.getAnchor();
+
+                    int x = relX + (int) offset.getX();
+                    int y = relY + (int) offset.getY();
+                    int z = relZ + (int) offset.getZ();
 
                     Location location = new Location(wsPlayer.getPlayer().getWorld(), x, y, z);
-                    wsPlayer.getMaterialBlocks().add(new MaterialBlock(itemType, itemDataType, location, location.getWorld(), tools));
+
+                    wsPlayer.getMaterialBlocks().add(new MaterialBlock(itemArray, dataArray, location, location.getWorld(), tools, 0));
                 }
             }
         } catch (Exception e) {
@@ -405,7 +459,7 @@ public class GameUtils {
                 MaterialBlock materialBlock = GameUtils.getMaterialBlock(wsplayer, newLocation);
 
                 if (materialBlock != null) {
-                    ItemStack item = new ItemStack(materialBlock.getType(), 1, materialBlock.getData());
+                    ItemStack item = new ItemStack(materialBlock.getType(), 1, materialBlock.getData().getData());
                     player.getInventory().addItem(item);
                 }
                 supportIterator (newLocation, wsplayer, directions[i]);
@@ -414,11 +468,17 @@ public class GameUtils {
     }
 
     public static boolean canBreak(MaterialBlock materialBlock, Player player) {
-        if (materialBlock.getTools().size() == 0) {
+
+        if (materialBlock.getTools().length == 0) {
             return true;
         }
-        for (int tool : materialBlock.getTools()) {
-            if (player.getItemInHand().getTypeId() == tool) {
+        for (String tool : materialBlock.getTools()) {
+            if (player.getItemInHand().getType() == Material.AIR) {
+                return false;
+            }
+            NBTContainer handItemNBT = NBTItem.convertItemtoNBT(player.getItemInHand());
+            String handItem = handItemNBT.getString("id");
+            if (handItem.equals(tool)) {
                 return true;
             }
         }

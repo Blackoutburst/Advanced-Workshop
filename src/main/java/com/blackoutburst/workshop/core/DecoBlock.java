@@ -5,9 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.material.MaterialData;
 
-import java.util.List;
-
-public class MaterialBlock {
+public class DecoBlock {
 
     protected Material[] types;
 
@@ -17,16 +15,13 @@ public class MaterialBlock {
 
     protected World world;
 
-    protected String[] tools;
-
     protected int index;
 
-    public MaterialBlock(Material[] types, MaterialData[] data, Location location, World world, String[] tools, int index) {
+    public DecoBlock(Material[] types, MaterialData[] data, Location location, World world, String[] tools, int index) {
         this.types = types;
         this.data = data;
         this.location = location;
         this.world = world;
-        this.tools = tools;
         this.index = index;
     }
 
@@ -43,8 +38,6 @@ public class MaterialBlock {
     public Location getLocation() {return location;}
 
     public World getWorld() {return world;}
-
-    public String[] getTools() {return tools;}
 
     public int getIndex() {return index;}
 
