@@ -199,8 +199,6 @@ public class MapUtils {
 
         updateDecoBlocks(wsplayer);
 
-        Bukkit.broadcastMessage("restoring area");
-
         List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
 
         for (DecoBlock i : decoBlocks) {
@@ -373,8 +371,6 @@ public class MapUtils {
         for (ItemStack material : materials) {
             materialsCopy.add(material.clone());
         }
-
-        Bukkit.broadcastMessage("materials: " + materials);
         
         try {
             List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + mapName + ".logic"));
@@ -411,25 +407,10 @@ public class MapUtils {
                         Material checkType = checkItem.getType();
                         Material materialType = material.getType();
 
-                        Bukkit.broadcastMessage("checked type is: " + checkType);
-                        Bukkit.broadcastMessage("checking type is: " + materialType);
-                        Bukkit.broadcastMessage("checked type is: " + checkData);
-                        Bukkit.broadcastMessage("checking type is: " + materialData);
-                        Bukkit.broadcastMessage("---------------------");
-
                         if (checkType != materialType || checkData != materialData) { continue; }
 
                         match = true;
                         int index = items.indexOf(item);
-
-                        Bukkit.broadcastMessage("match");
-                        Bukkit.broadcastMessage("---------------------");
-                        Bukkit.broadcastMessage("location: " + location);
-                        Bukkit.broadcastMessage("items: " + items);
-                        Bukkit.broadcastMessage("index: " + index);
-                        Bukkit.broadcastMessage("item: " + item);
-                        Bukkit.broadcastMessage("material: " + material);
-                        Bukkit.broadcastMessage("---------------------");
 
                         material.setAmount(material.getAmount() - 1);
                         wsplayer.getNeededBlocks().add(new NeededBlock(location, index, world));
@@ -502,20 +483,10 @@ public class MapUtils {
 
                 wsplayer.getDecoBlocks().add(new DecoBlock(materials, matsData, location, world, 0));
 
-                Bukkit.broadcastMessage("deco blocks: " + Arrays.toString(materials) + Arrays.toString(matsData));
-
-                Bukkit.broadcastMessage(location.toString());
-
-                Bukkit.broadcastMessage("------------------");
-
                 if (getNeededBlock(wsplayer, location) != null) {
                     int index = getNeededBlock(wsplayer, location).getIndex();
                     getDecoBlock(wsplayer, location).setIndex(index);
                     GameUtils.getMaterialBlock(wsplayer,location).setIndex(index);
-
-
-                    Bukkit.broadcastMessage("index set to: " + index);
-                    Bukkit.broadcastMessage("------------------");
                     continue;
                 }
                 if (materials.length > 1) {
