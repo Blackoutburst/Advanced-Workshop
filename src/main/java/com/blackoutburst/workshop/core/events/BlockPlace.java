@@ -10,5 +10,4 @@ public class BlockPlace {
         if (player != null)
             event.setCancelled(player.isInGame());
     }
-
 }

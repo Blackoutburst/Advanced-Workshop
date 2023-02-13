@@ -56,5 +56,4 @@ public class Main extends JavaPlugin {
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 1L, 0L);
     }
-
 }

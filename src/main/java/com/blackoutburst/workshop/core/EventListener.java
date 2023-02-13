@@ -50,7 +50,6 @@ public class EventListener implements Listener {
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         EntityDamage.execute(event);
-
     }
 
     @EventHandler

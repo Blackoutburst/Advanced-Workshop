@@ -2,16 +2,8 @@ package com.blackoutburst.workshop.utils;
 
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.*;
-import com.blackoutburst.workshop.utils.GameUtils;
-import com.blackoutburst.workshop.Craft;
 import de.tr7zw.nbtapi.*;
-import de.tr7zw.nbtapi.data.NBTData;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
-import de.tr7zw.nbtapi.iface.ReadableNBT;
-import de.tr7zw.nbtapi.plugin.tests.blocks.BlockNBTTest;
-import net.minecraft.server.v1_8_R3.Container;
-import net.minecraft.server.v1_8_R3.ContainerDispenser;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,21 +11,14 @@ import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.sql.Array;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.List;
-
-import static net.minecraft.server.v1_8_R3.CommandTitle.a;
 
 public class MapUtils {
 
@@ -125,7 +110,7 @@ public class MapUtils {
         }
     }
 
-    public static <JsonArray> void logicScan(WSPlayer wsplayer, String name) {
+    public static void logicScan(WSPlayer wsplayer, String name) {
         try {
             PrintWriter writer = new PrintWriter("./plugins/Workshop/" + name + ".logic");
             int x1 = wsplayer.getScanWand1().getBlockX();

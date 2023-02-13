@@ -35,5 +35,4 @@ public class ScanWand {
             wsplayer.setScanWand2(b.getLocation());
         }
     }
-
 }

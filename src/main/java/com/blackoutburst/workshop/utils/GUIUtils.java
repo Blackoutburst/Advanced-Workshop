@@ -3,14 +3,12 @@ package com.blackoutburst.workshop.utils;
 import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.guis.CraftSelectorGUI;
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.PrintWriter;
 
 public class GUIUtils {
-
 
     public static void deleteCraft(Inventory inv, WSPlayer p) {
         if (p.getInventoryType() == null) return;

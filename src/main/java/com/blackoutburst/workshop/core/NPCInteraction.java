@@ -3,8 +3,6 @@ package com.blackoutburst.workshop.core;
 import com.blackout.npcapi.core.APlayer;
 import com.blackout.npcapi.core.NPC;
 import com.blackout.npcapi.core.NPCPacket;
-import com.blackoutburst.workshop.utils.GameUtils;
-import com.blackoutburst.workshop.utils.MapUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
