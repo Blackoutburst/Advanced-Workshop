@@ -50,7 +50,6 @@ public class Main extends JavaPlugin {
                     if (wsPlayer.isNextRound()) {
                         wsPlayer.setNextRound(false);
                         GameUtils.startRound(wsPlayer);
-                        MapUtils.restoreArea(wsPlayer);
                     }
 
                 }

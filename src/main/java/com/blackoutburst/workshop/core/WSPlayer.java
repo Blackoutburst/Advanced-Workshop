@@ -31,6 +31,9 @@ public class WSPlayer {
 
     protected List<MaterialBlock> materialBlocks = new ArrayList<>();
 
+    protected List<DecoBlock> decoBlocks = new ArrayList<>();
+
+    protected List<NeededBlock> neededBlocks = new ArrayList<>();
     protected boolean inGame = false;
     protected Craft currentCraft = null;
 
@@ -101,6 +104,12 @@ public class WSPlayer {
 
     public List<MaterialBlock> getMaterialBlocks() {
         return materialBlocks;
+    }
+    public List<DecoBlock> getDecoBlocks() {
+        return decoBlocks;
+    }
+    public List<NeededBlock> getNeededBlocks() {
+        return neededBlocks;
     }
 
     public List<NPC> getNpcs() {
