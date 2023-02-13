@@ -39,7 +39,7 @@ public class WSPlayer {
     protected boolean inGame = false;
     protected Craft currentCraft = null;
 
-    protected int currentCraftIndex = 1;
+    protected int currentCraftIndex = 0;
 
     protected NMSBoard board;
 

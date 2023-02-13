@@ -8,10 +8,7 @@ import java.util.stream.Collectors;
 public class StringUtils {
 
     public static String getCurrentRound(WSPlayer wsplayer) {
-        if (wsplayer.getGameOptions().isUnlimitedCrafts())
-            return "∞";
-
-        return wsplayer.getCurrentCraftIndex() + "/" + wsplayer.getGameOptions().getCraftLimit();
+        return wsplayer.getGameOptions().isUnlimitedCrafts() ? String.valueOf(wsplayer.getCurrentCraftIndex()) : wsplayer.getCurrentCraftIndex() + "/" + wsplayer.getGameOptions().getCraftLimit();
     }
 
     public static String formatItemName(String name) {

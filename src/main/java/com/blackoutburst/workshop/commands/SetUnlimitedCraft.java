@@ -33,6 +33,8 @@ public class SetUnlimitedCraft implements CommandExecutor {
             }
 
             wsplayer.getGameOptions().setUnlimitedCrafts(isUnlimited(args[0]));
+
+            wsplayer.getPlayer().sendMessage("§aYou " + (wsplayer.getGameOptions().isUnlimitedCrafts() ? "§eenabled" : "§edisabled" + " §aunlimited crafts"));
         }
         return true;
     }

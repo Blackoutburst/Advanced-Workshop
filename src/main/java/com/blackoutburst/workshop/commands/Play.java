@@ -47,6 +47,7 @@ public class Play implements CommandExecutor {
                 wsplayer.setInGame(true);
                 wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
                 wsplayer.getBoard().set(wsplayer.getPlayer(), 13, "Map: §e" + area.getType());
+                wsplayer.setCurrentCraftIndex(0);
 
                 if (args.length > 1)
                     setCraftAmount(wsplayer, args[1]);

@@ -38,6 +38,7 @@ public class SetCraftLimit implements CommandExecutor {
             }
 
             wsplayer.getGameOptions().setCraftLimit(craftLimit);
+            wsplayer.getPlayer().sendMessage("§aYou've set the craft limit to §f: §e" + (wsplayer.getGameOptions().getCraftLimit()));
         }
         return true;
     }
