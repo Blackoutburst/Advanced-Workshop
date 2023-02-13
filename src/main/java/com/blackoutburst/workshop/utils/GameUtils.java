@@ -63,6 +63,8 @@ public class GameUtils {
 
         wsplayer.getBoard().removeLine(wsplayer.getPlayer(), 9);
         wsplayer.getBoard().removeLine(wsplayer.getPlayer(), 8);
+
+        wsplayer.getPlayer().getInventory().clear();
     }
 
     private static void fastCook(Furnace furnace, ItemStack stack, Material output, int data) {
