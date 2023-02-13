@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.blackoutburst'
-version '1.9.1-SNAPSHOT'
+version '1.9.2-SNAPSHOT'
 
 compileJava {
     sourceCompatibility = '1.8'

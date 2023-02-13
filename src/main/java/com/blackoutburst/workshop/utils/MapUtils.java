@@ -463,6 +463,8 @@ public class MapUtils {
                 String[] data = line.split(";", -1);
                 String[] items = (data[1] + "," + data[2]).split(",");
 
+                String[] rItems = data[1].split(",");
+
                 List<Material> typeList = new ArrayList<>();
                 List<Byte> dataList = new ArrayList<>();
                 for (String item : items) {
@@ -486,17 +488,21 @@ public class MapUtils {
                 if (getNeededBlock(wsplayer, location) != null) {
                     int index = getNeededBlock(wsplayer, location).getIndex();
                     getDecoBlock(wsplayer, location).setIndex(index);
-                    GameUtils.getMaterialBlock(wsplayer,location).setIndex(index);
+                    if (GameUtils.getMaterialBlock(wsplayer,location) != null) {
+                        GameUtils.getMaterialBlock(wsplayer, location).setIndex(index);
+                    }
                     continue;
                 }
                 if (materials.length > 1) {
                     DecoBlock decoblock = getDecoBlock(wsplayer, location);
                     Random rng = new Random();
-                    int randomBlockIndex = rng.nextInt(items.length);
+                    int randomBlockIndex = rng.nextInt(rItems.length);
 
                     decoblock.setIndex(randomBlockIndex);
                     MaterialBlock materialBlock = GameUtils.getMaterialBlock(wsplayer, location);
-                    materialBlock.setIndex(randomBlockIndex);
+                    if (materialBlock != null) {
+                        GameUtils.getMaterialBlock(wsplayer, location).setIndex(randomBlockIndex);
+                    }
                 }
             }
         } catch (Exception e) {
