@@ -49,7 +49,7 @@ public class GUIUtils {
                 writer.write(c.getItemRequired().getTypeId() + ":" + c.getItemRequired().getData().getData() + ", ");
 
                 for (int i  = 0; i < 9; i++)
-                    writer.write(c.getCraftingTable()[i].getTypeId() + ":" + c.getCraftingTable()[i].getData().getData() + (i == 8 ? "" : ", "));
+                    writer.write(c.getCraftingTable()[i].getTypeId() + ":" + c.getCraftingTable()[i].getData().getData() + ", ");
 
                 for (int i = 0; i < c.getMaterials().size(); i++) {
                     ItemStack material = c.getMaterials().get(i);
