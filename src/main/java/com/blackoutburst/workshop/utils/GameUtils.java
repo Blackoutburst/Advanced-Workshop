@@ -257,10 +257,10 @@ public class GameUtils {
                         spawnNPC("villager", skinID, wsPlayer, data, area);
                     }
 
-                    if (data[1].equals("1") || data[1].equals("2") || data[1].equals("3") ||
+                    if (data[1].equals("0") || data[1].equals("1") || data[1].equals("2") || data[1].equals("3") ||
                             data[1].equals("4") || data[1].equals("5") || data[1].equals("6") ||
                             data[1].equals("7") || data[1].equals("8") || data[1].equals("9")) {
-                        spawnItemFrame(wsPlayer, data, area, Integer.parseInt(data[1]) - 1);
+                        spawnItemFrame(wsPlayer, data, area, Integer.parseInt(data[1]));
                     }
                 }
             }
@@ -294,8 +294,13 @@ public class GameUtils {
 
         player.sendMessage("You must craft: " + wsplayer.getCurrentCraft().getName());
         player.getInventory().clear();
+
+        NMSEntities outputFrame = wsplayer.getItemFrames()[0];
+        ItemStack outputItem = wsplayer.getCurrentCraft().getItemRequired();
+        NMSItemFrame.setItem(player, outputFrame, outputItem);
+
         for (int i = 0; i < 9; i++) {
-            NMSEntities frame = wsplayer.getItemFrames()[i];
+            NMSEntities frame = wsplayer.getItemFrames()[i + 1];
             ItemStack item = wsplayer.getCurrentCraft().getCraftingTable()[i];
             NMSItemFrame.setItem(player, frame, item);
         }

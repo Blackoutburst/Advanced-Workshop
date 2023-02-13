@@ -19,7 +19,7 @@ public class WSPlayer {
 
     protected String inventoryType;
 
-    protected NMSEntities[] itemFrames = new NMSEntities[9];
+    protected NMSEntities[] itemFrames = new NMSEntities[10];
 
     protected List<NPC> npcs = new ArrayList<>();
 
