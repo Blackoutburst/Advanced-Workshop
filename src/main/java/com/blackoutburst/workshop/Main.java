@@ -36,6 +36,9 @@ public class Main extends JavaPlugin {
         getCommand("setspawn").setExecutor(new SetSpawn());
         getCommand("spawn").setExecutor(new Spawn());
         getCommand("recipeadd").setExecutor(new RecipeAdd());
+        getCommand("setcraftlimit").setExecutor(new SetCraftLimit());
+        getCommand("setcraftamount").setExecutor(new SetCraftLimit());
+        getCommand("setunlimitedcraft").setExecutor(new SetUnlimitedCraft());
         MapUtils.loadPlayAreas();
         MapUtils.loadSpawn();
         SkinLoader.loadSkinFromUUID(0, "92deafa9430742d9b00388601598d6c0");

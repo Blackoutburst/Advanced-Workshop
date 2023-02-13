@@ -39,6 +39,15 @@ commands:
   spawn:
     description: Go to spawn
     usage: /spawn
+  setcraftlimit:
+    description: Set how much craft you need to do
+    usage: /setcraftlimit
+  setcraftamount:
+    description: Set how much craft you need to do
+    usage: /setcraftamount
+  setunlimitedcraft:
+    description: Toggle craft requirement
+    usage: /setunlimitedcraft
 
   permissions:
     workshop.admin:
