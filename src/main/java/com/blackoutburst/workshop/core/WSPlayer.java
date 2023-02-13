@@ -35,10 +35,15 @@ public class WSPlayer {
     protected List<DecoBlock> decoBlocks = new ArrayList<>();
 
     protected List<NeededBlock> neededBlocks = new ArrayList<>();
+
     protected boolean inGame = false;
     protected Craft currentCraft = null;
 
+    protected int currentCraftIndex = 1;
+
     protected NMSBoard board;
+
+    protected GameOptions gameOptions;
 
     public WSPlayer(Player player) {
         this.player = player;
@@ -49,8 +54,9 @@ public class WSPlayer {
         board.set(player, 12, "  ");
         board.set(player, 11, "Craft: §enone");
         board.set(player, 10, "   ");
-        board.set(player,9, "§e§m-------------------- ");
+        board.set(player,7, "§e§m-------------------- ");
 
+        gameOptions = new GameOptions(this);
     }
 
     public static WSPlayer getFromPlayer(Player p) {
@@ -150,5 +156,17 @@ public class WSPlayer {
 
     public NMSBoard getBoard() {
         return board;
+    }
+
+    public GameOptions getGameOptions() {
+        return gameOptions;
+    }
+
+    public int getCurrentCraftIndex() {
+        return currentCraftIndex;
+    }
+
+    public void setCurrentCraftIndex(int currentCraftIndex) {
+        this.currentCraftIndex = currentCraftIndex;
     }
 }

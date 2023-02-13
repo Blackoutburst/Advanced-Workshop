@@ -15,6 +15,7 @@ import de.tr7zw.nbtapi.NBTContainer;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -32,6 +33,36 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GameUtils {
+
+    public static void endGame(WSPlayer wsplayer) {
+        wsplayer.setInGame(false);
+
+        wsplayer.setCurrentCraft(null);
+        wsplayer.getBoard().set(wsplayer.getPlayer(), 11, "Craft: §enone");
+
+        MapUtils.restoreArea(wsplayer);
+
+        PlayArea area = wsplayer.getPlayArea();
+        if (area != null)
+            area.setBusy(false);
+
+        wsplayer.getPlayer().sendMessage("Game stopped");
+        wsplayer.getPlayer().setGameMode(GameMode.ADVENTURE);
+
+        for (NPC npc : wsplayer.getNpcs()) {
+            NPCManager.deleteNPC(wsplayer.getPlayer(), npc);
+        }
+        wsplayer.getNpcs().clear();
+
+        for (NMSEntities frames : wsplayer.getItemFrames()) {
+            NMSEntityDestroy.send(wsplayer.getPlayer(), frames.getID());
+        }
+        wsplayer.getPlayer().teleport(Main.spawn);
+        wsplayer.getBoard().set(wsplayer.getPlayer(), 13, "Map: §enone");
+
+        wsplayer.getBoard().removeLine(wsplayer.getPlayer(), 9);
+        wsplayer.getBoard().removeLine(wsplayer.getPlayer(), 8);
+    }
 
     private static void fastCook(Furnace furnace, ItemStack stack, Material output, int data) {
         furnace.getInventory().setSmelting(new ItemStack(Material.AIR));
@@ -240,12 +271,22 @@ public class GameUtils {
     }
 
     public static void startRound(WSPlayer wsplayer) {
+        if (!wsplayer.getGameOptions().isUnlimitedCrafts() && wsplayer.getCurrentCraftIndex() >= wsplayer.getGameOptions().getCraftLimit()) {
+            endGame(wsplayer);
+            return;
+        }
+
         Player player = wsplayer.getPlayer();
         Random rng = new Random();
 
+        wsplayer.setCurrentCraftIndex(wsplayer.getCurrentCraftIndex() + 1);
+
         wsplayer.setCurrentCraft(wsplayer.getCrafts().get(rng.nextInt(wsplayer.getCrafts().size())));
-        wsplayer.getBoard().set(wsplayer.getPlayer(), 11, "Craft: §e" + wsplayer.getCurrentCraft().getName());
-        wsplayer.getPlayer().sendMessage("You must craft: " + wsplayer.getCurrentCraft().getName());
+        wsplayer.getBoard().set(player, 11, "Craft: §e" + wsplayer.getCurrentCraft().getName());
+        wsplayer.getBoard().set(player, 9, "Round: §e" + StringUtils.getCurrentRound(wsplayer));
+        wsplayer.getBoard().set(player, 8, "    ");
+
+        player.sendMessage("You must craft: " + wsplayer.getCurrentCraft().getName());
         player.getInventory().clear();
         for (int i = 0; i < 9; i++) {
             NMSEntities frame = wsplayer.getItemFrames()[i];

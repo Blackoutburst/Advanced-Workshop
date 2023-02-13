@@ -1,14 +1,7 @@
 package com.blackoutburst.workshop.commands;
 
-import com.blackout.npcapi.core.NPC;
-import com.blackout.npcapi.utils.NPCManager;
-import com.blackoutburst.workshop.Main;
-import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.nms.NMSEntities;
-import com.blackoutburst.workshop.nms.NMSEntityDestroy;
-import com.blackoutburst.workshop.utils.MapUtils;
-import org.bukkit.GameMode;
+import com.blackoutburst.workshop.utils.GameUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,31 +15,7 @@ public class L implements CommandExecutor {
             WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
             if (wsplayer == null || !wsplayer.isInGame()) return true;
 
-            wsplayer.setInGame(false);
-
-            wsplayer.setCurrentCraft(null);
-            wsplayer.getBoard().set(wsplayer.getPlayer(), 11, "Craft: §enone");
-
-            MapUtils.restoreArea(wsplayer);
-
-            PlayArea area = wsplayer.getPlayArea();
-            if (area != null)
-                area.setBusy(false);
-
-            wsplayer.getPlayer().sendMessage("Game stopped");
-            wsplayer.getPlayer().setGameMode(GameMode.ADVENTURE);
-
-            for (NPC npc : wsplayer.getNpcs()) {
-                NPCManager.deleteNPC(wsplayer.getPlayer(), npc);
-            }
-            wsplayer.getNpcs().clear();
-
-            for (NMSEntities frames : wsplayer.getItemFrames()) {
-                NMSEntityDestroy.send(wsplayer.getPlayer(), frames.getID());
-            }
-            wsplayer.getPlayer().teleport(Main.spawn);
-            wsplayer.getBoard().set(wsplayer.getPlayer(), 13, "Map: §enone");
-
+            GameUtils.endGame(wsplayer);
         }
         return true;
     }
