@@ -205,25 +205,31 @@ public class GameUtils {
         int y = Integer.parseInt(data[3]) + area.getAnchor().getBlockY();
         int z = Integer.parseInt(data[4]) + area.getAnchor().getBlockZ();
         NMSEnumDirection.Direction direction = NMSEnumDirection.Direction.NORTH;
+        int logicalDirection = 0;
+
         switch (BlockFace.valueOf(data[5])) {
             case NORTH:
                 direction = NMSEnumDirection.Direction.NORTH;
+                logicalDirection = 2;
                 break;
             case SOUTH:
                 direction = NMSEnumDirection.Direction.SOUTH;
+                logicalDirection = 0;
                 break;
             case EAST:
                 direction = NMSEnumDirection.Direction.EAST;
+                logicalDirection = 3;
                 break;
             case WEST:
                 direction = NMSEnumDirection.Direction.WEST;
+                logicalDirection = 1;
                 break;
         }
 
         NMSBlockPosition position = new NMSBlockPosition(x, y, z);
         NMSEnumDirection facingDirection = new NMSEnumDirection(direction);
         NMSEntities itemFrame = new NMSEntities(wsPlayer.getPlayer().getWorld(), NMSEntities.EntityType.ITEM_FRAME, position.position, facingDirection.direction);
-        NMSSpawnEntity.send(wsPlayer.getPlayer(), itemFrame, 2);
+        NMSSpawnEntity.send(wsPlayer.getPlayer(), itemFrame, logicalDirection);
         NMSEntityMetadata.send(wsPlayer.getPlayer(), itemFrame);
         wsPlayer.getItemFrames()[id] = itemFrame;
     }
