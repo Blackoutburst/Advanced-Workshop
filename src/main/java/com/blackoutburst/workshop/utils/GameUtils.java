@@ -247,6 +247,7 @@ public class GameUtils {
         Random rng = new Random();
 
         wsplayer.setCurrentCraft(wsplayer.getCrafts().get(rng.nextInt(wsplayer.getCrafts().size())));
+        wsplayer.getBoard().set(wsplayer.getPlayer(), 11, "Craft: §e" + wsplayer.getCurrentCraft().getName());
         wsplayer.getPlayer().sendMessage("You must craft: " + wsplayer.getCurrentCraft().getName());
         player.getInventory().clear();
         for (int i = 0; i < 9; i++) {

@@ -3,6 +3,7 @@ package com.blackoutburst.workshop.core;
 import com.blackout.npcapi.core.NPC;
 import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
+import com.blackoutburst.workshop.nms.NMSBoard;
 import com.blackoutburst.workshop.nms.NMSEntities;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -37,8 +38,19 @@ public class WSPlayer {
     protected boolean inGame = false;
     protected Craft currentCraft = null;
 
+    protected NMSBoard board;
+
     public WSPlayer(Player player) {
         this.player = player;
+        this.board = new NMSBoard(player, "§6Workshop");
+        board.set(player,15, "§e§m--------------------");
+        board.set(player, 14, " ");
+        board.set(player, 13, "Map: §enone");
+        board.set(player, 12, "  ");
+        board.set(player, 11, "Craft: §enone");
+        board.set(player, 10, "   ");
+        board.set(player,9, "§e§m-------------------- ");
+
     }
 
     public static WSPlayer getFromPlayer(Player p) {
@@ -134,5 +146,9 @@ public class WSPlayer {
 
     public void setInventoryType(String inventoryType) {
         this.inventoryType = inventoryType;
+    }
+
+    public NMSBoard getBoard() {
+        return board;
     }
 }
