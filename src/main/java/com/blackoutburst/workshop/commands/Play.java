@@ -40,6 +40,7 @@ public class Play implements CommandExecutor {
                 if (args.length > 0 && !args[0].equals(area.getType())) continue;
                 area.setBusy(true);
                 wsplayer.setPlayArea(area);
+                wsplayer.setCurrentCraftIndex(0);
                 GameUtils.loadCraft(wsplayer, area.getType());
                 GameUtils.loadMaterials(wsplayer, area.getType());
                 GameUtils.spawnEntities(wsplayer, area.getType());
@@ -47,7 +48,6 @@ public class Play implements CommandExecutor {
                 wsplayer.setInGame(true);
                 wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
                 wsplayer.getBoard().set(wsplayer.getPlayer(), 13, "Map: §e" + area.getType());
-                wsplayer.setCurrentCraftIndex(0);
 
                 if (args.length > 1)
                     setCraftAmount(wsplayer, args[1]);

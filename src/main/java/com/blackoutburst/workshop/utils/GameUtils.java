@@ -299,8 +299,10 @@ public class GameUtils {
         player.getInventory().clear();
 
         NMSEntities outputFrame = wsplayer.getItemFrames()[0];
-        ItemStack outputItem = wsplayer.getCurrentCraft().getItemRequired();
-        NMSItemFrame.setItem(player, outputFrame, outputItem);
+        if (outputFrame != null) {
+            ItemStack outputItem = wsplayer.getCurrentCraft().getItemRequired();
+            NMSItemFrame.setItem(player, outputFrame, outputItem);
+        }
 
         for (int i = 0; i < 9; i++) {
             NMSEntities frame = wsplayer.getItemFrames()[i + 1];
