@@ -338,12 +338,8 @@ public class GameUtils {
                     Byte[] dataArray = allItemData.toArray(new Byte[]{});
 
                     Location offset = area.getAnchor();
-
-                    int x = relX + (int) offset.getX();
-                    int y = relY + (int) offset.getY();
-                    int z = relZ + (int) offset.getZ();
-
-                    Location location = new Location(wsPlayer.getPlayer().getWorld(), x, y, z);
+                    Location relLoc = new Location(area.getAnchor().getWorld(), relX, relY, relZ);
+                    Location location = relLoc.add(offset);
 
                     wsPlayer.getMaterialBlocks().add(new MaterialBlock(itemArray, dataArray, location, location.getWorld(), tools, 0));
                 }
