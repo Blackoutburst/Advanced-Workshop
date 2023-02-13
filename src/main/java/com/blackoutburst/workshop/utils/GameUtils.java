@@ -54,8 +54,9 @@ public class GameUtils {
         }
         wsplayer.getNpcs().clear();
 
-        for (NMSEntities frames : wsplayer.getItemFrames()) {
-            NMSEntityDestroy.send(wsplayer.getPlayer(), frames.getID());
+        for (NMSEntities frame : wsplayer.getItemFrames()) {
+            if (frame == null) continue;
+            NMSEntityDestroy.send(wsplayer.getPlayer(), frame.getID());
         }
         wsplayer.getPlayer().teleport(Main.spawn);
         wsplayer.getBoard().set(wsplayer.getPlayer(), 13, "Map: §enone");
