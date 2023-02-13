@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
+
 public class BlockDamage {
 
     /**
@@ -23,6 +25,7 @@ public class BlockDamage {
         if (wsplayer.getPlayArea() == null) return;
 
         MaterialBlock materialBlock = GameUtils.getMaterialBlock(wsplayer, block.getLocation());
+
         if (materialBlock == null) return;
 
         if (!(GameUtils.canBreak(materialBlock,player))) {
