@@ -306,7 +306,7 @@ public class GameUtils {
                     }
 
                     List<Material> allItems = new ArrayList<>();
-                    List<MaterialData> allItemData = new ArrayList<>();
+                    List<Byte> allItemData = new ArrayList<Byte>();
 
                     for (String item : items) {
                         String id = item.split(" ")[0];
@@ -318,7 +318,7 @@ public class GameUtils {
                         nbtObject.setInteger("Count",1);
                         ItemStack convertedItem = NBTItem.convertNBTtoItem((NBTCompound) nbtObject);
                         allItems.add(convertedItem.getType());
-                        allItemData.add(convertedItem.getData());
+                        allItemData.add(convertedItem.getData().getData());
                     }
                     if ((neededItems.length != 0) && !(neededItems[0].equals(""))) {
                         for (String item : neededItems) {
@@ -331,11 +331,11 @@ public class GameUtils {
                             nbtObject.setInteger("Count", 1);
                             ItemStack convertedItem = NBTItem.convertNBTtoItem((NBTCompound) nbtObject);
                             allItems.add(convertedItem.getType());
-                            allItemData.add(convertedItem.getData());
+                            allItemData.add(convertedItem.getData().getData());
                         }
                     }
                     Material[] itemArray = allItems.toArray(new Material[]{});
-                    MaterialData[] dataArray = allItemData.toArray(new MaterialData[]{});
+                    Byte[] dataArray = allItemData.toArray(new Byte[]{});
 
                     Location offset = area.getAnchor();
 
@@ -459,7 +459,7 @@ public class GameUtils {
                 MaterialBlock materialBlock = GameUtils.getMaterialBlock(wsplayer, newLocation);
 
                 if (materialBlock != null) {
-                    ItemStack item = new ItemStack(materialBlock.getType(), 1, materialBlock.getData().getData());
+                    ItemStack item = new ItemStack(materialBlock.getType(), 1, materialBlock.getData());
                     player.getInventory().addItem(item);
                 }
                 supportIterator (newLocation, wsplayer, directions[i]);

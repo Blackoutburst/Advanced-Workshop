@@ -20,15 +20,18 @@ import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.sql.Array;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.List;
 
 import static net.minecraft.server.v1_8_R3.CommandTitle.a;
 
@@ -188,8 +191,26 @@ public class MapUtils {
     }
 
     public static void restoreArea(WSPlayer wsplayer) {
-        setupNeededBlocks(wsplayer);
+        if (wsplayer.getCurrentCraft() == null) { return; }
 
+        wsplayer.getNeededBlocks().clear();
+        wsplayer.getDecoBlocks().clear();
+        getNeededBlocks(wsplayer);
+
+        updateDecoBlocks(wsplayer);
+
+        Bukkit.broadcastMessage("restoring area");
+
+        List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
+
+        for (DecoBlock i : decoBlocks) {
+            Location location = i.getLocation();
+            Block b = location.getBlock();
+
+            b.setType(i.getType());
+            b.setData(i.getData());
+
+        }
     }
 
     public static void pasteMap(WSPlayer wsplayer, String name) {
@@ -343,152 +364,170 @@ public class MapUtils {
         return type + ";" + relCoords + ";" + ItemString + ";" + NeededItemString + ";" + tools + "\n";
     }
 
-    public static NeededBlock[] getNeededBlocks(WSPlayer wsplayer) {
-        try {
-            List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + wsplayer.getPlayArea().getType() + ".logic"));
-            Player player = wsplayer.getPlayer();
-            World world = player.getWorld();
-            Location anchor = wsplayer.getPlayArea().getAnchor();
+    public static void getNeededBlocks(WSPlayer wsplayer) {
+        List<ItemStack> materials = wsplayer.getCurrentCraft().getMaterials();
+        String mapName = wsplayer.getPlayArea().getType();
+        Location anchor = wsplayer.getPlayArea().getAnchor();
+        World world = wsplayer.getPlayer().getWorld();
+        List<ItemStack> materialsCopy = new ArrayList<>();
+        for (ItemStack material : materials) {
+            materialsCopy.add(material.clone());
+        }
 
-            Craft craft = wsplayer.getCurrentCraft();
-            List<ItemStack> materials = new ArrayList<>();
-            if (craft != null) {
-                materials = craft.getMaterials();
-            }
-            List<NeededBlock> NeededBlockList = new ArrayList<>();
-            List<Object[]> mats = new ArrayList<>();
+        Bukkit.broadcastMessage("materials: " + materials);
+        
+        try {
+            List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + mapName + ".logic"));
+            Collections.shuffle(lines);
 
             for (String line : lines) {
-                if (line.startsWith("P")) {
-                    String[] data = line.split(";");
-                    List<String> itemList = new ArrayList<>();
-                    Collections.addAll(itemList, data[2].split(","));
-                    Collections.addAll(itemList, data[3].split(","));
+                if (!(line.startsWith("P"))) { continue; }
 
-                    String[] items = itemList.toArray(new String[0]);
+                String[] data = line.split(";",-1);
+                List<String> items = Arrays.asList((data[2] + "," + data[3]).split(","));
 
-                    for (int i = 0; i < items.length; i++) {
-                        String item = items[i];
-                        ReadWriteNBT nbtObject = NBT.createNBTObject();
-                        nbtObject.setString("id", item.split(" ")[0]);
-                        nbtObject.setInteger("Damage", Integer.parseInt(item.split(" ")[1]));
-                        nbtObject.setInteger("Count", 1);
-                        ItemStack mat = NBTItem.convertNBTtoItem((NBTCompound) nbtObject);
-                        int x = Integer.parseInt(data[1].split(",")[0]) + anchor.getBlockX();
-                        int y = Integer.parseInt(data[1].split(",")[1]) + anchor.getBlockY();
-                        int z = Integer.parseInt(data[1].split(",")[2]) + anchor.getBlockZ();
+                int relX = Integer.parseInt(data[1].split(",")[0]);
+                int relY = Integer.parseInt(data[1].split(",")[1]);
+                int relZ = Integer.parseInt(data[1].split(",")[2]);
 
-                        Object[] matList = {mat, x, y, z, i};
+                Location relLoc = new Location(world,relX,relY,relZ);
+                Location location = relLoc.add(anchor);
 
-                        mats.add(matList);
+                boolean match = false;
+                for (String item : items) {
+                    String id = item.split(" ")[0];
+                    int itemData = Integer.parseInt(item.split(" ")[1]);
+
+                    ReadWriteNBT nbtObject = NBT.createNBTObject();
+                    nbtObject.setString("id",id);
+                    nbtObject.setInteger("Damage",itemData);
+                    nbtObject.setInteger("Count",1);
+                    ItemStack checkItem = NBTItem.convertNBTtoItem((NBTCompound) nbtObject);
+                    for (ItemStack material : materialsCopy) {
+                        if (material.getAmount() == 0 || material.getType() == Material.AIR) { continue; }
+
+                        byte checkData = checkItem.getData().getData();
+                        byte materialData = material.getData().getData();
+                        Material checkType = checkItem.getType();
+                        Material materialType = material.getType();
+
+                        Bukkit.broadcastMessage("checked type is: " + checkType);
+                        Bukkit.broadcastMessage("checking type is: " + materialType);
+                        Bukkit.broadcastMessage("checked type is: " + checkData);
+                        Bukkit.broadcastMessage("checking type is: " + materialData);
+                        Bukkit.broadcastMessage("---------------------");
+
+                        if (checkType != materialType || checkData != materialData) { continue; }
+
+                        match = true;
+                        int index = items.indexOf(item);
+
+                        Bukkit.broadcastMessage("match");
+                        Bukkit.broadcastMessage("---------------------");
+                        Bukkit.broadcastMessage("location: " + location);
+                        Bukkit.broadcastMessage("items: " + items);
+                        Bukkit.broadcastMessage("index: " + index);
+                        Bukkit.broadcastMessage("item: " + item);
+                        Bukkit.broadcastMessage("material: " + material);
+                        Bukkit.broadcastMessage("---------------------");
+
+                        material.setAmount(material.getAmount() - 1);
+                        wsplayer.getNeededBlocks().add(new NeededBlock(location, index, world));
+                        GameUtils.getMaterialBlock(wsplayer, location).setIndex(index);
+                        break;
                     }
-
-                    for (ItemStack item : materials) {
-                        if (item.getAmount() > 0 && item.getType() != Material.AIR) {
-                            int targetX;
-                            int targetY;
-                            int targetZ;
-                            int targetIndex;
-                            for (Object[] i : mats) {
-                                ItemStack mat = (ItemStack) i[0];
-
-                                if (mat.getType() == item.getType()) {
-                                    item.setAmount(item.getAmount() - 1);
-
-                                    targetX = (int) i[1];
-                                    targetY = (int) i[2];
-                                    targetZ = (int) i[3];
-                                    targetIndex = (int) i[4];
-                                    mats.clear();
-
-                                    Location location = new Location(world, targetX, targetY, targetZ);
-
-                                    NeededBlockList.add(new NeededBlock(location,targetIndex));
-
-                                    break;
-                                }
-
-                            }
-                        }
-                    }
+                    if (match) { break; }
                 }
             }
-            for (NeededBlock test : NeededBlockList) {
-                Bukkit.broadcastMessage(test.getLocation().toString());
-                Bukkit.broadcastMessage(Arrays.toString(mats.get(test.getIndex())));
-            }
-
-            return NeededBlockList.toArray(new NeededBlock[0]);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new NeededBlock[0];
     }
-    public static void setupNeededBlocks(WSPlayer wsplayer) {
-        if (wsplayer.getPlayArea() == null) return;
 
-        World world = wsplayer.getPlayer().getWorld();
+    public static DecoBlock getDecoBlock(WSPlayer wsPlayer, Location location) {
+        for (DecoBlock block : wsPlayer.getDecoBlocks()) {
+            if (location.getWorld().getName().equals(block.getWorld().getName()) &&
+                    location.getBlockX() == block.getLocation().getBlockX() &&
+                    location.getBlockY() == block.getLocation().getBlockY() &&
+                    location.getBlockZ() == block.getLocation().getBlockZ()) {
+                return block;
+            }
+        }
+        return null;
+    }
+
+    public static NeededBlock getNeededBlock(WSPlayer wsPlayer, Location location) {
+        for (NeededBlock block : wsPlayer.getNeededBlocks()) {
+            if (location.getWorld().getName().equals(block.getWorld().getName()) &&
+                    location.getBlockX() == block.getLocation().getBlockX() &&
+                    location.getBlockY() == block.getLocation().getBlockY() &&
+                    location.getBlockZ() == block.getLocation().getBlockZ()) {
+                return block;
+            }
+        }
+        return null;
+    }
+
+    public static void updateDecoBlocks(WSPlayer wsplayer) {
+
+        String mapName = wsplayer.getPlayArea().getType();
         Location anchor = wsplayer.getPlayArea().getAnchor();
+        World world = wsplayer.getPlayer().getWorld();
 
         try {
-            List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + wsplayer.getPlayArea().getType() + ".deco"));
-
-            NeededBlock[] neededBlocks = getNeededBlocks(wsplayer);
-
-            List<Location> locations = new ArrayList<>();
-            List<Integer> indexes = new ArrayList<>();
-
-            for (NeededBlock neededBlock : neededBlocks) {
-                locations.add(neededBlock.getLocation());
-                indexes.add(neededBlock.getIndex());
-            }
+            List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + mapName + ".deco"));
 
             for (String line : lines) {
-                String[] data = line.split(";",-1);
+                String[] data = line.split(";", -1);
+                String[] items = (data[1] + "," + data[2]).split(",");
 
-                String[] RBlockTypes = data[1].split(",");
-                String[] PBlockTypes = data[2].split(",");
-                String[] blockType;
-
-                List<String> blockTypeList = new ArrayList<>();
-
-                Collections.addAll(blockTypeList, RBlockTypes);
-                Collections.addAll(blockTypeList, PBlockTypes);
-
-                int xOffset = Integer.parseInt(data[0].split(",")[0]);
-                int yOffset = Integer.parseInt(data[0].split(",")[1]);
-                int zOffset = Integer.parseInt(data[0].split(",")[2]);
-
-                Location currentLoc = new Location(world,anchor.getBlockX() + xOffset,anchor.getBlockY() + yOffset,anchor.getBlockZ() + zOffset);
-                Block b = world.getBlockAt(currentLoc);
-
-                MaterialBlock material = GameUtils.getMaterialBlock(wsplayer, currentLoc);
-
-                if ((blockTypeList.size() > 1) && (locations.contains(currentLoc))) {
-                    int locIndex = locations.indexOf(currentLoc);
-                    int index = indexes.get(locIndex);
-
-                    material.setIndex(index);
-                    blockType = blockTypeList.get(index).split(" ");
-                    Material type = Material.getMaterial(blockType[0]);
-                    byte dataType = Byte.parseByte(blockType[1]);
-
-                    b.setType(type);
-                    b.setData(dataType);
+                List<Material> typeList = new ArrayList<>();
+                List<Byte> dataList = new ArrayList<>();
+                for (String item : items) {
+                    Material itemMat = Material.getMaterial(item.split(" ")[0]);
+                    Byte itemData = Byte.parseByte(item.split(" ")[1]);
+                    typeList.add(itemMat);
+                    dataList.add(itemData);
                 }
-                else {
-                    blockType = blockTypeList.get(0).split(" ");
-                    Material type = Material.getMaterial(blockType[0]);
-                    byte dataType = Byte.parseByte(blockType[1]);
-                    if (material != null) {
-                        material.setIndex(0);
-                    }
-                    b.setType(type);
-                    b.setData(dataType);
+                Material[] materials = typeList.toArray(new Material[0]);
+                Byte[] matsData = dataList.toArray(new Byte[0]);
+
+                int relX = Integer.parseInt(data[0].split(",")[0]);
+                int relY = Integer.parseInt(data[0].split(",")[1]);
+                int relZ = Integer.parseInt(data[0].split(",")[2]);
+
+                Location relLoc = new Location(world,relX,relY,relZ);
+                Location location = relLoc.add(anchor);
+
+                wsplayer.getDecoBlocks().add(new DecoBlock(materials, matsData, location, world, 0));
+
+                Bukkit.broadcastMessage("deco blocks: " + Arrays.toString(materials) + Arrays.toString(matsData));
+
+                Bukkit.broadcastMessage(location.toString());
+
+                Bukkit.broadcastMessage("------------------");
+
+                if (getNeededBlock(wsplayer, location) != null) {
+                    int index = getNeededBlock(wsplayer, location).getIndex();
+                    getDecoBlock(wsplayer, location).setIndex(index);
+                    GameUtils.getMaterialBlock(wsplayer,location).setIndex(index);
+
+
+                    Bukkit.broadcastMessage("index set to: " + index);
+                    Bukkit.broadcastMessage("------------------");
+                    continue;
+                }
+                if (materials.length > 1) {
+                    DecoBlock decoblock = getDecoBlock(wsplayer, location);
+                    Random rng = new Random();
+                    int randomBlockIndex = rng.nextInt(items.length);
+
+                    decoblock.setIndex(randomBlockIndex);
+                    MaterialBlock materialBlock = GameUtils.getMaterialBlock(wsplayer, location);
+                    materialBlock.setIndex(randomBlockIndex);
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
