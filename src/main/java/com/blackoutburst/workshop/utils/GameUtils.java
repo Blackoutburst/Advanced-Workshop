@@ -23,13 +23,10 @@ import org.bukkit.block.Furnace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
-import com.google.gson.Gson;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Array;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -247,6 +244,7 @@ public class GameUtils {
         Random rng = new Random();
 
         wsplayer.setCurrentCraft(wsplayer.getCrafts().get(rng.nextInt(wsplayer.getCrafts().size())));
+        wsplayer.getBoard().set(wsplayer.getPlayer(), 11, "Craft: §e" + wsplayer.getCurrentCraft().getName());
         wsplayer.getPlayer().sendMessage("You must craft: " + wsplayer.getCurrentCraft().getName());
         player.getInventory().clear();
         for (int i = 0; i < 9; i++) {

@@ -31,6 +31,7 @@ public class Play implements CommandExecutor {
                 GameUtils.startRound(wsplayer);
                 wsplayer.setInGame(true);
                 wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
+                wsplayer.getBoard().set(wsplayer.getPlayer(), 13, "Map: §e" + area.getType());
                 return true;
             }
             wsplayer.getPlayer().sendMessage("No game available");

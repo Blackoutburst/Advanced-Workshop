@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.blackoutburst'
-version '1.9.3-SNAPSHOT'
+version '1.10.0-SNAPSHOT'
 
 compileJava {
     sourceCompatibility = '1.8'
@@ -52,5 +52,4 @@ dependencies {
     implementation files('lib/craftbukkit-1.8.8-R0.1-SNAPSHOT.jar')
     implementation files('lib/NPC-API.jar')
     implementation files('lib/item-nbt-api-plugin-2.11.1.jar')
-    implementation 'com.google.code.gson:gson:2.9.0'
 }

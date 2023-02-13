@@ -3,7 +3,6 @@ package com.blackoutburst.workshop.core;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.material.MaterialData;
 
 public class DecoBlock {
 

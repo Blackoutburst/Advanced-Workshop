@@ -25,6 +25,7 @@ public class L implements CommandExecutor {
             wsplayer.setInGame(false);
 
             wsplayer.setCurrentCraft(null);
+            wsplayer.getBoard().set(wsplayer.getPlayer(), 11, "Craft: §enone");
 
             MapUtils.restoreArea(wsplayer);
 
@@ -44,6 +45,7 @@ public class L implements CommandExecutor {
                 NMSEntityDestroy.send(wsplayer.getPlayer(), frames.getID());
             }
             wsplayer.getPlayer().teleport(Main.spawn);
+            wsplayer.getBoard().set(wsplayer.getPlayer(), 13, "Map: §enone");
 
         }
         return true;

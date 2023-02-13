@@ -8,5 +8,4 @@ public class PlayerInteract {
     public static void execute(PlayerInteractEvent event) {
         ScanWand.rightClick(event);
     }
-
 }

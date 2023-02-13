@@ -1,14 +1,13 @@
 package com.blackoutburst.workshop;
 
-import com.blackoutburst.workshop.core.MaterialBlock;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Craft {
 
     protected String name;
+
     protected ItemStack itemRequired;
     protected ItemStack[] craftingTable;
 
@@ -20,7 +19,6 @@ public class Craft {
         this.craftingTable = craftingTable;
         this.materials = materials;
     }
-
 
     public String getName() {
         return name;

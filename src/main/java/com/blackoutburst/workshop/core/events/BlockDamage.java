@@ -3,23 +3,13 @@ package com.blackoutburst.workshop.core.events;
 import com.blackoutburst.workshop.core.MaterialBlock;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.GameUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-
 public class BlockDamage {
 
-    /**
-     *
-     * Must change
-     * @param block
-     * @param wsplayer
-     */
     private static void breakBlock(Block block, WSPlayer wsplayer) {
         Player player = wsplayer.getPlayer();
         if (wsplayer.getPlayArea() == null) return;
