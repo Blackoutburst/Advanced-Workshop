@@ -3,6 +3,7 @@ package com.blackoutburst.workshop.core.events;
 import com.blackoutburst.workshop.core.MaterialBlock;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.GameUtils;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
@@ -26,10 +27,12 @@ public class BlockDamage {
 
         GameUtils.supportIterator(block.getLocation(), wsplayer, '0');
 
-        block.breakNaturally();
+        block.setType(Material.AIR);
+        block.setData((byte) 0);
     }
 
     public static void execute(BlockDamageEvent event) {
+        if (event.getBlock().getType().equals(Material.AIR)) return;
         WSPlayer wsplayer = WSPlayer.getFromPlayer(event.getPlayer());
 
         if (wsplayer != null && wsplayer.isInGame()) {
