@@ -15,6 +15,9 @@ import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTContainer;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
+import net.minecraft.server.v1_8_R3.PlayerConnection;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -22,10 +25,13 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Furnace;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -281,23 +287,12 @@ public class GameUtils {
     }
 
     public static void startRound(WSPlayer wsplayer) {
-        if (!wsplayer.getGameOptions().isUnlimitedCrafts() && wsplayer.getCurrentCraftIndex() >= wsplayer.getGameOptions().getCraftLimit()) {
-            endGame(wsplayer);
-            return;
-        }
+
+        wsplayer.setWaiting(false);
 
         Player player = wsplayer.getPlayer();
-        Random rng = new Random();
-
-        wsplayer.setCurrentCraftIndex(wsplayer.getCurrentCraftIndex() + 1);
-
-        wsplayer.setCurrentCraft(wsplayer.getCrafts().get(rng.nextInt(wsplayer.getCrafts().size())));
-        wsplayer.getBoard().set(player, 11, "Craft: §e" + wsplayer.getCurrentCraft().getName());
-        wsplayer.getBoard().set(player, 9, "Round: §e" + StringUtils.getCurrentRound(wsplayer));
-        wsplayer.getBoard().set(player, 8, "    ");
 
         player.sendMessage("§eYou need to craft a §r" + wsplayer.getCurrentCraft().getName());
-        player.getInventory().clear();
 
         NMSEntities outputFrame = wsplayer.getItemFrames()[0];
         if (outputFrame != null) {
@@ -365,7 +360,7 @@ public class GameUtils {
                         }
                     }
 
-                    allTools = MiscUtils.transpose2dStringList(allTools);
+                    allTools = MiscUtils.transpose2dList(allTools);
 
                     String[][] allToolsArray = new String[allTools.size()][];
 
@@ -536,9 +531,8 @@ public class GameUtils {
     }
 
     public static boolean canBreak(MaterialBlock materialBlock, Player player) {
-        if (materialBlock.getTools()[0].equals("")) {
-            return true;
-        }
+        if (WSPlayer.getFromPlayer(player).isWaiting()) { return false; }
+        if (materialBlock.getTools()[0].isEmpty()) { return true; }
         for (String tool : materialBlock.getTools()) {
             if (player.getItemInHand().getType() == Material.AIR) {
                 return false;
@@ -549,6 +543,28 @@ public class GameUtils {
                 return true;
             }
         }
+        return false;
+    }
+
+    public static boolean prepareNextRound(WSPlayer wsplayer) {
+        if (!wsplayer.getGameOptions().isUnlimitedCrafts() && wsplayer.getCurrentCraftIndex() >= wsplayer.getGameOptions().getCraftLimit()) {
+            endGame(wsplayer);
+            return true;
+        }
+
+        wsplayer.setWaiting(true);
+
+        Player player = wsplayer.getPlayer();
+
+        Random rng = new Random();
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(new ItemStack[]{});
+        wsplayer.setCurrentCraftIndex(wsplayer.getCurrentCraftIndex() + 1);
+
+        wsplayer.setCurrentCraft(wsplayer.getCrafts().get(rng.nextInt(wsplayer.getCrafts().size())));
+        wsplayer.getBoard().set(player, 11, "Craft: §e" + wsplayer.getCurrentCraft().getName());
+        wsplayer.getBoard().set(player, 9, "Round: §e" + StringUtils.getCurrentRound(wsplayer));
+        wsplayer.getBoard().set(player, 8, "    ");
         return false;
     }
 }

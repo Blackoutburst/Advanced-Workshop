@@ -3,12 +3,15 @@ package com.blackoutburst.workshop.commands;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
+import com.blackoutburst.workshop.utils.CountdownDisplay;
 import com.blackoutburst.workshop.utils.GameUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Play implements CommandExecutor {
 
@@ -44,14 +47,27 @@ public class Play implements CommandExecutor {
                 GameUtils.loadCraft(wsplayer, area.getType());
                 GameUtils.loadMaterials(wsplayer, area.getType());
                 GameUtils.spawnEntities(wsplayer, area.getType());
-                GameUtils.startRound(wsplayer);
                 wsplayer.setInGame(true);
                 wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
                 wsplayer.getBoard().set(wsplayer.getPlayer(), 13, "Map: §e" + area.getType());
-
                 if (args.length > 1)
                     setCraftAmount(wsplayer, args[1]);
 
+                int start_delay = 5;
+
+                BukkitRunnable displayCountdown = new CountdownDisplay(start_delay, wsplayer.getPlayer());
+
+                displayCountdown.runTaskTimer(Main.getPlugin(Main.class),0,20);
+
+                boolean finished = GameUtils.prepareNextRound(wsplayer);
+
+                if (finished) { return true; }
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        GameUtils.startRound(wsplayer);
+                    }
+                }.runTaskLater(Main.getPlugin(Main.class), start_delay * 20);
                 return true;
             }
             wsplayer.getPlayer().sendMessage("No game available");

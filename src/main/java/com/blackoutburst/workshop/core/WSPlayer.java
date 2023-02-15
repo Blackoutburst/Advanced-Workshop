@@ -13,6 +13,7 @@ import java.util.List;
 
 public class WSPlayer {
 
+    protected boolean waiting;
     protected boolean nextRound;
 
     protected Player player;
@@ -169,4 +170,8 @@ public class WSPlayer {
     public void setCurrentCraftIndex(int currentCraftIndex) {
         this.currentCraftIndex = currentCraftIndex;
     }
+
+    public boolean isWaiting() {return waiting;}
+
+    public void setWaiting(boolean waiting) { this.waiting = waiting; }
 }
