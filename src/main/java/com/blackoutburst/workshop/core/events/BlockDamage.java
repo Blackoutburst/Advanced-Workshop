@@ -2,6 +2,7 @@ package com.blackoutburst.workshop.core.events;
 
 import com.blackoutburst.workshop.core.MaterialBlock;
 import com.blackoutburst.workshop.core.WSPlayer;
+import com.blackoutburst.workshop.utils.EffectsUtils;
 import com.blackoutburst.workshop.utils.GameUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,6 +28,7 @@ public class BlockDamage {
 
         GameUtils.supportIterator(block.getLocation(), wsplayer, '0');
 
+        EffectsUtils.breakBlock(block);
         block.setType(Material.AIR);
         block.setData((byte) 0);
     }

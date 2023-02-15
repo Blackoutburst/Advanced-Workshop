@@ -296,7 +296,7 @@ public class GameUtils {
         wsplayer.getBoard().set(player, 9, "Round: §e" + StringUtils.getCurrentRound(wsplayer));
         wsplayer.getBoard().set(player, 8, "    ");
 
-        player.sendMessage("You must craft: " + wsplayer.getCurrentCraft().getName());
+        player.sendMessage("§eYou need to craft a §r" + wsplayer.getCurrentCraft().getName());
         player.getInventory().clear();
 
         NMSEntities outputFrame = wsplayer.getItemFrames()[0];
