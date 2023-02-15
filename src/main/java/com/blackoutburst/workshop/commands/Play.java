@@ -5,7 +5,6 @@ import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.CountdownDisplay;
 import com.blackoutburst.workshop.utils.GameUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,7 +35,7 @@ public class Play implements CommandExecutor {
             WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
             if (wsplayer == null || wsplayer.isInGame()) return true;
 
-            wsplayer.getPlayer().sendMessage("Game running");
+            wsplayer.getPlayer().sendMessage("§eThe game is about to start!");
 
             for (PlayArea area : Main.playAreas) {
                 if (area.isBusy()) continue;
