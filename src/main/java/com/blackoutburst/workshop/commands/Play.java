@@ -35,7 +35,7 @@ public class Play implements CommandExecutor {
             WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
             if (wsplayer == null || wsplayer.isInGame()) return true;
 
-            wsplayer.getPlayer().sendMessage("Game running");
+            wsplayer.getPlayer().sendMessage("§eThe game is about to start!");
 
             for (PlayArea area : Main.playAreas) {
                 if (area.isBusy()) continue;

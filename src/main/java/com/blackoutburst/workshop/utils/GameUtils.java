@@ -46,7 +46,7 @@ public class GameUtils {
         if (area != null)
             area.setBusy(false);
 
-        wsplayer.getPlayer().sendMessage("Game stopped");
+        wsplayer.getPlayer().sendMessage("§eThe game ended!");
         wsplayer.getPlayer().setGameMode(GameMode.ADVENTURE);
 
         for (NPC npc : wsplayer.getNpcs()) {
@@ -65,7 +65,11 @@ public class GameUtils {
         wsplayer.getBoard().removeLine(wsplayer.getPlayer(), 8);
 
         wsplayer.getPlayer().getInventory().clear();
-        wsplayer.getPlayer().getInventory().setArmorContents(new ItemStack[]{});
+
+        wsplayer.getPlayer().getInventory().setHelmet(new ItemStack(Material.AIR));
+        wsplayer.getPlayer().getInventory().setChestplate(new ItemStack(Material.AIR));
+        wsplayer.getPlayer().getInventory().setLeggings(new ItemStack(Material.AIR));
+        wsplayer.getPlayer().getInventory().setBoots(new ItemStack(Material.AIR));
     }
 
     private static void fastCook(Furnace furnace, ItemStack stack, Material output, int data) {
