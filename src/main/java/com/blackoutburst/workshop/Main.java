@@ -52,7 +52,19 @@ public class Main extends JavaPlugin {
                     if (wsPlayer == null) break;
                     if (wsPlayer.isNextRound()) {
                         wsPlayer.setNextRound(false);
-                        GameUtils.startRound(wsPlayer);
+
+                        int round_delay = 1;
+
+                        boolean finished = GameUtils.prepareNextRound(wsPlayer);
+
+                        if (finished) { continue; }
+
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                GameUtils.startRound(wsPlayer);
+                            }
+                        }.runTaskLater(Main.getPlugin(Main.class), round_delay * 20);
                     }
 
                 }
