@@ -3,12 +3,11 @@ package com.blackoutburst.workshop.core;
 import com.blackout.npcapi.core.APlayer;
 import com.blackout.npcapi.core.NPC;
 import com.blackout.npcapi.core.NPCPacket;
-import org.bukkit.Bukkit;
+import com.blackoutburst.workshop.utils.EffectsUtils;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Objects;
 
 public class NPCInteraction implements NPCPacket {
 
@@ -38,6 +37,7 @@ public class NPCInteraction implements NPCPacket {
             if (player.getInventory().containsAtLeast(wsPlayer.getCurrentCraft().getItemRequired(), 1)) {
                 wsPlayer.setNextRound(true);
                 player.sendMessage("§ePerfect! Just what I needed.");
+                EffectsUtils.playLevelUPSound(player);
                 continue;
             }
             player.sendMessage("§cThat's not quite right. I need " + wsPlayer.getCurrentCraft().getName());
