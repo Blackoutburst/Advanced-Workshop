@@ -9,15 +9,11 @@ import com.blackoutburst.workshop.core.MaterialBlock;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.nms.*;
-import com.google.common.collect.Lists;
 import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTContainer;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
-import net.minecraft.server.v1_8_R3.PlayerConnection;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -25,13 +21,10 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Furnace;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -72,6 +65,7 @@ public class GameUtils {
         wsplayer.getBoard().removeLine(wsplayer.getPlayer(), 8);
 
         wsplayer.getPlayer().getInventory().clear();
+        wsplayer.getPlayer().getInventory().setArmorContents(new ItemStack[]{});
     }
 
     private static void fastCook(Furnace furnace, ItemStack stack, Material output, int data) {
@@ -287,10 +281,14 @@ public class GameUtils {
     }
 
     public static void startRound(WSPlayer wsplayer) {
-
         wsplayer.setWaiting(false);
 
         Player player = wsplayer.getPlayer();
+
+        player.getInventory().setHelmet(new ItemStack(Material.CHAINMAIL_HELMET));
+        player.getInventory().setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
+        player.getInventory().setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS));
+        player.getInventory().setBoots(new ItemStack(Material.CHAINMAIL_BOOTS));
 
         player.sendMessage("§eYou need to craft a §r" + wsplayer.getCurrentCraft().getName());
 
@@ -558,7 +556,6 @@ public class GameUtils {
 
         Random rng = new Random();
         player.getInventory().clear();
-        player.getInventory().setArmorContents(new ItemStack[]{});
         wsplayer.setCurrentCraftIndex(wsplayer.getCurrentCraftIndex() + 1);
 
         wsplayer.setCurrentCraft(wsplayer.getCrafts().get(rng.nextInt(wsplayer.getCrafts().size())));
