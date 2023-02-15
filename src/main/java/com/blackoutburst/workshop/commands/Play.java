@@ -52,6 +52,7 @@ public class Play implements CommandExecutor {
                 wsplayer.getBoard().set(wsplayer.getPlayer(), 13, "Map: §e" + area.getType());
                 if (args.length > 1)
                     setCraftAmount(wsplayer, args[1]);
+                GameUtils.fillCraftList(wsplayer);
 
                 int start_delay = 5;
 
@@ -59,9 +60,8 @@ public class Play implements CommandExecutor {
 
                 displayCountdown.runTaskTimer(Main.getPlugin(Main.class),0,20);
 
-                boolean finished = GameUtils.prepareNextRound(wsplayer);
+                GameUtils.prepareNextRound(wsplayer);
 
-                if (finished) { return true; }
                 new BukkitRunnable() {
                     @Override
                     public void run() {
