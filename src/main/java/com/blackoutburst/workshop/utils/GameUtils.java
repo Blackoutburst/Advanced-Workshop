@@ -292,7 +292,7 @@ public class GameUtils {
 
         Player player = wsplayer.getPlayer();
 
-        player.sendMessage("You must craft: " + wsplayer.getCurrentCraft().getName());
+        player.sendMessage("§eYou need to craft a §r" + wsplayer.getCurrentCraft().getName());
 
         NMSEntities outputFrame = wsplayer.getItemFrames()[0];
         if (outputFrame != null) {
