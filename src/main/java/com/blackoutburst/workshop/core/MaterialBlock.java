@@ -14,11 +14,11 @@ public class MaterialBlock {
 
     protected World world;
 
-    protected String[] tools;
+    protected String[][] tools;
 
     protected int index;
 
-    public MaterialBlock(Material[] types, Byte[] data, Location location, World world, String[] tools, int index) {
+    public MaterialBlock(Material[] types, Byte[] data, Location location, World world, String[][] tools, int index) {
         this.types = types;
         this.data = data;
         this.location = location;
@@ -35,13 +35,21 @@ public class MaterialBlock {
         return types;
     }
 
+    public String[][] getAllTools() {
+        return tools;
+    }
+
     public Byte getData() {return data[index];}
 
     public Location getLocation() {return location;}
 
     public World getWorld() {return world;}
 
-    public String[] getTools() {return tools;}
+    public String[] getTools() {
+        if (tools.length == 0) {
+            return new String[]{""};
+        }
+        return tools[index];}
 
     public int getIndex() {return index;}
 
