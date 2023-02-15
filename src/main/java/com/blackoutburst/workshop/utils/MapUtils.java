@@ -332,19 +332,32 @@ public class MapUtils {
             ItemString.append("minecraft:air 0");
         }
 
-        StringBuilder tools = new StringBuilder();
+        StringBuilder allToolString = new StringBuilder();
+
+        List<List<String>> allToolsList =  new ArrayList<>(new ArrayList<>());
+
         for (int i = 1; i < items.length; i++) {
             if (items[i] != null) {
-                NBTCompound ToolNBT = NBTItem.convertItemtoNBT(items[i]);
-                String ToolID = ToolNBT.getString("id");
-                if (i == 1) {
-                    tools.append(ToolID);
-                    continue;
+                ArrayList<ArrayList<Object>> SlotTools = readDropper(items[i]);
+
+                List<String> toolList = new ArrayList<>();
+
+                for (ArrayList<Object> tool : SlotTools) {
+                    toolList.add((String) tool.get(0));
                 }
-                tools.append(",").append(ToolID);
+                allToolsList.add(toolList);
             }
         }
-        return type + ";" + relCoords + ";" + ItemString + ";" + NeededItemString + ";" + tools + "\n";
+        for (List<String> toolList : allToolsList) {
+            StringBuilder toolString = new StringBuilder();
+
+            for (String tool : toolList) {
+                toolString.append(toolList.indexOf(tool) == 0 ? "" : ",").append(tool);
+            }
+            allToolString.append(allToolsList.indexOf(toolList) == 0 ? "" : ";").append(toolString);
+        }
+
+        return type + ";" + relCoords + ";" + ItemString + ";" + NeededItemString + ";" + allToolString + "\n";
     }
 
     public static void getNeededBlocks(WSPlayer wsplayer) {

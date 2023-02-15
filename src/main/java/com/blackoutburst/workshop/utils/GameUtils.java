@@ -9,6 +9,7 @@ import com.blackoutburst.workshop.core.MaterialBlock;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.nms.*;
+import com.google.common.collect.Lists;
 import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTContainer;
@@ -351,17 +352,33 @@ public class GameUtils {
 
                     String[] items = data[2].split(",");
                     String[] neededItems = {};
-                    String[] tools = {};
+                    List<List<String>> allTools = new ArrayList<>();
 
                     if (!(data[3].equals(""))) {
                         neededItems = data[3].split(",");
                     }
                     if (!(data[4].equals(""))) {
-                        tools = data[4].split(",");
+                        for (int i = 4; i < data.length; i++) {
+                            List<String> toolsList = Arrays.asList(data[i].split(","));
+
+                            allTools.add(toolsList);
+                        }
+                    }
+
+                    allTools = MiscUtils.transpose2dStringList(allTools);
+
+                    String[][] allToolsArray = new String[allTools.size()][];
+
+                    for (List<String> tools : allTools) {
+                        String[] toolArray = new String[tools.size()];
+                        for (String tool : tools) {
+                            toolArray[tools.indexOf(tool)] = tool;
+                        }
+                        allToolsArray[allTools.indexOf(tools)] = toolArray;
                     }
 
                     List<Material> allItems = new ArrayList<>();
-                    List<Byte> allItemData = new ArrayList<Byte>();
+                    List<Byte> allItemData = new ArrayList<>();
 
                     for (String item : items) {
                         String id = item.split(" ")[0];
@@ -396,7 +413,7 @@ public class GameUtils {
                     Location relLoc = new Location(area.getAnchor().getWorld(), relX, relY, relZ);
                     Location location = relLoc.add(offset);
 
-                    wsPlayer.getMaterialBlocks().add(new MaterialBlock(itemArray, dataArray, location, location.getWorld(), tools, 0));
+                    wsPlayer.getMaterialBlocks().add(new MaterialBlock(itemArray, dataArray, location, location.getWorld(), allToolsArray, 0));
                 }
             }
         } catch (Exception e) {
@@ -519,8 +536,7 @@ public class GameUtils {
     }
 
     public static boolean canBreak(MaterialBlock materialBlock, Player player) {
-
-        if (materialBlock.getTools().length == 0) {
+        if (materialBlock.getTools()[0].equals("")) {
             return true;
         }
         for (String tool : materialBlock.getTools()) {
