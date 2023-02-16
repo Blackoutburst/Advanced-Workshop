@@ -58,8 +58,11 @@ public class Play implements CommandExecutor {
                 if (gameoptions.getRandomType() == 'N') {
                     gameoptions.setBagSize(wsplayer.getCrafts().size());
                 }
+                if (gameoptions.getRandomType() == 'R') {
+                    gameoptions.setBagSize(10);
+                }
 
-                GameUtils.fillCraftList(wsplayer);
+                GameUtils.updateCraftList(wsplayer);
 
                 int start_delay = 5;
 
