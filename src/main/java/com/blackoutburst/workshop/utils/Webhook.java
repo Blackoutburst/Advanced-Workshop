@@ -1,5 +1,7 @@
 package com.blackoutburst.workshop.utils;
 
+import com.blackoutburst.workshop.Main;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -11,7 +13,7 @@ public class Webhook {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://discord.com/api/webhooks/1036038301158740018/jO8p5zO1S372shcX2uHcmtS6pvV90ArNOGDNVypK15S_PQYCFvns1t3mAt7FCqqI6Nkp"))
+                    .uri(URI.create(Main.WEBHOOK))
                     .headers("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString("{\"content\": \""+ content +"\"}"))
                     .build();

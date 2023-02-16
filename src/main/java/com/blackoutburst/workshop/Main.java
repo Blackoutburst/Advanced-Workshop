@@ -8,12 +8,13 @@ import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.GameUtils;
 import com.blackoutburst.workshop.utils.MapUtils;
 import com.blackoutburst.workshop.utils.StringUtils;
-import com.blackoutburst.workshop.utils.Webhook;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -26,6 +27,19 @@ public class Main extends JavaPlugin {
     public static List<PlayArea> playAreas = new ArrayList<>();
 
     public static List<WSPlayer> players = new ArrayList<>();
+
+    public static String WEBHOOK = readEnv(0);
+
+    private static String readEnv(int index) {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(".env"));
+            return lines.get(index).split("=")[1];
+        } catch (Exception e) {
+            System.err.println("Invalid .env file");
+            System.exit(0);
+        }
+        return null;
+    }
 
     @Override
     public void onEnable() {
