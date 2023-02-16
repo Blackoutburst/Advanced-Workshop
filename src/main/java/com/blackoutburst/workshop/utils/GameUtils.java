@@ -39,6 +39,7 @@ public class GameUtils {
         wsplayer.setInGame(false);
 
         wsplayer.setCurrentCraft(null);
+        wsplayer.setCraftList(null);
         wsplayer.getBoard().set(wsplayer.getPlayer(), 11, "Craft: §enone");
 
         MapUtils.restoreArea(wsplayer);
@@ -565,23 +566,28 @@ public class GameUtils {
 
         player.getInventory().clear();
 
-        updateCraft(wsplayer);
+        int craftIndex = wsplayer.getCurrentCraftIndex();
+        int bagSize = wsplayer.getGameOptions().getBagSize();
 
+        if (craftIndex == bagSize) {
+            updateCraftList(wsplayer);
+        }
+
+        updateCraft(wsplayer);
         return false;
     }
     public static void updateCraft(WSPlayer wsplayer) {
         List<Craft> crafts = wsplayer.getCraftList();
         int craftIndex = wsplayer.getCurrentCraftIndex() + 1;
-        wsplayer.setCurrentCraft(crafts.get(craftIndex - 1));
+        wsplayer.setCurrentCraft(crafts.get((craftIndex - 1) % wsplayer.getGameOptions().getBagSize()));
         wsplayer.setCurrentCraftIndex(craftIndex);
     }
 
-    public static void fillCraftList(WSPlayer wsplayer) {
+    public static void updateCraftList(WSPlayer wsplayer) {
         GameOptions gameoptions = wsplayer.getGameOptions();
         char type = gameoptions.getRandomType();
         List<Craft> validCrafts = wsplayer.getCrafts();
         int craftAmount = validCrafts.size();
-        int craftLimit = gameoptions.getCraftLimit();
         int bagSize = gameoptions.getBagSize();
         List<Craft> finalCraftList =  new ArrayList<>();
         Random rng = new Random();
@@ -590,16 +596,23 @@ public class GameUtils {
             case 'N':
             case 'B':
                 List<Craft> bags = new ArrayList<>();
-                int bagsNeeded = (int) Math.ceil((float) craftLimit / bagSize);
-
-                for (int i = 0; i < bagsNeeded; i++) {
-                    List<Craft> bag = generateBag(wsplayer);
-                    bags.addAll(bag);
+                if (wsplayer.getCraftList() == null) {
+                    List<Craft> bag1 = generateBag(wsplayer);
+                    List<Craft> bag2 = generateBag(wsplayer);
+                    bags.addAll(bag1);
+                    bags.addAll(bag2);
+                    finalCraftList = bags;
+                    break;
                 }
-                finalCraftList.addAll(bags);
+                List<Craft> tempCraftList = wsplayer.getCraftList().subList(bagSize,bagSize*2);
+                List<Craft> bag = generateBag(wsplayer);
+                finalCraftList.addAll(tempCraftList);
+                finalCraftList.addAll(bag);
                 break;
             case 'R':
-                for (int i = 0; i < craftLimit; i++) {
+                List<Craft> last5 = wsplayer.getCraftList().subList(5,10);
+                finalCraftList.addAll(last5);
+                for (int i = 0; i < 5; i++) {
                     int n = rng.nextInt(craftAmount);
                     finalCraftList.add(validCrafts.get(n));
                 }
