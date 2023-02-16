@@ -2,6 +2,7 @@ package com.blackoutburst.workshop.commands;
 
 import com.blackoutburst.workshop.core.GameOptions;
 import com.blackoutburst.workshop.core.WSPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 public class RngType implements CommandExecutor {
     private char randomType(String value) {
         value = value.toLowerCase();
+
         switch (value) {
             case "n":
             case "normal":
@@ -54,10 +56,13 @@ public class RngType implements CommandExecutor {
                 }
                 gameoptions.setRandomType('B');
                 gameoptions.setBagSize(Integer.parseInt(args[1]));
-            case 'N':
-                gameoptions.setRandomType('N');
+                break;
             case 'R':
                 gameoptions.setRandomType('R');
+                break;
+            default:
+                gameoptions.setRandomType('N');
+                break;
         }
         return true;
     }

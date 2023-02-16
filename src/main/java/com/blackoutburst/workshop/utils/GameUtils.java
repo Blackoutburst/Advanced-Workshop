@@ -297,6 +297,10 @@ public class GameUtils {
 
         player.sendMessage("§eYou need to craft a §r" + wsplayer.getCurrentCraft().getName());
 
+        wsplayer.getBoard().set(player, 11, "Craft: §e" + wsplayer.getCurrentCraft().getName());
+        wsplayer.getBoard().set(player, 9, "Round: §e" + StringUtils.getCurrentRound(wsplayer));
+        wsplayer.getBoard().set(player, 8, "    ");
+
         NMSEntities outputFrame = wsplayer.getItemFrames()[0];
         if (outputFrame != null) {
             ItemStack outputItem = wsplayer.getCurrentCraft().getItemRequired();
@@ -563,15 +567,12 @@ public class GameUtils {
 
         updateCraft(wsplayer);
 
-        wsplayer.getBoard().set(player, 11, "Craft: §e" + wsplayer.getCurrentCraft().getName());
-        wsplayer.getBoard().set(player, 9, "Round: §e" + StringUtils.getCurrentRound(wsplayer));
-        wsplayer.getBoard().set(player, 8, "    ");
         return false;
     }
     public static void updateCraft(WSPlayer wsplayer) {
         List<Craft> crafts = wsplayer.getCraftList();
         int craftIndex = wsplayer.getCurrentCraftIndex() + 1;
-        wsplayer.setCurrentCraft(crafts.get(craftIndex));
+        wsplayer.setCurrentCraft(crafts.get(craftIndex - 1));
         wsplayer.setCurrentCraftIndex(craftIndex);
     }
 
@@ -586,20 +587,23 @@ public class GameUtils {
         Random rng = new Random();
 
         switch (type) {
-            case 'B':
             case 'N':
+            case 'B':
                 List<Craft> bags = new ArrayList<>();
                 int bagsNeeded = (int) Math.ceil((float) craftLimit / bagSize);
+
                 for (int i = 0; i < bagsNeeded; i++) {
                     List<Craft> bag = generateBag(wsplayer);
                     bags.addAll(bag);
                 }
                 finalCraftList.addAll(bags);
+                break;
             case 'R':
                 for (int i = 0; i < craftLimit; i++) {
                     int n = rng.nextInt(craftAmount);
                     finalCraftList.add(validCrafts.get(n));
                 }
+                break;
         }
         wsplayer.setCraftList(finalCraftList);
     }
@@ -610,11 +614,14 @@ public class GameUtils {
         float craftCopies = (float) bagSize / craftAmount;
         int roundedCraftCopies = (int) Math.ceil(craftCopies);
         List<Craft> bag = new ArrayList<>();
+        int extra = (roundedCraftCopies*craftAmount) - bagSize;
 
         for (int i = 0; i < roundedCraftCopies; i++) {
             bag.addAll(validCrafts);
         }
         Collections.shuffle(bag);
+        bag = bag.subList(0, bag.size() - extra);
+
         return bag;
     }
 }

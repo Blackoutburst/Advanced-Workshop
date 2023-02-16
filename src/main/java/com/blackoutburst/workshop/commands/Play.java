@@ -1,10 +1,13 @@
 package com.blackoutburst.workshop.commands;
 
+import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
+import com.blackoutburst.workshop.core.GameOptions;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.CountdownDisplay;
 import com.blackoutburst.workshop.utils.GameUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -35,12 +38,11 @@ public class Play implements CommandExecutor {
             WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
             if (wsplayer == null || wsplayer.isInGame()) return true;
 
-            wsplayer.getPlayer().sendMessage("§eThe game is about to start!");
-
             for (PlayArea area : Main.playAreas) {
                 if (area.isBusy()) continue;
                 if (args.length > 0 && !args[0].equals(area.getType())) continue;
                 area.setBusy(true);
+                wsplayer.getPlayer().sendMessage("§eThe game is about to start!");
                 wsplayer.setPlayArea(area);
                 wsplayer.setCurrentCraftIndex(0);
                 GameUtils.loadCraft(wsplayer, area.getType());
@@ -51,11 +53,17 @@ public class Play implements CommandExecutor {
                 wsplayer.getBoard().set(wsplayer.getPlayer(), 13, "Map: §e" + area.getType());
                 if (args.length > 1)
                     setCraftAmount(wsplayer, args[1]);
+                GameOptions gameoptions = wsplayer.getGameOptions();
+
+                if (gameoptions.getRandomType() == 'N') {
+                    gameoptions.setBagSize(wsplayer.getCrafts().size());
+                }
+
                 GameUtils.fillCraftList(wsplayer);
 
                 int start_delay = 5;
 
-                BukkitRunnable displayCountdown = new CountdownDisplay(start_delay, wsplayer.getPlayer());
+                BukkitRunnable displayCountdown = new CountdownDisplay(start_delay, wsplayer);
 
                 displayCountdown.runTaskTimer(Main.getPlugin(Main.class),0,20);
 
@@ -64,6 +72,7 @@ public class Play implements CommandExecutor {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
+                        if (!wsplayer.isInGame()) return;
                         GameUtils.startRound(wsplayer);
                     }
                 }.runTaskLater(Main.getPlugin(Main.class), start_delay * 20);
