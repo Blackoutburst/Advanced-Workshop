@@ -14,6 +14,9 @@ import java.util.List;
 public class WSPlayer {
 
     protected boolean waiting;
+
+    protected List<Craft> craftList;
+
     protected boolean nextRound;
 
     protected Player player;
@@ -174,4 +177,8 @@ public class WSPlayer {
     public boolean isWaiting() {return waiting;}
 
     public void setWaiting(boolean waiting) { this.waiting = waiting; }
+
+    public List<Craft> getCraftList() { return craftList; }
+
+    public void setCraftList(List<Craft> craftList) { this.craftList = craftList; }
 }

@@ -39,6 +39,7 @@ public class Main extends JavaPlugin {
         getCommand("setcraftlimit").setExecutor(new SetCraftLimit());
         getCommand("setcraftamount").setExecutor(new SetCraftLimit());
         getCommand("setunlimitedcraft").setExecutor(new SetUnlimitedCraft());
+        getCommand("rngtype").setExecutor(new RngType());
         MapUtils.loadPlayAreas();
         MapUtils.loadSpawn();
         SkinLoader.loadSkinFromUUID(0, "92deafa9430742d9b00388601598d6c0");

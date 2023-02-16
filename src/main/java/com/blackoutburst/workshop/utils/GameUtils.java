@@ -5,6 +5,7 @@ import com.blackout.npcapi.utils.NPCManager;
 import com.blackout.npcapi.utils.SkinLoader;
 import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
+import com.blackoutburst.workshop.core.GameOptions;
 import com.blackoutburst.workshop.core.MaterialBlock;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
@@ -296,6 +297,10 @@ public class GameUtils {
 
         player.sendMessage("§eYou need to craft a §r" + wsplayer.getCurrentCraft().getName());
 
+        wsplayer.getBoard().set(player, 11, "Craft: §e" + wsplayer.getCurrentCraft().getName());
+        wsplayer.getBoard().set(player, 9, "Round: §e" + StringUtils.getCurrentRound(wsplayer));
+        wsplayer.getBoard().set(player, 8, "    ");
+
         NMSEntities outputFrame = wsplayer.getItemFrames()[0];
         if (outputFrame != null) {
             ItemStack outputItem = wsplayer.getCurrentCraft().getItemRequired();
@@ -558,14 +563,65 @@ public class GameUtils {
 
         Player player = wsplayer.getPlayer();
 
-        Random rng = new Random();
         player.getInventory().clear();
-        wsplayer.setCurrentCraftIndex(wsplayer.getCurrentCraftIndex() + 1);
 
-        wsplayer.setCurrentCraft(wsplayer.getCrafts().get(rng.nextInt(wsplayer.getCrafts().size())));
-        wsplayer.getBoard().set(player, 11, "Craft: §e" + wsplayer.getCurrentCraft().getName());
-        wsplayer.getBoard().set(player, 9, "Round: §e" + StringUtils.getCurrentRound(wsplayer));
-        wsplayer.getBoard().set(player, 8, "    ");
+        updateCraft(wsplayer);
+
         return false;
+    }
+    public static void updateCraft(WSPlayer wsplayer) {
+        List<Craft> crafts = wsplayer.getCraftList();
+        int craftIndex = wsplayer.getCurrentCraftIndex() + 1;
+        wsplayer.setCurrentCraft(crafts.get(craftIndex - 1));
+        wsplayer.setCurrentCraftIndex(craftIndex);
+    }
+
+    public static void fillCraftList(WSPlayer wsplayer) {
+        GameOptions gameoptions = wsplayer.getGameOptions();
+        char type = gameoptions.getRandomType();
+        List<Craft> validCrafts = wsplayer.getCrafts();
+        int craftAmount = validCrafts.size();
+        int craftLimit = gameoptions.getCraftLimit();
+        int bagSize = gameoptions.getBagSize();
+        List<Craft> finalCraftList =  new ArrayList<>();
+        Random rng = new Random();
+
+        switch (type) {
+            case 'N':
+            case 'B':
+                List<Craft> bags = new ArrayList<>();
+                int bagsNeeded = (int) Math.ceil((float) craftLimit / bagSize);
+
+                for (int i = 0; i < bagsNeeded; i++) {
+                    List<Craft> bag = generateBag(wsplayer);
+                    bags.addAll(bag);
+                }
+                finalCraftList.addAll(bags);
+                break;
+            case 'R':
+                for (int i = 0; i < craftLimit; i++) {
+                    int n = rng.nextInt(craftAmount);
+                    finalCraftList.add(validCrafts.get(n));
+                }
+                break;
+        }
+        wsplayer.setCraftList(finalCraftList);
+    }
+    public static List<Craft> generateBag(WSPlayer wsplayer) {
+        List<Craft> validCrafts = wsplayer.getCrafts();
+        int craftAmount = validCrafts.size();
+        int bagSize = wsplayer.getGameOptions().getBagSize();
+        float craftCopies = (float) bagSize / craftAmount;
+        int roundedCraftCopies = (int) Math.ceil(craftCopies);
+        List<Craft> bag = new ArrayList<>();
+        int extra = (roundedCraftCopies*craftAmount) - bagSize;
+
+        for (int i = 0; i < roundedCraftCopies; i++) {
+            bag.addAll(validCrafts);
+        }
+        Collections.shuffle(bag);
+        bag = bag.subList(0, bag.size() - extra);
+
+        return bag;
     }
 }

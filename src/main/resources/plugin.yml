@@ -48,6 +48,9 @@ commands:
   setunlimitedcraft:
     description: Toggle craft requirement
     usage: /setunlimitedcraft
+  rngtype:
+      description: Changes randomisation type
+      usage: /rngtype
 
   permissions:
     workshop.admin:
