@@ -26,6 +26,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         new File("./plugins/Workshop").mkdirs();
+        new File("./plugins/Workshop/playerData").mkdirs();
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         getCommand("play").setExecutor(new Play());
         getCommand("l").setExecutor(new L());
