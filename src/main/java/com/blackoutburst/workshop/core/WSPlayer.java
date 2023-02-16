@@ -40,6 +40,8 @@ public class WSPlayer {
 
     protected List<NeededBlock> neededBlocks = new ArrayList<>();
 
+    protected Timers timers = new Timers();
+
     protected boolean inGame = false;
     protected Craft currentCraft = null;
 
@@ -53,12 +55,14 @@ public class WSPlayer {
         this.player = player;
         this.board = new NMSBoard(player, "§6Workshop");
         board.set(player,15, "§e§m--------------------");
-        board.set(player, 14, " ");
-        board.set(player, 13, "Map: §enone");
-        board.set(player, 12, "  ");
-        board.set(player, 11, "Craft: §enone");
-        board.set(player, 10, "   ");
-        board.set(player,7, "§e§m-------------------- ");
+        board.set(player, 14, "Map: §enone");
+        board.set(player, 12, "Game Time: §b0.00s");
+        board.set(player, 11, " ");
+        board.set(player, 10, "Craft: §enone");
+        board.set(player, 9, "Craft Time: §b0.00s");
+        board.set(player, 8, "    ");
+        board.set(player, 7, "Round: §enone");
+        board.set(player,6, "§e§m-------------------- ");
 
         gameOptions = new GameOptions(this);
     }
@@ -181,4 +185,8 @@ public class WSPlayer {
     public List<Craft> getCraftList() { return craftList; }
 
     public void setCraftList(List<Craft> craftList) { this.craftList = craftList; }
+
+    public Timers getTimers() {
+        return timers;
+    }
 }

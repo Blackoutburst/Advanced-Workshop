@@ -6,6 +6,7 @@ import com.blackoutburst.workshop.core.GameOptions;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.CountdownDisplay;
+import com.blackoutburst.workshop.utils.DBUtils;
 import com.blackoutburst.workshop.utils.GameUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -14,6 +15,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.time.Instant;
 
 public class Play implements CommandExecutor {
 
@@ -48,9 +51,11 @@ public class Play implements CommandExecutor {
                 GameUtils.loadCraft(wsplayer, area.getType());
                 GameUtils.loadMaterials(wsplayer, area.getType());
                 GameUtils.spawnEntities(wsplayer, area.getType());
+                wsplayer.setWaiting(true);
                 wsplayer.setInGame(true);
                 wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
-                wsplayer.getBoard().set(wsplayer.getPlayer(), 13, "Map: §e" + area.getType());
+
+                wsplayer.getBoard().set(wsplayer.getPlayer(), 14, "Map: §e" + area.getType());
                 if (args.length > 1)
                     setCraftAmount(wsplayer, args[1]);
                 GameOptions gameoptions = wsplayer.getGameOptions();
@@ -72,11 +77,18 @@ public class Play implements CommandExecutor {
 
                 GameUtils.prepareNextRound(wsplayer);
 
+                Integer gameCount = DBUtils.getData(wsplayer.getPlayer(), "gameCount", Integer.class);
+                Integer mapGameCount = DBUtils.getData(wsplayer.getPlayer(), area.getType() + ".gameCount", Integer.class);
+
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         if (!wsplayer.isInGame()) return;
                         GameUtils.startRound(wsplayer);
+
+                        wsplayer.getTimers().setMapBegin(Instant.now());
+                        DBUtils.saveData(wsplayer.getPlayer(), "gameCount", gameCount != null ? gameCount + 1 : 1, Integer.class);
+                        DBUtils.saveData(wsplayer.getPlayer(), area.getType() + ".gameCount", mapGameCount != null ? mapGameCount + 1 : 1, Integer.class);
                     }
                 }.runTaskLater(Main.getPlugin(Main.class), start_delay * 20);
                 return true;

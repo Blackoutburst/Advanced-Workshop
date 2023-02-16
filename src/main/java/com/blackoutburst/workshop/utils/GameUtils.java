@@ -29,6 +29,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,7 +42,10 @@ public class GameUtils {
 
         wsplayer.setCurrentCraft(null);
         wsplayer.setCraftList(null);
-        wsplayer.getBoard().set(wsplayer.getPlayer(), 11, "Craft: §enone");
+
+        wsplayer.getBoard().set(wsplayer.getPlayer(), 14, "Map: §enone");
+        wsplayer.getBoard().set(wsplayer.getPlayer(), 10, "Craft: §enone");
+        wsplayer.getBoard().set(wsplayer.getPlayer(), 7, "Round: §enone");
 
         MapUtils.restoreArea(wsplayer);
 
@@ -48,7 +53,10 @@ public class GameUtils {
         if (area != null)
             area.setBusy(false);
 
-        wsplayer.getPlayer().sendMessage("§eThe game ended!");
+        Float duration = Duration.between(wsplayer.getTimers().getMapBegin(), wsplayer.getTimers().getMapEnd()).toMillis() / 1000.0f;
+        String gameTime = StringUtils.ROUND.format(duration) + "s";
+
+        wsplayer.getPlayer().sendMessage("§eThe game ended! §b(" + gameTime + ")");
         wsplayer.getPlayer().setGameMode(GameMode.ADVENTURE);
 
         for (NPC npc : wsplayer.getNpcs()) {
@@ -61,10 +69,6 @@ public class GameUtils {
             NMSEntityDestroy.send(wsplayer.getPlayer(), frame.getID());
         }
         wsplayer.getPlayer().teleport(Main.spawn);
-        wsplayer.getBoard().set(wsplayer.getPlayer(), 13, "Map: §enone");
-
-        wsplayer.getBoard().removeLine(wsplayer.getPlayer(), 9);
-        wsplayer.getBoard().removeLine(wsplayer.getPlayer(), 8);
 
         wsplayer.getPlayer().getInventory().clear();
 
@@ -298,9 +302,8 @@ public class GameUtils {
 
         player.sendMessage("§eYou need to craft a §r" + wsplayer.getCurrentCraft().getName());
 
-        wsplayer.getBoard().set(player, 11, "Craft: §e" + wsplayer.getCurrentCraft().getName());
-        wsplayer.getBoard().set(player, 9, "Round: §e" + StringUtils.getCurrentRound(wsplayer));
-        wsplayer.getBoard().set(player, 8, "    ");
+        wsplayer.getBoard().set(player, 10, "Craft: §e" + wsplayer.getCurrentCraft().getName());
+        wsplayer.getBoard().set(player, 7, "Round: §e" + StringUtils.getCurrentRound(wsplayer));
 
         NMSEntities outputFrame = wsplayer.getItemFrames()[0];
         if (outputFrame != null) {
@@ -314,6 +317,7 @@ public class GameUtils {
             NMSItemFrame.setItem(player, frame, item);
         }
         MapUtils.restoreArea(wsplayer);
+        wsplayer.getTimers().setRoundBegin(Instant.now());
     }
 
     private static ItemStack getItem(String data) {
@@ -556,6 +560,22 @@ public class GameUtils {
 
     public static boolean prepareNextRound(WSPlayer wsplayer) {
         if (!wsplayer.getGameOptions().isUnlimitedCrafts() && wsplayer.getCurrentCraftIndex() >= wsplayer.getGameOptions().getCraftLimit()) {
+            wsplayer.getTimers().setMapEnd(Instant.now());
+            if (wsplayer.getCurrentCraftIndex() == 5 && wsplayer.getGameOptions().getRandomType() == 'N') {
+                Float duration = Duration.between(wsplayer.getTimers().getMapBegin(), wsplayer.getTimers().getMapEnd()).toMillis() / 1000.0f;
+
+                Double currentDuration = DBUtils.getData(wsplayer.getPlayer(), wsplayer.getPlayArea().getType() + ".time", Double.class);
+                if (currentDuration == null)
+                    currentDuration = Double.MAX_VALUE;
+
+                if (duration < currentDuration)
+                    DBUtils.saveData(wsplayer.getPlayer(), wsplayer.getPlayArea().getType() + ".time", duration, Float.class);
+
+                if (currentDuration != Double.MAX_VALUE && (duration < currentDuration)) {
+                    Webhook.send("**"+ wsplayer.getPlayer().getName() + "** got a new PB on the map **" + wsplayer.getPlayArea().getType() + "**!\\nTime: **" +StringUtils.ROUND.format( duration) + "s**\\nImprovement: **" + StringUtils.ROUND.format(duration - currentDuration) + "s**");
+                    wsplayer.getPlayer().sendMessage("§d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s" + ")");
+                }
+            }
             endGame(wsplayer);
             return true;
         }

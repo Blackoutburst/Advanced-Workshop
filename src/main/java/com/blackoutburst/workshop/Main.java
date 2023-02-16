@@ -7,11 +7,15 @@ import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.GameUtils;
 import com.blackoutburst.workshop.utils.MapUtils;
+import com.blackoutburst.workshop.utils.StringUtils;
+import com.blackoutburst.workshop.utils.Webhook;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,14 +49,35 @@ public class Main extends JavaPlugin {
         MapUtils.loadSpawn();
         SkinLoader.loadSkinFromUUID(0, "92deafa9430742d9b00388601598d6c0");
 
+
         new BukkitRunnable() {
             @Override
             public void run() {
                 int size = Main.players.size();
                 for (int i = 0; i < size; i++) {
                     WSPlayer wsPlayer = Main.players.get(i);
-                    if (wsPlayer == null) break;
+                    if (wsPlayer == null) continue;
+                    if (!wsPlayer.isInGame()) continue;
+
+
+                    String gameTime = (wsPlayer.getTimers().getMapBegin() == null)
+                    ?
+                        "0.00s"
+                    :
+                        StringUtils.ROUND.format(((float) Duration.between(wsPlayer.getTimers().getMapBegin(), Instant.now()).toMillis() / 1000.0f)) + "s";
+
+
+                    if (wsPlayer.isWaiting()) continue;
+
+                    String roundTime;
+
+
                     if (wsPlayer.isNextRound()) {
+                        roundTime = StringUtils.ROUND.format(((float) Duration.between(wsPlayer.getTimers().getRoundBegin(), wsPlayer.getTimers().getRoundEnd()).toMillis() / 1000.0f)) + "s";
+
+                        wsPlayer.getBoard().set(wsPlayer.getPlayer(), 12, "Game Time: §b0.00s");
+                        wsPlayer.getBoard().set(wsPlayer.getPlayer(), 9, "Craft Time: §b0.00s");
+
                         wsPlayer.setNextRound(false);
 
                         int round_delay = 1;
@@ -67,8 +92,12 @@ public class Main extends JavaPlugin {
                                 GameUtils.startRound(wsPlayer);
                             }
                         }.runTaskLater(Main.getPlugin(Main.class), round_delay * 20);
+                    } else {
+                        roundTime = StringUtils.ROUND.format(((float) Duration.between(wsPlayer.getTimers().getRoundBegin(), Instant.now()).toMillis() / 1000.0f)) + "s";
                     }
 
+                    wsPlayer.getBoard().set(wsPlayer.getPlayer(), 12, "Game Time: §b" + gameTime);
+                    wsPlayer.getBoard().set(wsPlayer.getPlayer(), 9, "Craft Time: §b" + roundTime);
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 1L, 0L);

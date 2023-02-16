@@ -2,10 +2,15 @@ package com.blackoutburst.workshop.utils;
 
 import com.blackoutburst.workshop.core.WSPlayer;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class StringUtils {
+
+    public static final DecimalFormat ROUND = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
 
     public static String getCurrentRound(WSPlayer wsplayer) {
         return wsplayer.getGameOptions().isUnlimitedCrafts() ? String.valueOf(wsplayer.getCurrentCraftIndex()) : wsplayer.getCurrentCraftIndex() + "/" + wsplayer.getGameOptions().getCraftLimit();
