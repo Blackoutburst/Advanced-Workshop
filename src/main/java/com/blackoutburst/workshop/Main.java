@@ -8,6 +8,7 @@ import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.GameUtils;
 import com.blackoutburst.workshop.utils.MapUtils;
 import com.blackoutburst.workshop.utils.StringUtils;
+import com.blackoutburst.workshop.utils.Webhook;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
