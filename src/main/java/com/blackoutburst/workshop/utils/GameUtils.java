@@ -71,6 +71,7 @@ public class GameUtils {
         wsplayer.getPlayer().teleport(Main.spawn);
 
         wsplayer.getPlayer().getInventory().clear();
+        wsplayer.setWaiting(false);
 
         wsplayer.getPlayer().getInventory().setHelmet(new ItemStack(Material.AIR));
         wsplayer.getPlayer().getInventory().setChestplate(new ItemStack(Material.AIR));
@@ -565,6 +566,7 @@ public class GameUtils {
     }
 
     public static boolean prepareNextRound(WSPlayer wsplayer) {
+        wsplayer.setWaiting(true);
         if (!wsplayer.getGameOptions().isUnlimitedCrafts() && wsplayer.getCurrentCraftIndex() >= wsplayer.getGameOptions().getCraftLimit()) {
             wsplayer.getTimers().setMapEnd(Instant.now());
             if (wsplayer.getCurrentCraftIndex() == 5 && wsplayer.getGameOptions().getRandomType() == 'N') {
@@ -585,8 +587,6 @@ public class GameUtils {
             endGame(wsplayer);
             return true;
         }
-
-        wsplayer.setWaiting(true);
 
         Player player = wsplayer.getPlayer();
 

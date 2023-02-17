@@ -53,6 +53,7 @@ public class Play implements CommandExecutor {
                 GameUtils.spawnEntities(wsplayer, area.getType());
                 wsplayer.setWaiting(true);
                 wsplayer.setInGame(true);
+                wsplayer.setNextRound(false);
                 wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
 
                 wsplayer.getBoard().set(wsplayer.getPlayer(), 14, "Map: §e" + area.getType());

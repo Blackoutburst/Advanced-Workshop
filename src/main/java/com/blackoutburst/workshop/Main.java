@@ -99,7 +99,7 @@ public class Main extends JavaPlugin {
 
                         boolean finished = GameUtils.prepareNextRound(wsPlayer);
 
-                        if (finished) { continue; }
+                        if (finished) continue;
 
                         new BukkitRunnable() {
                             @Override
