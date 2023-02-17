@@ -15,5 +15,6 @@ public class Join {
         Main.players.add(new WSPlayer(event.getPlayer()));
         PacketInteractListener.init(event.getPlayer(), new NPCInteraction());
         event.getPlayer().setGameMode(GameMode.ADVENTURE);
+        DBUtils.saveData(event.getPlayer(), "name", event.getPlayer().getName(), String.class);
     }
 }
