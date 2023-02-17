@@ -60,6 +60,7 @@ public class Main extends JavaPlugin {
         getCommand("setcraftamount").setExecutor(new SetCraftLimit());
         getCommand("setunlimitedcraft").setExecutor(new SetUnlimitedCraft());
         getCommand("rngtype").setExecutor(new RngType());
+        getCommand("reloadmaps").setExecutor(new ReloadMaps());
         MapUtils.loadPlayAreas();
         MapUtils.loadSpawn();
         SkinLoader.loadSkinFromUUID(0, "92deafa9430742d9b00388601598d6c0");
@@ -84,11 +85,12 @@ public class Main extends JavaPlugin {
 
                     if (wsPlayer.isWaiting()) continue;
 
-                    String roundTime;
-
+                    String roundTime = "0.00s";
 
                     if (wsPlayer.isNextRound()) {
-                        roundTime = StringUtils.ROUND.format(((float) Duration.between(wsPlayer.getTimers().getRoundBegin(), wsPlayer.getTimers().getRoundEnd()).toMillis() / 1000.0f)) + "s";
+                        if (wsPlayer.getTimers().getRoundBegin() != null) {
+                            roundTime = StringUtils.ROUND.format(((float) Duration.between(wsPlayer.getTimers().getRoundBegin(), wsPlayer.getTimers().getRoundEnd()).toMillis() / 1000.0f)) + "s";
+                        }
 
                         wsPlayer.getBoard().set(wsPlayer.getPlayer(), 12, "Game Time: §b0.00s");
                         wsPlayer.getBoard().set(wsPlayer.getPlayer(), 9, "Craft Time: §b0.00s");

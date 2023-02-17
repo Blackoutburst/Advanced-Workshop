@@ -39,6 +39,7 @@ public class GameUtils {
 
     public static void endGame(WSPlayer wsplayer) {
         wsplayer.setInGame(false);
+        wsplayer.getGamestarter().cancel();
 
         wsplayer.setCurrentCraft(null);
         wsplayer.setCraftList(null);
@@ -53,7 +54,10 @@ public class GameUtils {
         if (area != null)
             area.setBusy(false);
 
-        Float duration = Duration.between(wsplayer.getTimers().getMapBegin(), wsplayer.getTimers().getMapEnd()).toMillis() / 1000.0f;
+        Float duration = 0.0f;
+        if (wsplayer.getTimers().getMapBegin() != null) {
+            duration = Duration.between(wsplayer.getTimers().getMapBegin(), wsplayer.getTimers().getMapEnd()).toMillis() / 1000.0f;
+        }
         String gameTime = StringUtils.ROUND.format(duration) + "s";
 
         wsplayer.getPlayer().sendMessage("§eThe game ended! §b(" + gameTime + ")");
