@@ -2,8 +2,10 @@ package com.blackoutburst.workshop.core.events;
 
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.GameUtils;
+import net.minecraft.server.v1_8_R3.ContainerDispenser;
 import org.bukkit.Material;
 import org.bukkit.block.Furnace;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,6 +22,10 @@ public class Interaction {
         WSPlayer wsplayer = WSPlayer.getFromPlayer(event.getPlayer());
         if (wsplayer == null || !wsplayer.isInGame()) return;
         if (event.getClickedBlock() == null) return;
+
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem().getType() == Material.ARMOR_STAND) {
+            event.setCancelled(true);
+        }
 
 
         Material blockType = event.getClickedBlock().getType();
