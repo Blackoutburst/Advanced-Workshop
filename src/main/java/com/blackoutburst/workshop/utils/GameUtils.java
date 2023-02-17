@@ -318,6 +318,12 @@ public class GameUtils {
         }
         MapUtils.restoreArea(wsplayer);
         wsplayer.getTimers().setRoundBegin(Instant.now());
+
+        Integer roundCount = DBUtils.getData(wsplayer.getPlayer(), "roundCount", Integer.class);
+        DBUtils.saveData(wsplayer.getPlayer(), "roundCount", roundCount != null ? roundCount + 1 : 1, Integer.class);
+
+        Integer mapRoundCount = DBUtils.getData(wsplayer.getPlayer(), wsplayer.getPlayArea().getType() + ".roundCount", Integer.class);
+        DBUtils.saveData(wsplayer.getPlayer(), wsplayer.getPlayArea().getType() + ".roundCount", mapRoundCount != null ? mapRoundCount + 1 : 1, Integer.class);
     }
 
     private static ItemStack getItem(String data) {
