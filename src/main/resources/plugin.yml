@@ -51,6 +51,10 @@ commands:
   rngtype:
       description: Changes randomisation type
       usage: /rngtype
+  reloadmaps:
+    permission: workshop.admin
+    description: Reloads in-memory copy of maps
+    usage: /reloadmaps
 
   permissions:
     workshop.admin:

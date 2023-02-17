@@ -1,5 +1,6 @@
 package com.blackoutburst.workshop.core;
 
+import com.blackoutburst.workshop.commands.Play;
 import com.blackout.npcapi.core.NPC;
 import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WSPlayer {
+
+    protected GameStarter gamestarter;
 
     protected boolean waiting;
 
@@ -189,4 +192,8 @@ public class WSPlayer {
     public Timers getTimers() {
         return timers;
     }
+
+    public GameStarter getGamestarter() { return gamestarter; }
+
+    public void setGamestarter(GameStarter gamestarter) { this.gamestarter =  gamestarter; }
 }

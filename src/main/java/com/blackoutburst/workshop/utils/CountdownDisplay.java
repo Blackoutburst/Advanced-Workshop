@@ -18,8 +18,10 @@ public class CountdownDisplay extends BukkitRunnable {
     }
     @Override
     public void run() {
-        if (!wsplayer.isInGame()) return;
-        if (seconds == 1) this.cancel();
+        if (!wsplayer.isInGame() || seconds == 0) {
+            this.cancel();
+            return;
+        }
 
         MiscUtils.sendTitle(player,"§c" + seconds,"",0,20,0);
         player.playSound(player.getLocation(), Sound.NOTE_STICKS,1,0.8f);
