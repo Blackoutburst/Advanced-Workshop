@@ -85,7 +85,7 @@ public class Play implements CommandExecutor {
                         if (args.length == 2) setTimeLimit(wsplayer, "");
                         if (args.length > 2) setTimeLimit(wsplayer, args[2]);
                     }
-                    if (args[1].equals("all")) {
+                    else if (args[1].equals("all")) {
                         gameoptions.setCraftLimit(wsplayer.getCrafts().size());
                     }
                     else setCraftAmount(wsplayer, args[1]);
