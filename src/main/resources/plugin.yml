@@ -55,6 +55,9 @@ commands:
     permission: workshop.admin
     description: Reloads in-memory copy of maps
     usage: /reloadmaps
+  settimelimit:
+    description: Sets the time limit, for timed gameplay
+    usage: /settimelimit
 
   permissions:
     workshop.admin:

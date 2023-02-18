@@ -5,10 +5,7 @@ import com.blackout.npcapi.utils.NPCManager;
 import com.blackout.npcapi.utils.SkinLoader;
 import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
-import com.blackoutburst.workshop.core.GameOptions;
-import com.blackoutburst.workshop.core.MaterialBlock;
-import com.blackoutburst.workshop.core.PlayArea;
-import com.blackoutburst.workshop.core.WSPlayer;
+import com.blackoutburst.workshop.core.*;
 import com.blackoutburst.workshop.nms.*;
 import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.NBTCompound;
@@ -40,27 +37,35 @@ public class GameUtils {
     public static void endGame(WSPlayer wsplayer) {
         wsplayer.setInGame(false);
         wsplayer.getGamestarter().cancel();
-
         wsplayer.setCurrentCraft(null);
         wsplayer.setCraftList(null);
 
         wsplayer.getBoard().set(wsplayer.getPlayer(), 14, "Map: §enone");
         wsplayer.getBoard().set(wsplayer.getPlayer(), 10, "Craft: §enone");
         wsplayer.getBoard().set(wsplayer.getPlayer(), 7, "Round: §enone");
+        wsplayer.getBoard().set(wsplayer.getPlayer(), 6, "Remaining Time: §eN/A");
 
         MapUtils.restoreArea(wsplayer);
 
         PlayArea area = wsplayer.getPlayArea();
+        int craftNumber = wsplayer.getCurrentCraftIndex() - 1;
         if (area != null)
             area.setBusy(false);
 
+        String output = "";
         Float duration = 0.0f;
-        if (wsplayer.getTimers().getMapBegin() != null) {
-            duration = Duration.between(wsplayer.getTimers().getMapBegin(), wsplayer.getTimers().getMapEnd()).toMillis() / 1000.0f;
-        }
-        String gameTime = StringUtils.ROUND.format(duration) + "s";
 
-        wsplayer.getPlayer().sendMessage("§eThe game ended! §b(" + gameTime + ")");
+        if (wsplayer.getTimers().getMapBegin() != null && !wsplayer.getGameOptions().isTimeLimited()) {
+            duration = Duration.between(wsplayer.getTimers().getMapBegin(), wsplayer.getTimers().getMapEnd()).toMillis() / 1000.0f;
+            output = StringUtils.ROUND.format(duration) + "s";
+        }
+        if (wsplayer.getGameOptions().isTimeLimited()) {
+            output = craftNumber + " craft" + (craftNumber == 1 ? "" : "s");
+            wsplayer.getGameOptions().setTimeLimited(false);
+            wsplayer.getGameOptions().setUnlimitedCrafts(false);
+        }
+
+        wsplayer.getPlayer().sendMessage("§eThe game ended! §b(" + output + ")");
         wsplayer.getPlayer().setGameMode(GameMode.ADVENTURE);
 
         for (NPC npc : wsplayer.getNpcs()) {
@@ -76,6 +81,7 @@ public class GameUtils {
 
         wsplayer.getPlayer().getInventory().clear();
         wsplayer.setWaiting(false);
+        wsplayer.getTimers().setMapBegin(null);
 
         wsplayer.getPlayer().getInventory().setHelmet(new ItemStack(Material.AIR));
         wsplayer.getPlayer().getInventory().setChestplate(new ItemStack(Material.AIR));
@@ -296,6 +302,7 @@ public class GameUtils {
     }
 
     public static void startRound(WSPlayer wsplayer) {
+        if (!wsplayer.isInGame()) return;
         wsplayer.setWaiting(false);
 
         Player player = wsplayer.getPlayer();
@@ -571,14 +578,15 @@ public class GameUtils {
 
     public static boolean prepareNextRound(WSPlayer wsplayer) {
         wsplayer.setWaiting(true);
-        if (!wsplayer.getGameOptions().isUnlimitedCrafts() && wsplayer.getCurrentCraftIndex() >= wsplayer.getGameOptions().getCraftLimit()) {
+        GameOptions gameoptions = wsplayer.getGameOptions();
+        Timers timers = wsplayer.getTimers();
+        if (!gameoptions.isUnlimitedCrafts() && wsplayer.getCurrentCraftIndex() >= gameoptions.getCraftLimit()) {
             wsplayer.getTimers().setMapEnd(Instant.now());
-            if (wsplayer.getCurrentCraftIndex() == 5 && wsplayer.getGameOptions().getRandomType() == 'N') {
-                Float duration = Duration.between(wsplayer.getTimers().getMapBegin(), wsplayer.getTimers().getMapEnd()).toMillis() / 1000.0f;
+            if (wsplayer.getCurrentCraftIndex() == 5 && gameoptions.getRandomType() == 'N') {
+                Float duration = Duration.between(timers.getMapBegin(), timers.getMapEnd()).toMillis() / 1000.0f;
 
                 Double currentDuration = DBUtils.getData(wsplayer.getPlayer(), wsplayer.getPlayArea().getType() + ".time", Double.class);
-                if (currentDuration == null)
-                    currentDuration = Double.MAX_VALUE;
+                if (currentDuration == null) currentDuration = Double.MAX_VALUE;
 
                 if (duration < currentDuration)
                     DBUtils.saveData(wsplayer.getPlayer(), wsplayer.getPlayArea().getType() + ".time", duration, Float.class);

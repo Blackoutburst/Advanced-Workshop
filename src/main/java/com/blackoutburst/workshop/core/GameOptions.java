@@ -5,7 +5,12 @@ public class GameOptions {
     protected int craftLimit;
 
     protected int bagSize;
+
+    protected float timeLimit;
+
     protected boolean unlimitedCrafts;
+
+    protected boolean isTimeLimited;
 
     protected char randomType;
 
@@ -14,6 +19,8 @@ public class GameOptions {
         this.unlimitedCrafts = false;
         this.randomType = 'N';
         this.bagSize = 5;
+        this.isTimeLimited = false;
+        this.timeLimit = 60.0f;
         load(player);
     }
 
@@ -46,4 +53,12 @@ public class GameOptions {
     public int getBagSize() { return bagSize; }
 
     public void setBagSize(int bagSize) { this.bagSize = bagSize; }
+
+    public boolean isTimeLimited() { return isTimeLimited; }
+
+    public void setTimeLimited(boolean isTimeLimited) { this.isTimeLimited = isTimeLimited; }
+
+    public float getTimeLimit() { return timeLimit; }
+
+    public void setTimeLimit(float timeLimit) { this.timeLimit = timeLimit; }
 }

@@ -19,21 +19,41 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.time.Instant;
+import java.util.Objects;
 
 public class Play implements CommandExecutor {
 
     private void setCraftAmount(WSPlayer wsplayer, String value) {
-        try {
-            int limit = Integer.parseInt(value);
-
-            if (limit <= 0) {
-                wsplayer.getGameOptions().setUnlimitedCrafts(true);
-            } else {
-                wsplayer.getGameOptions().setUnlimitedCrafts(false);
-                wsplayer.getGameOptions().setCraftLimit(limit);
-            }
-        } catch (Exception ignored) {
+        if (!value.matches("[0-9]+")) {
             wsplayer.getPlayer().sendMessage("§cInvalid craft amount provided, using your current settings.");
+            return;
+        }
+        int limit = Integer.parseInt(value);
+
+        if (limit <= 0) {
+            wsplayer.getGameOptions().setUnlimitedCrafts(true);
+        } else {
+            wsplayer.getGameOptions().setUnlimitedCrafts(false);
+            wsplayer.getGameOptions().setCraftLimit(limit);
+        }
+    }
+    public void setTimeLimit(WSPlayer wsplayer, String value) {
+        GameOptions gameoptions = wsplayer.getGameOptions();
+        if (!value.matches("([0-9]+([.][0-9]+)?)?")) {
+            wsplayer.getPlayer().sendMessage("§cInvalid time limit provided, using your current settings.");
+            gameoptions.setTimeLimited(true);
+            gameoptions.setUnlimitedCrafts(true);
+            return;
+        }
+        if (value.equals("")) {
+            gameoptions.setTimeLimited(true);
+            gameoptions.setUnlimitedCrafts(true);
+        }
+        else {
+            float limit = Float.parseFloat(value);
+            gameoptions.setTimeLimited(true);
+            gameoptions.setTimeLimit(limit);
+            gameoptions.setUnlimitedCrafts(true);
         }
     }
 
@@ -59,8 +79,13 @@ public class Play implements CommandExecutor {
                 wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
 
                 wsplayer.getBoard().set(wsplayer.getPlayer(), 14, "Map: §e" + area.getType());
-                if (args.length > 1)
-                    setCraftAmount(wsplayer, args[1]);
+                if (args.length > 1) {
+                    if (!args[1].equals("time")) setCraftAmount(wsplayer, args[1]);
+                    else {
+                        if (args.length == 2) setTimeLimit(wsplayer, "");
+                        if (args.length > 2) setTimeLimit(wsplayer, args[2]);
+                    }
+                }
                 GameOptions gameoptions = wsplayer.getGameOptions();
 
                 if (gameoptions.getRandomType() == 'N') {
