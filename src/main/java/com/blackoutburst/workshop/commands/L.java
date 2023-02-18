@@ -19,6 +19,7 @@ public class L implements CommandExecutor {
             WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
 
             if (wsplayer == null || !wsplayer.isInGame()) {
+                sender.sendMessage("§aTeleporting...");
                 ((Player) sender).teleport(Main.spawn);
                 return true;
             }

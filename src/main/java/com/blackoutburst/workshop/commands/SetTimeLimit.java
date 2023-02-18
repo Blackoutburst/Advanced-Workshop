@@ -25,6 +25,7 @@ public class SetTimeLimit implements CommandExecutor {
             return true;
         }
         wsplayer.getGameOptions().setTimeLimit(Float.parseFloat(args[0]));
+        wsplayer.getPlayer().sendMessage("§aYou've set the time limit to §f: §e" + (wsplayer.getGameOptions().getTimeLimit()));
 
         return true;
     }
