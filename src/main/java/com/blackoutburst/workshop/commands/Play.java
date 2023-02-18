@@ -62,6 +62,7 @@ public class Play implements CommandExecutor {
         if (sender instanceof Player) {
             WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
             if (wsplayer == null || wsplayer.isInGame()) return true;
+            GameOptions gameoptions = wsplayer.getGameOptions();
 
             for (PlayArea area : Main.playAreas) {
                 if (area.isBusy()) continue;
@@ -80,13 +81,15 @@ public class Play implements CommandExecutor {
 
                 wsplayer.getBoard().set(wsplayer.getPlayer(), 14, "Map: §e" + area.getType());
                 if (args.length > 1) {
-                    if (!args[1].equals("time")) setCraftAmount(wsplayer, args[1]);
-                    else {
+                    if (args[1].equals("time")) {
                         if (args.length == 2) setTimeLimit(wsplayer, "");
                         if (args.length > 2) setTimeLimit(wsplayer, args[2]);
                     }
+                    if (args[1].equals("all")) {
+                        gameoptions.setCraftLimit(wsplayer.getCrafts().size());
+                    }
+                    else setCraftAmount(wsplayer, args[1]);
                 }
-                GameOptions gameoptions = wsplayer.getGameOptions();
 
                 if (gameoptions.getRandomType() == 'N') {
                     gameoptions.setBagSize(wsplayer.getCrafts().size());
