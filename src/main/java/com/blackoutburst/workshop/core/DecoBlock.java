@@ -43,4 +43,6 @@ public class DecoBlock {
     public void setIndex(int i) {
         this.index = i;
     }
+
+    public void setTypes(Material[] types) { this.types =  types; }
 }

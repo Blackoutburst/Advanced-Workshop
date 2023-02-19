@@ -65,7 +65,8 @@ public class WSPlayer {
         board.set(player, 9, "Craft Time: §b0.00s");
         board.set(player, 8, "    ");
         board.set(player, 7, "Round: §enone");
-        board.set(player,6, "§e§m-------------------- ");
+        board.set(player, 6, "Time remaining: §bN/A");
+        board.set(player,5, "§e§m-------------------- ");
 
         gameOptions = new GameOptions(this);
     }

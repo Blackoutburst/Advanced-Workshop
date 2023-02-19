@@ -1,13 +1,11 @@
 package com.blackoutburst.workshop.core;
 
-import com.blackoutburst.workshop.commands.Spawn;
 import com.blackoutburst.workshop.core.events.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -75,6 +73,9 @@ public class EventListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         PlayerInteract.execute(event);
     }
+
+    @EventHandler
+    public void onPlaceEntity(PlayerInteractEvent event) { PlaceEntity.execute(event); }
 
     @EventHandler
     public void onPlayerEggThrowEvent(PlayerEggThrowEvent event) { EggThrow.execute(event); }

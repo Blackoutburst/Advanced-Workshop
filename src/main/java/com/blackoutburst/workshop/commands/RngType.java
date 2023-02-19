@@ -56,12 +56,15 @@ public class RngType implements CommandExecutor {
                 }
                 gameoptions.setRandomType('B');
                 gameoptions.setBagSize(Integer.parseInt(args[1]));
+                player.sendMessage("§aRNG Type successfully changed to §ebagged");
                 break;
             case 'R':
                 gameoptions.setRandomType('R');
+                player.sendMessage("§aRNG Type successfully changed to §ecompletely random");
                 break;
             default:
                 gameoptions.setRandomType('N');
+                player.sendMessage("§aRNG Type successfully changed to §enon-repeating");
                 break;
         }
         return true;

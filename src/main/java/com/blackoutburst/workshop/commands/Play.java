@@ -19,21 +19,42 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.time.Instant;
+import java.util.Objects;
 
 public class Play implements CommandExecutor {
 
     private void setCraftAmount(WSPlayer wsplayer, String value) {
-        try {
-            int limit = Integer.parseInt(value);
-
-            if (limit <= 0) {
-                wsplayer.getGameOptions().setUnlimitedCrafts(true);
-            } else {
-                wsplayer.getGameOptions().setUnlimitedCrafts(false);
-                wsplayer.getGameOptions().setCraftLimit(limit);
-            }
-        } catch (Exception ignored) {
+        if (!value.matches("[0-9]+")) {
             wsplayer.getPlayer().sendMessage("§cInvalid craft amount provided, using your current settings.");
+            return;
+        }
+        int limit = Integer.parseInt(value);
+
+        if (limit <= 0) {
+            wsplayer.getGameOptions().setUnlimitedCrafts(true);
+        } else {
+            wsplayer.getGameOptions().setUnlimitedCrafts(false);
+            wsplayer.getGameOptions().setCraftLimit(limit);
+        }
+    }
+    public void setTimeLimit(WSPlayer wsplayer, String value) {
+        GameOptions gameoptions = wsplayer.getGameOptions();
+        if (!value.matches("([0-9]+([.][0-9]+)?)?")) {
+            wsplayer.getPlayer().sendMessage("§cInvalid time limit provided, using your current settings.");
+            gameoptions.setTimeLimited(true);
+            gameoptions.setUnlimitedCrafts(true);
+            return;
+        }
+        if (value.equals("")) {
+            gameoptions.setTimeLimited(true);
+            gameoptions.setTimeLimit(gameoptions.getDefaultTimeLimit());
+            gameoptions.setUnlimitedCrafts(true);
+        }
+        else {
+            float limit = Float.parseFloat(value);
+            gameoptions.setTimeLimited(true);
+            gameoptions.setTimeLimit(limit);
+            gameoptions.setUnlimitedCrafts(true);
         }
     }
 
@@ -42,6 +63,7 @@ public class Play implements CommandExecutor {
         if (sender instanceof Player) {
             WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
             if (wsplayer == null || wsplayer.isInGame()) return true;
+            GameOptions gameoptions = wsplayer.getGameOptions();
 
             for (PlayArea area : Main.playAreas) {
                 if (area.isBusy()) continue;
@@ -59,9 +81,17 @@ public class Play implements CommandExecutor {
                 wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
 
                 wsplayer.getBoard().set(wsplayer.getPlayer(), 14, "Map: §e" + area.getType());
-                if (args.length > 1)
-                    setCraftAmount(wsplayer, args[1]);
-                GameOptions gameoptions = wsplayer.getGameOptions();
+                if (args.length > 1) {
+                    if (args[1].equals("time")) {
+                        if (args.length == 2) setTimeLimit(wsplayer, "");
+                        if (args.length > 2) setTimeLimit(wsplayer, args[2]);
+                    }
+                    else if (args[1].equals("all")) {
+                        gameoptions.setCraftLimit(wsplayer.getCrafts().size());
+                    }
+                    else setCraftAmount(wsplayer, args[1]);
+                }
+                else gameoptions.setCraftLimit(gameoptions.getDefaultCraftLimit());
 
                 if (gameoptions.getRandomType() == 'N') {
                     gameoptions.setBagSize(wsplayer.getCrafts().size());
@@ -72,7 +102,7 @@ public class Play implements CommandExecutor {
 
                 GameUtils.updateCraftList(wsplayer);
 
-                int start_delay = 5;
+                int start_delay = gameoptions.getCountDownTime();
 
                 BukkitRunnable displayCountdown = new CountdownDisplay(start_delay, wsplayer);
 
@@ -86,7 +116,7 @@ public class Play implements CommandExecutor {
                 GameStarter startGame = new GameStarter(wsplayer, area, gameCount, mapGameCount);
                 wsplayer.setGamestarter(startGame);
 
-                startGame.runTaskLater(Main.getPlugin(Main.class), start_delay * 20);
+                startGame.runTaskLater(Main.getPlugin(Main.class), start_delay * 20L);
                 return true;
             }
             wsplayer.getPlayer().sendMessage("No game available");

@@ -3,12 +3,11 @@ package com.blackoutburst.workshop;
 import com.blackout.npcapi.utils.SkinLoader;
 import com.blackoutburst.workshop.commands.*;
 import com.blackoutburst.workshop.core.EventListener;
+import com.blackoutburst.workshop.core.GameOptions;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.utils.GameUtils;
-import com.blackoutburst.workshop.utils.MapUtils;
-import com.blackoutburst.workshop.utils.StringUtils;
-import com.blackoutburst.workshop.utils.Webhook;
+import com.blackoutburst.workshop.utils.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -49,18 +48,20 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         getCommand("play").setExecutor(new Play());
         getCommand("l").setExecutor(new L());
+        getCommand("spawn").setExecutor(new L());
         getCommand("scanwand").setExecutor(new ScanWand());
         getCommand("logicscan").setExecutor(new LogicScan());
         getCommand("decoscan").setExecutor(new DecoScan());
         getCommand("pastemap").setExecutor(new PasteMap());
         getCommand("setspawn").setExecutor(new SetSpawn());
-        getCommand("spawn").setExecutor(new Spawn());
         getCommand("recipeadd").setExecutor(new RecipeAdd());
         getCommand("setcraftlimit").setExecutor(new SetCraftLimit());
         getCommand("setcraftamount").setExecutor(new SetCraftLimit());
         getCommand("setunlimitedcraft").setExecutor(new SetUnlimitedCraft());
         getCommand("rngtype").setExecutor(new RngType());
         getCommand("reloadmaps").setExecutor(new ReloadMaps());
+        getCommand("settimelimit").setExecutor(new SetTimeLimit());
+        getCommand("setcountdown").setExecutor(new SetCountdown());
         MapUtils.loadPlayAreas();
         MapUtils.loadSpawn();
         SkinLoader.loadSkinFromUUID(0, "92deafa9430742d9b00388601598d6c0");
@@ -74,7 +75,7 @@ public class Main extends JavaPlugin {
                     WSPlayer wsPlayer = Main.players.get(i);
                     if (wsPlayer == null) continue;
                     if (!wsPlayer.isInGame()) continue;
-
+                    GameOptions gameoptions = wsPlayer.getGameOptions();
 
                     String gameTime = (wsPlayer.getTimers().getMapBegin() == null)
                     ?
@@ -82,6 +83,9 @@ public class Main extends JavaPlugin {
                     :
                         StringUtils.ROUND.format(((float) Duration.between(wsPlayer.getTimers().getMapBegin(), Instant.now()).toMillis() / 1000.0f)) + "s";
 
+                    if (gameoptions.isTimeLimited()) {
+                        if (MiscUtils.checkTimeLimit(wsPlayer)) continue;
+                    }
 
                     if (wsPlayer.isWaiting()) continue;
 
@@ -112,9 +116,14 @@ public class Main extends JavaPlugin {
                     } else {
                         roundTime = StringUtils.ROUND.format(((float) Duration.between(wsPlayer.getTimers().getRoundBegin(), Instant.now()).toMillis() / 1000.0f)) + "s";
                     }
-
+                    String remainingTime = "§eN/A";
+                    if (gameoptions.isTimeLimited()) {
+                        float time = Duration.between(wsPlayer.getTimers().getMapBegin(), Instant.now()).toMillis() / 1000.0f;
+                        remainingTime = "§b" + StringUtils.ROUND.format(gameoptions.getTimeLimit() - time);
+                    }
                     wsPlayer.getBoard().set(wsPlayer.getPlayer(), 12, "Game Time: §b" + gameTime);
                     wsPlayer.getBoard().set(wsPlayer.getPlayer(), 9, "Craft Time: §b" + roundTime);
+                    wsPlayer.getBoard().set(wsPlayer.getPlayer(), 6, "Remaining Time: " + remainingTime);
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 1L, 0L);

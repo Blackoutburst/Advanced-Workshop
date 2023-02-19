@@ -1,7 +1,9 @@
 package com.blackoutburst.workshop.commands;
 
+import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.GameUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +17,12 @@ public class L implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
-            if (wsplayer == null || !wsplayer.isInGame()) return true;
+
+            if (wsplayer == null || !wsplayer.isInGame()) {
+                sender.sendMessage("§aTeleporting...");
+                ((Player) sender).teleport(Main.spawn);
+                return true;
+            }
 
             wsplayer.getTimers().setMapEnd(Instant.now());
             GameUtils.endGame(wsplayer);

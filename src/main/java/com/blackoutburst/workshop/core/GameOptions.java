@@ -4,16 +4,30 @@ public class GameOptions {
 
     protected int craftLimit;
 
+    protected int defaultCraftLimit;
+
     protected int bagSize;
+
+    protected float timeLimit;
+
+    protected float defaultTimeLimit;
+
     protected boolean unlimitedCrafts;
+
+    protected boolean isTimeLimited;
 
     protected char randomType;
 
+    protected int countDownTime;
+
     public GameOptions(WSPlayer player) {
-        this.craftLimit = 5;
+        this.defaultCraftLimit = 5;
         this.unlimitedCrafts = false;
         this.randomType = 'N';
         this.bagSize = 5;
+        this.isTimeLimited = false;
+        this.defaultTimeLimit = 60.0f;
+        this.countDownTime = 5;
         load(player);
     }
 
@@ -46,4 +60,24 @@ public class GameOptions {
     public int getBagSize() { return bagSize; }
 
     public void setBagSize(int bagSize) { this.bagSize = bagSize; }
+
+    public boolean isTimeLimited() { return isTimeLimited; }
+
+    public void setTimeLimited(boolean isTimeLimited) { this.isTimeLimited = isTimeLimited; }
+
+    public float getTimeLimit() { return timeLimit; }
+
+    public void setTimeLimit(float timeLimit) { this.timeLimit = timeLimit; }
+
+    public int getDefaultCraftLimit() { return defaultCraftLimit; }
+
+    public void setDefaultCraftLimit(int defaultCraftLimit) { this.defaultCraftLimit = defaultCraftLimit; }
+
+    public float getDefaultTimeLimit() { return defaultTimeLimit; }
+
+    public void setDefaultTimeLimit(float defaultTimeLimit) { this.defaultTimeLimit = defaultTimeLimit; }
+
+    public int getCountDownTime() { return countDownTime; }
+
+    public void setCountDownTime(int countDownTime) { this.countDownTime = countDownTime; }
 }
