@@ -1,6 +1,5 @@
 package com.blackoutburst.workshop.core;
 
-import com.blackoutburst.workshop.commands.Play;
 import com.blackout.npcapi.core.NPC;
 import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
