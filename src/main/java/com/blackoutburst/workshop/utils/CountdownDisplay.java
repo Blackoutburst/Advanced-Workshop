@@ -20,11 +20,28 @@ public class CountdownDisplay extends BukkitRunnable {
     public void run() {
         if (!wsplayer.isInGame() || seconds == 0) {
             this.cancel();
+            player.playSound(player.getLocation(), Sound.ORB_PICKUP, (seconds == 0 ? 1 : 0), 0.8f);
             return;
         }
+        char color;
 
-        MiscUtils.sendTitle(player,"§c" + seconds,"",0,20,0);
+        switch (seconds) {
+            case 5:
+            case 4:
+                color = 'e'; // yellow
+                break;
+            case 3:
+            case 2:
+            case 1:
+                color = 'c'; // red
+                break;
+            default:
+                color = 'a'; // green
+                break;
+        }
+
         player.playSound(player.getLocation(), Sound.NOTE_STICKS,1,0.8f);
+        MiscUtils.sendTitle(player,"§" + color + seconds,"",0,20,0);
         seconds--;
     }
 }

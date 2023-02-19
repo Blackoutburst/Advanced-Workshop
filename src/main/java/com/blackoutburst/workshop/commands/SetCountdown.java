@@ -6,8 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class SetTimeLimit implements CommandExecutor {
-
+public class SetCountdown implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) return true;
@@ -25,13 +24,13 @@ public class SetTimeLimit implements CommandExecutor {
             player.sendMessage("§cYou must specify a time!");
             return true;
         }
-        if (!args[0].matches("[0-9]+([.][0-9]+)?")) {
+        if (!args[0].matches("[0-9]+")) {
             player.sendMessage("§cThe time must be a number!");
             return true;
         }
-        wsplayer.getGameOptions().setDefaultTimeLimit(Float.parseFloat(args[0]));
-        wsplayer.getPlayer().sendMessage("§aYou've set the time limit to§f: §e" +
-                wsplayer.getGameOptions().getDefaultTimeLimit() + "§as");
+        wsplayer.getGameOptions().setCountDownTime(Integer.parseInt(args[0]));
+        wsplayer.getPlayer().sendMessage("§aYou've set the countdown to§f: §e" +
+                wsplayer.getGameOptions().getCountDownTime() + "§as");
 
         return true;
     }

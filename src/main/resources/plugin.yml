@@ -58,6 +58,9 @@ commands:
   settimelimit:
     description: Sets the time limit, for timed gameplay
     usage: /settimelimit
+  setcountdown:
+    description: Sets the countdown length at the start of games
+    usage: /setcountdown
 
   permissions:
     workshop.admin:

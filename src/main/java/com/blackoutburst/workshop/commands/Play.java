@@ -102,7 +102,7 @@ public class Play implements CommandExecutor {
 
                 GameUtils.updateCraftList(wsplayer);
 
-                int start_delay = 5;
+                int start_delay = gameoptions.getCountDownTime();
 
                 BukkitRunnable displayCountdown = new CountdownDisplay(start_delay, wsplayer);
 
@@ -116,7 +116,7 @@ public class Play implements CommandExecutor {
                 GameStarter startGame = new GameStarter(wsplayer, area, gameCount, mapGameCount);
                 wsplayer.setGamestarter(startGame);
 
-                startGame.runTaskLater(Main.getPlugin(Main.class), start_delay * 20);
+                startGame.runTaskLater(Main.getPlugin(Main.class), start_delay * 20L);
                 return true;
             }
             wsplayer.getPlayer().sendMessage("No game available");

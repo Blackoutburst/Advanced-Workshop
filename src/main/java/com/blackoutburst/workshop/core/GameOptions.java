@@ -18,6 +18,8 @@ public class GameOptions {
 
     protected char randomType;
 
+    protected int countDownTime;
+
     public GameOptions(WSPlayer player) {
         this.defaultCraftLimit = 5;
         this.unlimitedCrafts = false;
@@ -25,6 +27,7 @@ public class GameOptions {
         this.bagSize = 5;
         this.isTimeLimited = false;
         this.defaultTimeLimit = 60.0f;
+        this.countDownTime = 5;
         load(player);
     }
 
@@ -73,4 +76,8 @@ public class GameOptions {
     public float getDefaultTimeLimit() { return defaultTimeLimit; }
 
     public void setDefaultTimeLimit(float defaultTimeLimit) { this.defaultTimeLimit = defaultTimeLimit; }
+
+    public int getCountDownTime() { return countDownTime; }
+
+    public void setCountDownTime(int countDownTime) { this.countDownTime = countDownTime; }
 }
