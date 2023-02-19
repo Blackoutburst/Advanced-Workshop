@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.weather.WeatherChangeEvent;
 
 public class EventListener implements Listener {
 
@@ -79,4 +80,14 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onPlayerEggThrowEvent(PlayerEggThrowEvent event) { EggThrow.execute(event); }
+
+    @EventHandler
+    public void onWeatherChange(WeatherChangeEvent event) {
+        WeatherChange.execute(event);
+    }
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        PlayerMove.execute(event);
+    }
 }

@@ -16,6 +16,8 @@ public class WSPlayer {
 
     protected GameStarter gamestarter;
 
+    protected int jumpPadCooldown;
+
     protected boolean waiting;
 
     protected List<Craft> craftList;
@@ -197,4 +199,12 @@ public class WSPlayer {
     public GameStarter getGamestarter() { return gamestarter; }
 
     public void setGamestarter(GameStarter gamestarter) { this.gamestarter =  gamestarter; }
+
+    public int getJumpPadCooldown() {
+        return jumpPadCooldown;
+    }
+
+    public void setJumpPadCooldown(int jumpPadCooldown) {
+        this.jumpPadCooldown = jumpPadCooldown;
+    }
 }
