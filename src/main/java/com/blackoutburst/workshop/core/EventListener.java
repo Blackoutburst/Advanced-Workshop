@@ -77,5 +77,8 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
+    public void onPlaceEntity(PlayerInteractEvent event) { PlaceEntity.execute(event); }
+
+    @EventHandler
     public void onPlayerEggThrowEvent(PlayerEggThrowEvent event) { EggThrow.execute(event); }
 }

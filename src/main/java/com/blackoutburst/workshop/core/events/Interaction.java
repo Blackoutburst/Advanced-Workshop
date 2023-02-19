@@ -23,10 +23,6 @@ public class Interaction {
         if (wsplayer == null || !wsplayer.isInGame()) return;
         if (event.getClickedBlock() == null) return;
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null) {
-            if (event.getItem().getType() == Material.ARMOR_STAND) event.setCancelled(true);
-        }
-
         Material blockType = event.getClickedBlock().getType();
         if (blockType.equals(Material.FURNACE) || blockType.equals(Material.BURNING_FURNACE)) {
             clickFurnace(event);
