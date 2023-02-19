@@ -4,12 +4,17 @@ import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.*;
 import de.tr7zw.nbtapi.*;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
+import de.tr7zw.nbtinjector.javassist.bytecode.analysis.ControlFlow;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.*;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.InventoryWrapper;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.FileNotFoundException;
@@ -56,11 +61,15 @@ public class MapUtils {
                         ArrayList<ArrayList<Object>> blocks = null;
                         if (b.getType().equals(Material.DISPENSER)) {
                             Dispenser dispenser = (Dispenser) b.getState();
-                            blocks = readDropper(dispenser.getInventory().getContents()[0]);
+                            if (dispenser.getInventory().getContents()[0] != null) {
+                                blocks = readDropper(dispenser.getInventory().getContents()[0]);
+                            }
                         }
                         if (b.getType().equals(Material.DROPPER)) {
                             Dropper dropper = (Dropper) b.getState();
-                            blocks = readDropper(dropper.getInventory().getContents()[0]);
+                            if (dropper.getInventory().getContents()[0] != null) {
+                                blocks = readDropper(dropper.getInventory().getContents()[0]);
+                            }
                         }
                         StringBuilder blocksString = new StringBuilder();
                         StringBuilder neededBlocksString = new StringBuilder();
@@ -175,16 +184,19 @@ public class MapUtils {
         }
     }
 
-    public static void restoreArea(WSPlayer wsplayer) {
-        if (wsplayer.getCurrentCraft() == null) { return; }
-
+    public static void restoreArea(WSPlayer wsplayer, boolean clear_inventories) {
         wsplayer.getNeededBlocks().clear();
         wsplayer.getDecoBlocks().clear();
-        getNeededBlocks(wsplayer);
+        if (wsplayer.getCurrentCraft() != null) {
+            getNeededBlocks(wsplayer);
+        }
 
         updateDecoBlocks(wsplayer);
 
         List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
+        List<Material> inventories = Arrays.asList(
+                Material.CHEST, Material.TRAPPED_CHEST, Material.FURNACE, Material.BURNING_FURNACE,
+                Material.DISPENSER, Material.DROPPER, Material.BREWING_STAND, Material.HOPPER);
 
         for (DecoBlock i : decoBlocks) {
             Location location = i.getLocation();
@@ -193,6 +205,12 @@ public class MapUtils {
             b.setType(i.getType());
             b.setData(i.getData());
 
+            if (!clear_inventories) continue;
+
+            if (inventories.contains(i.getType())) {
+                InventoryHolder container = (InventoryHolder) b.getState();
+                container.getInventory().clear();
+            }
         }
     }
 
@@ -491,7 +509,7 @@ public class MapUtils {
                     }
                     continue;
                 }
-                if (materials.length > 1) {
+                if (materials.length > 1 && wsplayer.isInGame()) {
                     DecoBlock decoblock = getDecoBlock(wsplayer, location);
                     Random rng = new Random();
                     int randomBlockIndex = rng.nextInt(rItems.length);
@@ -501,6 +519,10 @@ public class MapUtils {
                     if (materialBlock != null) {
                         GameUtils.getMaterialBlock(wsplayer, location).setIndex(randomBlockIndex);
                     }
+                }
+                else if (materials.length > 1) {
+                    DecoBlock materialBlock = getDecoBlock(wsplayer, location);
+                    materialBlock.setTypes(new Material[]{Material.AIR});
                 }
             }
         } catch (Exception e) {

@@ -47,6 +47,7 @@ public class Play implements CommandExecutor {
         }
         if (value.equals("")) {
             gameoptions.setTimeLimited(true);
+            gameoptions.setTimeLimit(gameoptions.getDefaultTimeLimit());
             gameoptions.setUnlimitedCrafts(true);
         }
         else {
@@ -90,6 +91,7 @@ public class Play implements CommandExecutor {
                     }
                     else setCraftAmount(wsplayer, args[1]);
                 }
+                else gameoptions.setCraftLimit(gameoptions.getDefaultCraftLimit());
 
                 if (gameoptions.getRandomType() == 'N') {
                     gameoptions.setBagSize(wsplayer.getCrafts().size());

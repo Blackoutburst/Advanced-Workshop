@@ -13,10 +13,11 @@ public class Quit {
         WSPlayer wsPlayer = WSPlayer.getFromPlayer(event.getPlayer());
         if (wsPlayer == null) return;
 
-        MapUtils.restoreArea(wsPlayer);
         PlayArea area = wsPlayer.getPlayArea();
-        if (area != null)
+        if (area != null) {
             area.setBusy(false);
+            MapUtils.restoreArea(wsPlayer, true);
+        }
         Main.players.remove(WSPlayer.getFromPlayer(event.getPlayer()));
         PacketInteractListener.remove(event.getPlayer());
     }

@@ -34,11 +34,16 @@ public class NPCInteraction implements NPCPacket {
         APlayer ap = APlayer.get(player);
         for (NPC npc : ap.npcs) {
             if (id != npc.getEntityId()) { continue; }
-            if (!npc.getName().equals("villager")) { continue; }
+            if (!npc.getName().equals("villager") && !npc.getName().equals("chicken")) { continue; }
 
             WSPlayer wsPlayer = WSPlayer.getFromPlayer(player);
             if (wsPlayer == null) return;
             if (wsPlayer.isWaiting()) return;
+
+            if (npc.getName().equals("chicken")) {
+                player.getInventory().addItem(new ItemStack(Material.EGG));
+                return;
+            }
 
             if (player.getInventory().containsAtLeast(wsPlayer.getCurrentCraft().getItemRequired(), 1)) {
                 wsPlayer.setNextRound(true);

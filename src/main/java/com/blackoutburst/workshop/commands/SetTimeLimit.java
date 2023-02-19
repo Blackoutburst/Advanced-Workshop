@@ -24,8 +24,9 @@ public class SetTimeLimit implements CommandExecutor {
             player.sendMessage("§cThe time must be a number!");
             return true;
         }
-        wsplayer.getGameOptions().setTimeLimit(Float.parseFloat(args[0]));
-        wsplayer.getPlayer().sendMessage("§aYou've set the time limit to §f: §e" + (wsplayer.getGameOptions().getTimeLimit()));
+        wsplayer.getGameOptions().setDefaultTimeLimit(Float.parseFloat(args[0]));
+        wsplayer.getPlayer().sendMessage("§aYou've set the time limit to§f: §e" +
+                wsplayer.getGameOptions().getDefaultTimeLimit() + "§as");
 
         return true;
     }

@@ -45,7 +45,7 @@ public class GameUtils {
         wsplayer.getBoard().set(wsplayer.getPlayer(), 7, "Round: §enone");
         wsplayer.getBoard().set(wsplayer.getPlayer(), 6, "Remaining Time: §eN/A");
 
-        MapUtils.restoreArea(wsplayer);
+        MapUtils.restoreArea(wsplayer, true);
 
         PlayArea area = wsplayer.getPlayArea();
         int craftNumber = wsplayer.getCurrentCraftIndex() - 1;
@@ -328,7 +328,7 @@ public class GameUtils {
             ItemStack item = wsplayer.getCurrentCraft().getCraftingTable()[i];
             NMSItemFrame.setItem(player, frame, item);
         }
-        MapUtils.restoreArea(wsplayer);
+        MapUtils.restoreArea(wsplayer, false);
         wsplayer.getTimers().setRoundBegin(Instant.now());
 
         Integer roundCount = DBUtils.getData(wsplayer.getPlayer(), "roundCount", Integer.class);

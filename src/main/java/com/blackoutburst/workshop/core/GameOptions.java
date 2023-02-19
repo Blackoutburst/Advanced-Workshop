@@ -4,9 +4,13 @@ public class GameOptions {
 
     protected int craftLimit;
 
+    protected int defaultCraftLimit;
+
     protected int bagSize;
 
     protected float timeLimit;
+
+    protected float defaultTimeLimit;
 
     protected boolean unlimitedCrafts;
 
@@ -15,12 +19,12 @@ public class GameOptions {
     protected char randomType;
 
     public GameOptions(WSPlayer player) {
-        this.craftLimit = 5;
+        this.defaultCraftLimit = 5;
         this.unlimitedCrafts = false;
         this.randomType = 'N';
         this.bagSize = 5;
         this.isTimeLimited = false;
-        this.timeLimit = 60.0f;
+        this.defaultTimeLimit = 60.0f;
         load(player);
     }
 
@@ -61,4 +65,12 @@ public class GameOptions {
     public float getTimeLimit() { return timeLimit; }
 
     public void setTimeLimit(float timeLimit) { this.timeLimit = timeLimit; }
+
+    public int getDefaultCraftLimit() { return defaultCraftLimit; }
+
+    public void setDefaultCraftLimit(int defaultCraftLimit) { this.defaultCraftLimit = defaultCraftLimit; }
+
+    public float getDefaultTimeLimit() { return defaultTimeLimit; }
+
+    public void setDefaultTimeLimit(float defaultTimeLimit) { this.defaultTimeLimit = defaultTimeLimit; }
 }
