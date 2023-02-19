@@ -48,12 +48,12 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         getCommand("play").setExecutor(new Play());
         getCommand("l").setExecutor(new L());
+        getCommand("spawn").setExecutor(new L());
         getCommand("scanwand").setExecutor(new ScanWand());
         getCommand("logicscan").setExecutor(new LogicScan());
         getCommand("decoscan").setExecutor(new DecoScan());
         getCommand("pastemap").setExecutor(new PasteMap());
         getCommand("setspawn").setExecutor(new SetSpawn());
-        getCommand("spawn").setExecutor(new Spawn());
         getCommand("recipeadd").setExecutor(new RecipeAdd());
         getCommand("setcraftlimit").setExecutor(new SetCraftLimit());
         getCommand("setcraftamount").setExecutor(new SetCraftLimit());
