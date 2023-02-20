@@ -1,6 +1,6 @@
-package com.blackoutburst.workshop.core;
+package com.blackoutburst.workshop.core.events.listeners;
 
-import com.blackoutburst.workshop.core.events.*;
+import com.blackoutburst.workshop.core.events.spigot.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;

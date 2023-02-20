@@ -1,4 +1,4 @@
-package com.blackoutburst.workshop.core.events;
+package com.blackoutburst.workshop.core.events.spigot;
 
 import org.bukkit.event.weather.WeatherChangeEvent;
 

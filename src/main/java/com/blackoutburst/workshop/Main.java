@@ -2,12 +2,11 @@ package com.blackoutburst.workshop;
 
 import com.blackout.npcapi.utils.SkinLoader;
 import com.blackoutburst.workshop.commands.*;
-import com.blackoutburst.workshop.core.EventListener;
 import com.blackoutburst.workshop.core.GameOptions;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
+import com.blackoutburst.workshop.core.events.listeners.EventListener;
 import com.blackoutburst.workshop.utils.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;

@@ -1,4 +1,4 @@
-package com.blackoutburst.workshop.core.events;
+package com.blackoutburst.workshop.core.events.spigot;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent;

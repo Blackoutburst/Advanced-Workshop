@@ -1,4 +1,4 @@
-package com.blackoutburst.workshop.core.events;
+package com.blackoutburst.workshop.core.events.spigot;
 
 import com.blackoutburst.workshop.core.ScanWand;
 import org.bukkit.event.player.PlayerInteractEvent;

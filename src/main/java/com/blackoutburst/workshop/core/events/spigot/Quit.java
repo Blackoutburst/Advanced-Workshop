@@ -1,4 +1,4 @@
-package com.blackoutburst.workshop.core.events;
+package com.blackoutburst.workshop.core.events.spigot;
 
 import com.blackout.npcapi.core.PacketInteractListener;
 import com.blackoutburst.workshop.Main;

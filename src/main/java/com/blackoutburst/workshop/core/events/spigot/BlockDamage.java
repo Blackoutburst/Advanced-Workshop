@@ -1,6 +1,6 @@
-package com.blackoutburst.workshop.core.events;
+package com.blackoutburst.workshop.core.events.spigot;
 
-import com.blackoutburst.workshop.core.MaterialBlock;
+import com.blackoutburst.workshop.core.blocks.MaterialBlock;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.EffectsUtils;
 import com.blackoutburst.workshop.utils.GameUtils;

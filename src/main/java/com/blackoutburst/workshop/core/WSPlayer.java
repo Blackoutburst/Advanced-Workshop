@@ -3,6 +3,9 @@ package com.blackoutburst.workshop.core;
 import com.blackout.npcapi.core.NPC;
 import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
+import com.blackoutburst.workshop.core.blocks.DecoBlock;
+import com.blackoutburst.workshop.core.blocks.MaterialBlock;
+import com.blackoutburst.workshop.core.blocks.NeededBlock;
 import com.blackoutburst.workshop.nms.NMSBoard;
 import com.blackoutburst.workshop.nms.NMSEntities;
 import org.bukkit.Location;
@@ -54,6 +57,8 @@ public class WSPlayer {
     protected NMSBoard board;
 
     protected GameOptions gameOptions;
+
+    protected List<NMSEntities> entities = new ArrayList<>();
 
     public WSPlayer(Player player) {
         this.player = player;
@@ -205,5 +210,9 @@ public class WSPlayer {
 
     public void setJumpPadCooldown(int jumpPadCooldown) {
         this.jumpPadCooldown = jumpPadCooldown;
+    }
+
+    public List<NMSEntities> getEntities() {
+        return entities;
     }
 }

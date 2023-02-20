@@ -1,4 +1,4 @@
-package com.blackoutburst.workshop.core.events;
+package com.blackoutburst.workshop.core.events.spigot;
 
 import com.blackoutburst.workshop.core.WSPlayer;
 import org.bukkit.Bukkit;

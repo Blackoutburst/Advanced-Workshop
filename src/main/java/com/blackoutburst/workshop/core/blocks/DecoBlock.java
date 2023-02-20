@@ -1,4 +1,4 @@
-package com.blackoutburst.workshop.core;
+package com.blackoutburst.workshop.core.blocks;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

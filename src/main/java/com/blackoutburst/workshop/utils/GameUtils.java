@@ -6,6 +6,7 @@ import com.blackout.npcapi.utils.SkinLoader;
 import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.*;
+import com.blackoutburst.workshop.core.blocks.MaterialBlock;
 import com.blackoutburst.workshop.nms.*;
 import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.NBTCompound;
