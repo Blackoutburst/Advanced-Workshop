@@ -19,6 +19,8 @@ public class NPCInteract {
     private static void villager(Player player) {
         WSPlayer wsPlayer = WSPlayer.getFromPlayer(player);
 
+        if (wsPlayer.isWaiting()) return;
+
         if (!player.getInventory().containsAtLeast(wsPlayer.getCurrentCraft().getItemRequired(), 1)) {
             player.sendMessage("§cThat's not quite right. I need " + wsPlayer.getCurrentCraft().getName());
             return;
