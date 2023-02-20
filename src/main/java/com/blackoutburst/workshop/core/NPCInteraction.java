@@ -31,6 +31,8 @@ public class NPCInteraction implements NPCPacket {
 
     @Override
     public void onRightClick(Player player, int id) {
+        System.out.println(id);
+
         APlayer ap = APlayer.get(player);
         for (NPC npc : ap.npcs) {
             if (id != npc.getEntityId()) { continue; }

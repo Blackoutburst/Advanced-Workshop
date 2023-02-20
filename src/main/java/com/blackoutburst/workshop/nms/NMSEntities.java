@@ -1,8 +1,11 @@
 package com.blackoutburst.workshop.nms;
 
 import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -151,6 +154,90 @@ public class NMSEntities {
 
             entity = entityConstructor.newInstance(args);
             networkID = type.networkID;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setLocation(double x, double y, double z, float yaw, float pitch) {
+        try {
+            final Class<?> entityClass = NMS.getClass("Entity");
+
+            final Method method = entityClass.getMethod("setLocation", double.class, double.class, double.class, float.class, float.class);
+
+            method.invoke(this.entity, x, y, z, yaw, pitch);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setOnGround(boolean onGround) {
+        try {
+            final Class<?> entityClass = NMS.getClass("Entity");
+            final Class<?> nbtClass = NMS.getClass("NBTTagCompound");
+            Object NBT = this.getNBTTag();
+
+            final Method setBoolean = nbtClass.getMethod("setBoolean", String.class, boolean.class);
+            setBoolean.invoke(NBT, "OnGround", onGround);
+
+            final Method f = entityClass.getMethod("f", nbtClass);
+            f.invoke(this.entity, NBT);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Object getNBTTag() {
+        try {
+            final Class<?> entityClass = NMS.getClass("Entity");
+            final Class<?> nbtClass = NMS.getClass("NBTTagCompound");
+
+            final Constructor<?> nbtConstructor = nbtClass.getConstructor();
+
+            Object NBT = nbtConstructor.newInstance();
+
+            final Method e = entityClass.getMethod("e", nbtClass);
+            e.invoke(this.entity, NBT);
+
+            return NBT;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void setCustomName(String name) {
+        try {
+            final Class<?> entityClass = NMS.getClass("Entity");
+
+            final Method method = entityClass.getMethod("setCustomName", String.class);
+
+            method.invoke(this.entity, name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setCustomNameVisible(boolean visible) {
+        try {
+            final Class<?> entityClass = NMS.getClass("Entity");
+
+            final Method method = entityClass.getMethod("setCustomNameVisible", boolean.class);
+
+            method.invoke(this.entity, visible);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setYawPitch(float yaw, float pitch) {
+        try {
+            final Class<?> entityClass = NMS.getClass("Entity");
+
+            final Method method = entityClass.getDeclaredMethod("setYawPitch", float.class, float.class);
+            method.setAccessible(true);
+            method.invoke(this.entity, yaw, pitch);
         } catch (Exception e) {
             e.printStackTrace();
         }

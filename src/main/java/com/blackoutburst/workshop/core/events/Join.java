@@ -4,8 +4,14 @@ import com.blackout.npcapi.core.PacketInteractListener;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.NPCInteraction;
 import com.blackoutburst.workshop.core.WSPlayer;
+import com.blackoutburst.workshop.nms.*;
 import com.blackoutburst.workshop.utils.DBUtils;
+import net.minecraft.server.v1_8_R3.Entity;
+import net.minecraft.server.v1_8_R3.PacketPlayOutAnimation;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityHeadRotation;
+import net.minecraft.server.v1_8_R3.PlayerConnection;
 import org.bukkit.GameMode;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class Join {
