@@ -336,9 +336,11 @@ public class GameUtils {
 
     public static void startRound(WSPlayer wsplayer) {
         if (!wsplayer.isInGame()) return;
-        wsplayer.setWaiting(false);
-
         Player player = wsplayer.getPlayer();
+
+        player.getInventory().clear();
+
+        wsplayer.setWaiting(false);
 
         player.getInventory().setHelmet(new ItemStack(Material.CHAINMAIL_HELMET));
         player.getInventory().setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
@@ -646,10 +648,6 @@ public class GameUtils {
             endGame(wsplayer);
             return true;
         }
-
-        Player player = wsplayer.getPlayer();
-
-        player.getInventory().clear();
 
         int craftIndex = wsplayer.getCurrentCraftIndex();
         int bagSize = wsplayer.getGameOptions().getBagSize();
