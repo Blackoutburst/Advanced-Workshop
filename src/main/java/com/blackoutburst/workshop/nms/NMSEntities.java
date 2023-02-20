@@ -15,6 +15,7 @@ public class NMSEntities {
 
     protected Object entity;
     protected int networkID;
+    protected EntityType type;
 
     /**
      * Define all the entity types
@@ -142,6 +143,8 @@ public class NMSEntities {
      */
     public NMSEntities(World world, EntityType type, Object... parameters) {
         try {
+            this.type = type;
+
             final Class<?> entityClass = NMS.getClass(type.className);
 
             final Constructor<?> entityConstructor = entityClass.getConstructor(type.constructorArgs);
@@ -157,6 +160,10 @@ public class NMSEntities {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public EntityType getType() {
+        return type;
     }
 
     public void setLocation(double x, double y, double z, float yaw, float pitch) {

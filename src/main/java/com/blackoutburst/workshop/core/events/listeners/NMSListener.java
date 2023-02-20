@@ -7,18 +7,10 @@ import com.blackoutburst.workshop.core.Action;
 import com.blackoutburst.workshop.core.NMSEntityInteractEvent;
 import com.blackoutburst.workshop.core.NMSNPCInteractEvent;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.core.events.nms.EntityInteract;
+import com.blackoutburst.workshop.core.events.nms.NMSEntityInteract;
 import com.blackoutburst.workshop.core.events.nms.NPCInteract;
 import com.blackoutburst.workshop.nms.NMSEntities;
-import com.blackoutburst.workshop.utils.DBUtils;
-import com.blackoutburst.workshop.utils.EffectsUtils;
-import com.blackoutburst.workshop.utils.StringUtils;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.time.Duration;
-import java.time.Instant;
 
 public class NMSListener implements NPCPacket {
 
@@ -35,7 +27,7 @@ public class NMSListener implements NPCPacket {
         WSPlayer wp = WSPlayer.getFromPlayer(player);
         for (NMSEntities entity : wp.getEntities()) {
             if (id == entity.getID()) {
-                EntityInteract.execute(new NMSEntityInteractEvent(player, Action.LEFT_CLICK, entity));
+                NMSEntityInteract.execute(new NMSEntityInteractEvent(player, Action.LEFT_CLICK, entity));
                 return;
             }
         }
@@ -54,7 +46,7 @@ public class NMSListener implements NPCPacket {
         WSPlayer wp = WSPlayer.getFromPlayer(player);
         for (NMSEntities entity : wp.getEntities()) {
             if (id == entity.getID()) {
-                EntityInteract.execute(new NMSEntityInteractEvent(player, Action.RIGHT_CLICK, entity));
+                NMSEntityInteract.execute(new NMSEntityInteractEvent(player, Action.RIGHT_CLICK, entity));
                 return;
             }
         }

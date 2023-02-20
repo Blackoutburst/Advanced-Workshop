@@ -226,6 +226,33 @@ public class GameUtils {
         wsPlayer.getNpcs().add(npc);
     }
 
+    private static void spawnEntity(NMSEntities.EntityType type, WSPlayer wsPlayer, String[] data, PlayArea area) {
+        float x = Integer.parseInt(data[2]) + area.getAnchor().getBlockX() + 0.5f;
+        int y = Integer.parseInt(data[3]) + area.getAnchor().getBlockY();
+        float z = Integer.parseInt(data[4]) + area.getAnchor().getBlockZ() + 0.5f;
+        int yaw = 0;
+        switch (BlockFace.valueOf(data[5])) {
+            case NORTH:
+                yaw = 180;
+                break;
+            case SOUTH:
+                yaw = 0;
+                break;
+            case EAST:
+                yaw = -90;
+                break;
+            case WEST:
+                yaw = 90;
+                break;
+        }
+
+        NMSEntities entity = new NMSEntities(wsPlayer.getPlayer().getWorld(), NMSEntities.EntityType.CHICKEN);
+        entity.setLocation(x, y, z, yaw, 0);
+        NMSSpawnEntityLiving.send(wsPlayer.getPlayer(), entity);
+        NMSEntityHeadRotation.send(wsPlayer.getPlayer(), entity, yaw);
+        wsPlayer.getEntities().add(entity);
+    }
+
     private static void spawnItemFrame(WSPlayer wsPlayer, String[] data, PlayArea area, int id) {
         int x = Integer.parseInt(data[2]) + area.getAnchor().getBlockX();
         int y = Integer.parseInt(data[3]) + area.getAnchor().getBlockY();
@@ -274,7 +301,7 @@ public class GameUtils {
                     }
 
                     if (data[1].equals("chicken")) {
-                        spawnNPC("chicken", 0, wsPlayer, data, area);
+                        spawnEntity(NMSEntities.EntityType.CHICKEN, wsPlayer, data, area);
                     }
 
                     if (data[1].equals("villager")) {

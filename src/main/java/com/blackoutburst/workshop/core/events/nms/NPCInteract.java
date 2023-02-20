@@ -1,6 +1,7 @@
 package com.blackoutburst.workshop.core.events.nms;
 
 import com.blackout.npcapi.core.NPC;
+import com.blackoutburst.workshop.core.Action;
 import com.blackoutburst.workshop.core.NMSNPCInteractEvent;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.DBUtils;
@@ -14,12 +15,6 @@ import java.time.Duration;
 import java.time.Instant;
 
 public class NPCInteract {
-
-    private static void chicken(Player player) {
-        if (WSPlayer.getFromPlayer(player).isWaiting()) return;
-
-        player.getInventory().addItem(new ItemStack(Material.EGG));
-    }
 
     private static void villager(Player player) {
         WSPlayer wsPlayer = WSPlayer.getFromPlayer(player);
@@ -52,9 +47,8 @@ public class NPCInteract {
         Player player = event.getPlayer();
         NPC npc = event.getNpc();
 
-        switch (npc.getName()) {
-            case "chicken": chicken(player); break;
-            case "villager": villager(player); break;
+        if (npc.getName().equals("villager") && event.getAction().equals(Action.RIGHT_CLICK)) {
+            villager(player);
         }
     }
 }
