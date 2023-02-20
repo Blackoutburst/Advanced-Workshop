@@ -74,6 +74,11 @@ public class GameUtils {
         }
         wsplayer.getNpcs().clear();
 
+        for (NMSEntities entity : wsplayer.getEntities()) {
+            NMSEntityDestroy.send(wsplayer.getPlayer(), entity.getID());
+        }
+        wsplayer.getNpcs().clear();
+
         for (NMSEntities frame : wsplayer.getItemFrames()) {
             if (frame == null) continue;
             NMSEntityDestroy.send(wsplayer.getPlayer(), frame.getID());
