@@ -68,15 +68,10 @@ public class EventListener implements Listener {
     @EventHandler
     public void onInteraction(PlayerInteractEvent event) {
         Interaction.execute(event);
-    }
-
-    @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
         PlayerInteract.execute(event);
+        PlaceEntity.execute(event);
+        OpenHopper.execute(event);
     }
-
-    @EventHandler
-    public void onPlaceEntity(PlayerInteractEvent event) { PlaceEntity.execute(event); }
 
     @EventHandler
     public void onPlayerEggThrowEvent(PlayerEggThrowEvent event) { EggThrow.execute(event); }

@@ -109,6 +109,7 @@ public class Play implements CommandExecutor {
                 displayCountdown.runTaskTimer(Main.getPlugin(Main.class),0,20);
 
                 GameUtils.prepareNextRound(wsplayer);
+                wsplayer.getPlayer().getInventory().clear();
 
                 Integer gameCount = DBUtils.getData(wsplayer.getPlayer(), "gameCount", Integer.class);
                 Integer mapGameCount = DBUtils.getData(wsplayer.getPlayer(), area.getType() + ".gameCount", Integer.class);
