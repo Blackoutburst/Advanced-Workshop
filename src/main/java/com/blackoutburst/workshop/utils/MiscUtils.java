@@ -6,6 +6,7 @@ import com.blackoutburst.workshop.core.WSPlayer;
 // import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
 // import net.minecraft.server.v1_8_R3.PlayerConnection;
 // import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import com.blackoutburst.workshop.nms.NMSTitle;
 import org.bukkit.entity.Player;
 
 import java.time.Duration;
@@ -37,16 +38,7 @@ public class MiscUtils {
     }
 
     public static void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        PlayerConnection connection = craftPlayer.getHandle().playerConnection;
-        IChatBaseComponent titleJSON = IChatBaseComponent.ChatSerializer.a("{'text': '" + title + "'}");
-        IChatBaseComponent subtitleJSON = IChatBaseComponent.ChatSerializer.a("{'text': '" + subtitle + "'}");
-        PacketPlayOutTitle timePacket = new PacketPlayOutTitle(fadeIn, stay, fadeOut);
-        PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, titleJSON);
-        PacketPlayOutTitle subtitlePacket = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, subtitleJSON);
-        connection.sendPacket(timePacket);
-        connection.sendPacket(titlePacket);
-        connection.sendPacket(subtitlePacket);
+        NMSTitle.send(player, title, subtitle, fadeIn, stay, fadeOut);
     }
 
     public static boolean checkTimeLimit(WSPlayer wsplayer) {
