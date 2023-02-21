@@ -69,11 +69,11 @@ public class CraftSelectorGUI {
         inv.setItem(slot, item);
     }
 
-    public static boolean click(Inventory inv, int slot, Player p) {
+    public static boolean click(Inventory inv, int slot, Player p, String title) {
         WSPlayer wsplayer = WSPlayer.getFromPlayer(p);
         if (wsplayer == null) return true;
 
-        if (inv == null || !inv.getName().equals(NAME)) return false;
+        if (inv == null || !title.equals(NAME)) return false;
 
         if (slot >= 0 && slot < 36 && inv.getItem(slot) != null) {
             CraftGUI.open(wsplayer, getCorrectCraft(wsplayer, inv.getItem(slot)));
