@@ -3,12 +3,13 @@ package com.blackoutburst.workshop.core.blocks;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.data.BlockData;
 
 public class DecoBlock {
 
     protected Material[] types;
 
-    protected Byte[] data;
+    protected BlockData[] data;
 
     protected Location location;
 
@@ -16,7 +17,7 @@ public class DecoBlock {
 
     protected int index;
 
-    public DecoBlock(Material[] types, Byte[] data, Location location, World world, int index) {
+    public DecoBlock(Material[] types, BlockData[] data, Location location, World world, int index) {
         this.types = types;
         this.data = data;
         this.location = location;
@@ -32,7 +33,7 @@ public class DecoBlock {
         return types;
     }
 
-    public Byte getData() {return data[index];}
+    public BlockData getData() {return data[index];}
 
     public Location getLocation() {return location;}
 

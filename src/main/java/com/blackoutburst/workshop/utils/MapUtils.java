@@ -7,11 +7,17 @@ import com.blackoutburst.workshop.core.blocks.MaterialBlock;
 import com.blackoutburst.workshop.core.blocks.NeededBlock;
 import de.tr7zw.nbtapi.*;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
+import de.tr7zw.nbtapi.plugin.NBTAPI;
+import de.tr7zw.nbtapi.plugin.tests.blocks.BlockNBTTest;
+import de.tr7zw.nbtinjector.NBTInjector;
+import de.tr7zw.nbtinjector.javassist.bytecode.analysis.ControlFlow;
+import de.tr7zw.nbtinjector.javassist.bytecode.stackmap.BasicBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.*;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -154,7 +160,7 @@ public class MapUtils {
                         if (b.getType().equals(Material.DISPENSER)) {
                             writer.write(resourceScan(b,relCoords,"P"));
                         }
-                        if (b.getType().equals(Material.SIGN) || b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
+                        if (b.getType().equals(Material.OAK_SIGN)|| b.getType().equals(Material.OAK_WALL_SIGN)) {
                             Sign sign = (Sign) b.getState();
                             if (sign.getLines().length == 0) continue;
                             String text = sign.getLine(0);
@@ -194,7 +200,7 @@ public class MapUtils {
 
         List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
         List<Material> inventories = Arrays.asList(
-                Material.CHEST, Material.TRAPPED_CHEST, Material.FURNACE, Material.BURNING_FURNACE,
+                Material.CHEST, Material.TRAPPED_CHEST, Material.FURNACE,
                 Material.DISPENSER, Material.DROPPER, Material.BREWING_STAND, Material.HOPPER);
 
         for (DecoBlock i : decoBlocks) {
@@ -202,7 +208,7 @@ public class MapUtils {
             Block b = location.getBlock();
 
             b.setType(i.getType());
-            b.setData(i.getData());
+            b.setBlockData(i.getData());
 
             if (!clear_inventories) continue;
 
@@ -238,7 +244,21 @@ public class MapUtils {
 
                 Block b = world.getBlockAt(anchor.getBlockX() + xOffset, anchor.getBlockY() + yOffset, anchor.getBlockZ() + zOffset);
                 b.setType(type);
-                b.setData(dataType);
+                NBTBlock test = new NBTBlock(b);
+
+                String boop = test.getData().toString();
+
+                ReadWriteNBT a = NBT.parseNBT(boop);
+
+                NBTContainer c = new NBTContainer();
+
+                c.setCompound(a);
+
+                BasicBlock.Maker d = new BasicBlock.Maker();
+
+                NBTTileEntity e = new NBTTileEntity((BlockState) b);
+
+                e.addCompound(boop);
             }
 
             String areaData = name + ", " + world.getName() + ", " + anchor.getBlockX() + ", " + anchor.getBlockY() + ", " + anchor.getBlockZ() + "\n";
@@ -484,7 +504,7 @@ public class MapUtils {
                 List<Byte> dataList = new ArrayList<>();
                 for (String item : items) {
                     Material itemMat = Material.getMaterial(item.split(" ")[0]);
-                    Byte itemData = Byte.parseByte(item.split(" ")[1]);
+                    BlockData itemData = item.split(" ")[1];
                     typeList.add(itemMat);
                     dataList.add(itemData);
                 }
