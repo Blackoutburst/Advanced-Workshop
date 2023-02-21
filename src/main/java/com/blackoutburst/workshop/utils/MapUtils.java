@@ -208,7 +208,6 @@ public class MapUtils {
             Block b = location.getBlock();
 
             b.setType(i.getType());
-            b.setBlockData(i.getData());
 
             if (!clear_inventories) continue;
 
@@ -311,7 +310,6 @@ public class MapUtils {
                         needed = true;
                     }
                     itemsFormatted.add(itemNBT.getString("id"));
-                    itemsFormatted.add(itemNBT.getInteger("Damage"));
                     itemsFormatted.add(needed);
                     ChestItemArray.add(itemsFormatted);
                 }
@@ -321,7 +319,6 @@ public class MapUtils {
         boolean needed = false;
         ArrayList<Object> itemsFormatted = new ArrayList<>();
         itemsFormatted.add(ItemNBT.getString("id"));
-        itemsFormatted.add(ItemNBT.getInteger("Damage"));
         itemsFormatted.add(needed);
         ArrayList<ArrayList<Object>> itemArray = new ArrayList<>();
 
@@ -346,27 +343,18 @@ public class MapUtils {
             for (ArrayList<Object> i : dropperItem) {
 
                 String id = (String) i.get(0);
-                int data = (int) i.get(1);
 
-                if (!(boolean) i.get(2)) {
-                    if (ItemString.length() == 0) {
-                        ItemString.append(id).append(" ").append(data);
-                        continue;
-                    }
-                    ItemString.append(",").append(id).append(" ").append(data);
+                if (!(boolean) i.get(1)) {
+                    ItemString.append((ItemString.length() == 0) ? "" : ",").append(id);
                     continue;
                 }
                 if (type.equals("R")) {
                     continue;
                 }
-                if (NeededItemString.length() == 0) {
-                    NeededItemString.append(id).append(" ").append(data);
-                    continue;
-                }
-                NeededItemString.append(",").append(id).append(" ").append(data);
+                NeededItemString.append((NeededItemString.length() == 0) ? "" : ",").append(id);
             }
         } else {
-            ItemString.append("minecraft:air 0");
+            ItemString.append("minecraft:air");
         }
 
         StringBuilder allToolString = new StringBuilder();
@@ -504,9 +492,7 @@ public class MapUtils {
                 List<Byte> dataList = new ArrayList<>();
                 for (String item : items) {
                     Material itemMat = Material.getMaterial(item.split(" ")[0]);
-                    BlockData itemData = item.split(" ")[1];
                     typeList.add(itemMat);
-                    dataList.add(itemData);
                 }
                 Material[] materials = typeList.toArray(new Material[0]);
                 Byte[] matsData = dataList.toArray(new Byte[0]);
@@ -518,7 +504,7 @@ public class MapUtils {
                 Location relLoc = new Location(world,relX,relY,relZ);
                 Location location = relLoc.add(anchor);
 
-                wsplayer.getDecoBlocks().add(new DecoBlock(materials, matsData, location, world, 0));
+                wsplayer.getDecoBlocks().add(new DecoBlock(materials, location, world, 0));
 
                 if (getNeededBlock(wsplayer, location) != null) {
                     int index = getNeededBlock(wsplayer, location).getIndex();

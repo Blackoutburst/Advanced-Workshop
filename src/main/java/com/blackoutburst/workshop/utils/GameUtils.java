@@ -20,6 +20,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Furnace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -95,9 +96,9 @@ public class GameUtils {
         wsplayer.getPlayer().getInventory().setBoots(new ItemStack(Material.AIR));
     }
 
-    private static void fastCook(Furnace furnace, ItemStack stack, Material output, int data) {
+    private static void fastCook(Furnace furnace, ItemStack stack, Material output) {
         furnace.getInventory().setSmelting(new ItemStack(Material.AIR));
-        furnace.getInventory().setResult(new ItemStack(output, stack.getAmount(), (short) data));
+        furnace.getInventory().setResult(new ItemStack(output, stack.getAmount()));
     }
 
     public static void instantSmelt(Furnace furnace) {
@@ -112,63 +113,80 @@ public class GameUtils {
                 ItemStack stack = furnace.getInventory().getSmelting();
                 if (stack != null) {
                     switch (stack.getType()) {
-                        case POTATO_ITEM:
-                            fastCook(furnace, stack, Material.BAKED_POTATO, 0);
+                        case POTATO:
+                            fastCook(furnace, stack, Material.BAKED_POTATO);
                             break;
-                        case RAW_CHICKEN:
-                            fastCook(furnace, stack, Material.COOKED_CHICKEN, 0);
+                        case CHICKEN:
+                            fastCook(furnace, stack, Material.COOKED_CHICKEN);
                             break;
-                        case RAW_FISH:
-                            fastCook(furnace, stack, Material.COOKED_FISH, 0);
+                        case COD:
+                            fastCook(furnace, stack, Material.COOKED_COD);
                             break;
-                        case PORK:
-                            fastCook(furnace, stack, Material.GRILLED_PORK, 0);
+                        case SALMON:
+                            fastCook(furnace, stack, Material.SALMON);
                             break;
-                        case RAW_BEEF:
-                            fastCook(furnace, stack, Material.COOKED_BEEF, 0);
+                        case PORKCHOP:
+                            fastCook(furnace, stack, Material.COOKED_PORKCHOP);
+                            break;
+                        case BEEF:
+                            fastCook(furnace, stack, Material.COOKED_BEEF);
                             break;
                         case CLAY_BALL:
-                            fastCook(furnace, stack, Material.CLAY_BRICK, 0);
+                            fastCook(furnace, stack, Material.BRICK);
                             break;
                         case SAND:
-                            fastCook(furnace, stack, Material.GLASS, 0);
+                            fastCook(furnace, stack, Material.GLASS);
                             break;
                         case GOLD_ORE:
-                            fastCook(furnace, stack, Material.GOLD_INGOT, 0);
+                            fastCook(furnace, stack, Material.GOLD_INGOT);
                             break;
                         case IRON_ORE:
-                            fastCook(furnace, stack, Material.IRON_INGOT, 0);
+                            fastCook(furnace, stack, Material.IRON_INGOT);
                             break;
                         case NETHERRACK:
-                            fastCook(furnace, stack, Material.NETHER_BRICK_ITEM, 0);
+                            fastCook(furnace, stack, Material.NETHER_BRICK);
                             break;
                         case COBBLESTONE:
-                            fastCook(furnace, stack, Material.STONE, 0);
+                            fastCook(furnace, stack, Material.STONE);
                             break;
                         case CACTUS:
-                            fastCook(furnace, stack, Material.INK_SACK, 2);
+                            fastCook(furnace, stack, Material.GREEN_DYE);
                             break;
-                        case LOG:
-                        case LOG_2:
-                            fastCook(furnace, stack, Material.COAL, 1);
+                        case OAK_LOG:
+                        fastCook(furnace, stack, Material.COAL);
+                            break;
+                        case BIRCH_LOG:
+                            fastCook(furnace, stack, Material.COAL);
+                            break;
+                        case SPRUCE_LOG:
+                            fastCook(furnace, stack, Material.COAL);
+                            break;
+                        case JUNGLE_LOG:
+                            fastCook(furnace, stack, Material.COAL);
+                            break;
+                        case ACACIA_LOG:
+                            fastCook(furnace, stack, Material.COAL);
+                            break;
+                        case DARK_OAK_LOG:
+                            fastCook(furnace, stack, Material.COAL);
                             break;
                         case COAL_ORE:
-                            fastCook(furnace, stack, Material.COAL, 0);
+                            fastCook(furnace, stack, Material.COAL);
                             break;
                         case DIAMOND_ORE:
-                            fastCook(furnace, stack, Material.DIAMOND, 0);
+                            fastCook(furnace, stack, Material.DIAMOND);
                             break;
                         case EMERALD_ORE:
-                            fastCook(furnace, stack, Material.EMERALD, 0);
+                            fastCook(furnace, stack, Material.EMERALD);
                             break;
                         case LAPIS_ORE:
-                            fastCook(furnace, stack, Material.INK_SACK, 4);
+                            fastCook(furnace, stack, Material.LAPIS_LAZULI);
                             break;
-                        case QUARTZ_ORE:
-                            fastCook(furnace, stack, Material.QUARTZ, 0);
+                        case NETHER_QUARTZ_ORE:
+                            fastCook(furnace, stack, Material.QUARTZ);
                             break;
                         case REDSTONE_ORE:
-                            fastCook(furnace, stack, Material.REDSTONE, 0);
+                            fastCook(furnace, stack, Material.REDSTONE);
                             break;
                     }
                 }
@@ -374,11 +392,7 @@ public class GameUtils {
     }
 
     private static ItemStack getItem(String data) {
-        if (data.contains(":")) {
-            String[] subData = data.split(":");
-            return new ItemStack(Integer.parseInt(subData[0]), 1, Short.parseShort(subData[1]));
-        }
-        return new ItemStack(Integer.parseInt(data));
+        return new ItemStack(Material.valueOf(data));
     }
 
     public static MaterialBlock getMaterialBlock(WSPlayer wsPlayer, Location location) {
@@ -488,6 +502,10 @@ public class GameUtils {
         try {
             List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + type + ".craft"));
 
+            // TODO
+            // THIS IS BROKEN
+            // update .craft format
+
             for (String line : lines) {
                 String[] data = line.split(", ");
                 name = data[0];
@@ -502,11 +520,10 @@ public class GameUtils {
                 List<ItemStack> materials = new ArrayList<>();
                 for (int i = 11; i < data.length; i++) {
                     String[] subData = data[i].split(":");
-                    Material itemType = Material.getMaterial(Integer.parseInt(subData[0]));
+                    Material itemType = Material.getMaterial(subData[0]);
                     int itemAmount = Integer.parseInt(subData[2]);
-                    short itemData = Short.parseShort(subData[1]);
 
-                    materials.add(new ItemStack(itemType, itemAmount, itemData));
+                    materials.add(new ItemStack(itemType, itemAmount));
                 }
 
                 wsPlayer.getCrafts().add(new Craft(name, requiredItem, craftingTable, materials));
@@ -517,14 +534,14 @@ public class GameUtils {
         }
     }
 
-    private static boolean hasLostSupport(char direction, boolean solid, int id, byte data) {
+    /* private static boolean hasLostSupport(char direction, boolean solid, Material id, byte data) {
         try {
             List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/supports.txt"));
-            String pattern = direction + ",([0-9]+):?([0-9]+)?";
+            String pattern = direction + ",(\\w+):?([0-9]+)?";
 
             Pattern regexPattern = Pattern.compile(pattern);
 
-            if ((id == 132) && (!solid)) {
+            if ((id == Material.STRING) && (!solid)) {
                 return false;
             }
 
@@ -580,7 +597,7 @@ public class GameUtils {
             newLocation.add(xChange,yChange,zChange);
 
             Block testBlock = newLocation.getWorld().getBlockAt(newLocation);
-            int id = testBlock.getTypeId();
+            Material id = testBlock.getType();
             byte data = testBlock.getData();
 
             if (hasLostSupport(directions[i], solid, id, data) && direction != oppositeDirections[i]) {
@@ -593,7 +610,7 @@ public class GameUtils {
                 supportIterator (newLocation, wsplayer, directions[i]);
             }
         }
-    }
+    } */
 
     public static boolean canBreak(MaterialBlock materialBlock, Player player) {
         if (WSPlayer.getFromPlayer(player).isWaiting()) { return false; }

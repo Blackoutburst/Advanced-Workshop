@@ -26,13 +26,13 @@ public class CraftGUI {
     private static void loadCraft(Inventory inv, Craft craft) {
         ItemStack reqItem = craft.getItemRequired();
 
-        setItem(inv, reqItem.getType(), 1, reqItem.getData().getData(), null, AIR[0]);
+        setItem(inv, reqItem.getType(), 1, null, AIR[0]);
 
         for (int i  = 1; i < 10; i++) {
             ItemStack cTable = craft.getCraftingTable()[i - 1];
             if (cTable == null || cTable.getType().equals(Material.AIR)) continue;
 
-            setItem(inv, cTable.getType(), 1, cTable.getData().getData(), null, AIR[i]);
+            setItem(inv, cTable.getType(), 1, null, AIR[i]);
         }
 
         for (int i = 10; i < AIR.length - 1; i++) {
@@ -40,7 +40,7 @@ public class CraftGUI {
             ItemStack material = craft.getMaterials().get(i - 10);
             if (material == null || material.getType().equals(Material.AIR)) continue;
 
-            setItem(inv, material.getType(), material.getAmount(), material.getData().getData(), null, AIR[i]);
+            setItem(inv, material.getType(), material.getAmount(), null, AIR[i]);
         }
     }
 
@@ -49,14 +49,14 @@ public class CraftGUI {
 
         for (int i = 0; i < 54; i++) {
             if (isAir(i)) continue;
-            setItem(inv, Material.STAINED_GLASS_PANE, 1, 7, "§r", i);
+            setItem(inv, Material.GRAY_STAINED_GLASS_PANE, 1, "§r", i);
         }
 
-        setItem(inv, Material.STAINED_CLAY, 1, 13, "§aSave", 46);
-        setItem(inv, Material.STAINED_CLAY, 1, 13, "§aSave", 47);
+        setItem(inv, Material.GREEN_TERRACOTTA, 1, "§aSave", 46);
+        setItem(inv, Material.GREEN_TERRACOTTA, 1, "§aSave", 47);
 
-        setItem(inv, Material.STAINED_CLAY, 1, 14, "§cDelete", 49);
-        setItem(inv, Material.STAINED_CLAY, 1, 14, "§cDelete", 50);
+        setItem(inv, Material.RED_TERRACOTTA, 1, "§cDelete", 49);
+        setItem(inv, Material.RED_TERRACOTTA, 1, "§cDelete", 50);
 
         if (craft != null) {
             loadCraft(inv, craft);
@@ -65,8 +65,8 @@ public class CraftGUI {
         p.getPlayer().openInventory(inv);
     }
 
-    private static void setItem(Inventory inv, Material mat, int amount, int data, String name, int slot) {
-        ItemStack item = new ItemStack(mat, amount, (short) data);
+    private static void setItem(Inventory inv, Material mat, int amount, String name, int slot) {
+        ItemStack item = new ItemStack(mat, amount);
         if (name != null) {
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(name);
