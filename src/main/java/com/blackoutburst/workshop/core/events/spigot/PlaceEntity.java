@@ -16,12 +16,13 @@ public class PlaceEntity {
         WSPlayer wsplayer = WSPlayer.getFromPlayer(player);
         if (!wsplayer.isInGame()) return;
         List<Material> banned_items = Arrays.asList(
-                Material.ARMOR_STAND, Material.BOAT, Material.MINECART, Material.COMMAND_MINECART,
-                Material.EXPLOSIVE_MINECART, Material.HOPPER_MINECART, Material.POWERED_MINECART,
-                Material.STORAGE_MINECART
+                Material.ARMOR_STAND, Material.OAK_BOAT, Material.BIRCH_BOAT, Material.SPRUCE_BOAT,
+                Material.JUNGLE_BOAT, Material.ACACIA_BOAT, Material.DARK_OAK_BOAT, Material.MINECART,
+                Material.COMMAND_BLOCK_MINECART, Material.TNT_MINECART, Material.HOPPER_MINECART,
+                Material.FURNACE_MINECART, Material.CHEST_MINECART
         );
 
-        if (!banned_items.contains(player.getItemInHand().getType())) return;
+        if (!banned_items.contains(player.getInventory().getItemInMainHand().getType())) return;
 
         event.setUseItemInHand(Event.Result.DENY);
     }

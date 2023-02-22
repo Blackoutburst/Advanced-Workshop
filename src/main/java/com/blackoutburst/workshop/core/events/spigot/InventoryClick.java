@@ -27,12 +27,12 @@ public class InventoryClick {
     public static void execute(InventoryClickEvent event) {
         WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) event.getWhoClicked());
 
-        switch (event.getInventory().getName()) {
+        switch (event.getView().getTitle()) {
             case CraftGUI.NAME:
-                event.setCancelled(CraftGUI.click(event.getClickedInventory(), event.getSlot(), (Player) event.getWhoClicked()));
+                event.setCancelled(CraftGUI.click(event.getClickedInventory(), event.getSlot(), (Player) event.getWhoClicked(), event.getView().getTitle()));
             break;
             case CraftSelectorGUI.NAME:
-                event.setCancelled(CraftSelectorGUI.click(event.getClickedInventory(), event.getSlot(), (Player) event.getWhoClicked()));
+                event.setCancelled(CraftSelectorGUI.click(event.getClickedInventory(), event.getSlot(), (Player) event.getWhoClicked(), event.getView().getTitle()));
             break;
         }
 

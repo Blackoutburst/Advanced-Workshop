@@ -2,10 +2,8 @@ package com.blackoutburst.workshop.core.events.spigot;
 
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.GameUtils;
-import net.minecraft.server.v1_8_R3.ContainerDispenser;
 import org.bukkit.Material;
 import org.bukkit.block.Furnace;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,7 +22,7 @@ public class Interaction {
         if (event.getClickedBlock() == null) return;
 
         Material blockType = event.getClickedBlock().getType();
-        if (blockType.equals(Material.FURNACE) || blockType.equals(Material.BURNING_FURNACE)) {
+        if (blockType.equals(Material.FURNACE)) {
             clickFurnace(event);
         }
     }

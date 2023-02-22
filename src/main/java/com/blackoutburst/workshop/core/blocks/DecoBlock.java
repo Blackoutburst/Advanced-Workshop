@@ -8,7 +8,7 @@ public class DecoBlock {
 
     protected Material[] types;
 
-    protected Byte[] data;
+    // protected BlockData[] data;
 
     protected Location location;
 
@@ -16,9 +16,9 @@ public class DecoBlock {
 
     protected int index;
 
-    public DecoBlock(Material[] types, Byte[] data, Location location, World world, int index) {
+    public DecoBlock(Material[] types, Location location, World world, int index) {
         this.types = types;
-        this.data = data;
+        // this.data = data;
         this.location = location;
         this.world = world;
         this.index = index;
@@ -28,11 +28,9 @@ public class DecoBlock {
         return types[index];
     }
 
-    public Material[] getTypes() {
-        return types;
-    }
+    public Material[] getTypes() { return types; }
 
-    public Byte getData() {return data[index];}
+    // public BlockData getData() {return data[index];}
 
     public Location getLocation() {return location;}
 

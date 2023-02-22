@@ -8,8 +8,8 @@ group 'com.blackoutburst'
 version '1.16.0'
 
 compileJava {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    sourceCompatibility = '16'
+    targetCompatibility = '16'
     options.encoding = "UTF-8"
 }
 
@@ -49,8 +49,7 @@ configurations {
 
 dependencies {
     implementation 'org.jetbrains:annotations:23.0.0'
-    priority 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
-    implementation files('lib/craftbukkit-1.8.8-R0.1-SNAPSHOT.jar')
+    priority 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
     implementation files('lib/NPC-API-0.1.2.jar')
     implementation files('lib/item-nbt-api-plugin-2.11.1.jar')
 }

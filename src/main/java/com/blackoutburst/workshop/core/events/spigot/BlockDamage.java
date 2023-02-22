@@ -26,11 +26,10 @@ public class BlockDamage {
 
         player.getInventory().addItem(new ItemStack(materialBlock.getType(), 1, materialBlock.getData()));
 
-        GameUtils.supportIterator(block.getLocation(), wsplayer, '0');
+        // GameUtils.supportIterator(block.getLocation(), wsplayer, '0');
 
         EffectsUtils.breakBlock(block);
         block.setType(Material.AIR);
-        block.setData((byte) 0);
     }
 
     public static void execute(BlockDamageEvent event) {

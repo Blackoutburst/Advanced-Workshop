@@ -20,7 +20,7 @@ public class CountdownDisplay extends BukkitRunnable {
     public void run() {
         if (!wsplayer.isInGame() || seconds == 0) {
             this.cancel();
-            player.playSound(player.getLocation(), Sound.ORB_PICKUP, (seconds == 0 ? 1 : 0), 0.8f);
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, (seconds == 0 ? 1 : 0), 0.8f);
             return;
         }
         char color;
@@ -40,7 +40,7 @@ public class CountdownDisplay extends BukkitRunnable {
                 break;
         }
 
-        player.playSound(player.getLocation(), Sound.NOTE_STICKS,1,0.8f);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 0.8f);
         MiscUtils.sendTitle(player,"§" + color + seconds,"",0,20,0);
         seconds--;
     }

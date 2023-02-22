@@ -11,7 +11,7 @@ public class EntityInteract {
         if (event.getEntity() instanceof Player) {
             WSPlayer player = WSPlayer.getFromPlayer((Player) event.getEntity());
             if (player != null) {
-                if (event.getBlock().getType() == Material.SOIL)
+                if (event.getBlock().getType() == Material.FARMLAND)
                     event.setCancelled(player.isInGame());
             }
         }

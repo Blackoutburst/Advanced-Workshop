@@ -9,6 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import java.io.PrintWriter;
 
 public class GUIUtils {
+    //
+    // TODO
+    // format broken, redo
 
     public static void deleteCraft(Inventory inv, WSPlayer p) {
         if (p.getInventoryType() == null) return;
@@ -44,15 +47,15 @@ public class GUIUtils {
 
             for (Craft c : p.getCrafts()) {
                 writer.write(c.getName() + ", ");
-                writer.write(c.getItemRequired().getTypeId() + ":" + c.getItemRequired().getData().getData() + ", ");
+                writer.write(c.getItemRequired().getType() + ", ");
 
                 for (int i  = 0; i < 9; i++)
-                    writer.write(c.getCraftingTable()[i].getTypeId() + ":" + c.getCraftingTable()[i].getData().getData() + ", ");
+                    writer.write(c.getCraftingTable()[i].getType() + ", ");
 
                 for (int i = 0; i < c.getMaterials().size(); i++) {
                     ItemStack material = c.getMaterials().get(i);
 
-                    writer.write(material.getTypeId() + ":" + material.getData().getData() + ":" + material.getAmount() + (i == (c.getMaterials().size() - 1) ? "\n" : ", "));
+                    writer.write(material.getType() + ":" + material.getAmount() + (i == (c.getMaterials().size() - 1) ? "\n" : ", "));
                 }
             }
             writer.close();
@@ -90,10 +93,10 @@ public class GUIUtils {
 
             for (Craft c : p.getCrafts()) {
                 writer.write(c.getName() + ", ");
-                writer.write(c.getItemRequired().getTypeId() + ":" + c.getItemRequired().getData().getData() + ", ");
+                writer.write(c.getItemRequired().getType() + ", ");
 
                 for (int i  = 0; i < 9; i++)
-                    writer.write(c.getCraftingTable()[i].getTypeId() + ":" + c.getCraftingTable()[i].getData().getData() + ", ");
+                    writer.write(c.getCraftingTable()[i].getType() + ", ");
 
                 if (c.getMaterials().size() == 0) {
                     writer.write("0:0:0, 0:0:0, 0:0:0, 0:0:0, 0:0:0, 0:0:0, 0:0:0, 0:0:0, 0:0:0, 0:0:0, 0:0:0, 0:0:0\n");
@@ -101,12 +104,12 @@ public class GUIUtils {
                 for (int i = 0; i < c.getMaterials().size(); i++) {
                     ItemStack material = c.getMaterials().get(i);
 
-                    writer.write(material.getTypeId() + ":" + material.getData().getData() + ":" + material.getAmount() + (i == (c.getMaterials().size() - 1) ? "\n" : ", "));
+                    writer.write(material.getType() + ":" + material.getAmount() + (i == (c.getMaterials().size() - 1) ? "\n" : ", "));
                 }
             }
 
             writer.write(StringUtils.formatItemName(reqItem.getType().name()) + ", ");
-            writer.write(reqItem.getTypeId() + ":" + reqItem.getData().getData() + ", ");
+            writer.write(reqItem.getType() + ", ");
 
             for (int i  = 1; i < 10; i++) {
                 ItemStack cTable = inv.getItem(order[i]);
@@ -114,7 +117,7 @@ public class GUIUtils {
                     writer.write("0:0" + ", ");
                     continue;
                 }
-                writer.write(cTable.getTypeId() + ":" + cTable.getData().getData() + ", ");
+                writer.write(cTable.getType() + ", ");
             }
 
             for (int i  = 10; i < order.length; i++) {
@@ -123,7 +126,7 @@ public class GUIUtils {
                     writer.write("0:0:0" + (i == (order.length -1) ? "\n" : ", "));
                     continue;
                 }
-                writer.write(mats.getTypeId() + ":" + mats.getData().getData() + ":" + mats.getAmount() + (i == (order.length -1) ? "\n" : ", "));
+                writer.write(mats.getType() + ":" + mats.getAmount() + (i == (order.length -1) ? "\n" : ", "));
             }
 
             writer.close();
