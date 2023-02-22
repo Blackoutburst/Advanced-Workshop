@@ -111,7 +111,7 @@ public class Main extends JavaPlugin {
                             public void run() {
                                 GameUtils.startRound(wsPlayer);
                             }
-                        }.runTaskLater(Main.getPlugin(Main.class), round_delay * 20);
+                        }.runTaskLater(Main.getPlugin(Main.class), (round_delay * 20) - 1);
                     } else {
                         roundTime = StringUtils.ROUND.format(((float) Duration.between(wsPlayer.getTimers().getRoundBegin(), Instant.now()).toMillis() / 1000.0f)) + "s";
                     }
