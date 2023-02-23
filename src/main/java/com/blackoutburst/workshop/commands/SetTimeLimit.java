@@ -10,9 +10,8 @@ public class SetTimeLimit implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) return true;
+        if (!(sender instanceof Player player)) return true;
 
-        Player player = (Player) sender;
         WSPlayer wsplayer = WSPlayer.getFromPlayer(player);
         if (wsplayer == null) return true;
 

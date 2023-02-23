@@ -1,54 +1,14 @@
 package com.blackoutburst.workshop.core.events.listeners;
 
-import com.blackout.npcapi.core.APlayer;
-import com.blackout.npcapi.core.NPC;
-import com.blackout.npcapi.core.NPCPacket;
-import com.blackoutburst.workshop.core.Action;
-import com.blackoutburst.workshop.core.NMSEntityInteractEvent;
-import com.blackoutburst.workshop.core.NMSNPCInteractEvent;
-import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.core.events.nms.NMSEntityInteract;
-import com.blackoutburst.workshop.core.events.nms.NPCInteract;
-import com.blackoutburst.workshop.nms.NMSEntities;
-import org.bukkit.entity.Player;
+import com.blackoutburst.workshop.core.events.nms.EntityUse;
+import com.blackoutburst.workshop.nms.NMSEntityUseEvent;
+import com.blackoutburst.workshop.nms.NMSPacket;
 
-public class NMSListener implements NPCPacket {
+public class NMSListener implements NMSPacket {
 
     @Override
-    public void onLeftClick(Player player, int id) {
-        APlayer ap = APlayer.get(player);
-        for (NPC npc : ap.npcs) {
-            if (id == npc.getEntityId()) {
-                NPCInteract.execute(new NMSNPCInteractEvent(player, Action.LEFT_CLICK, npc));
-                return;
-            }
-        }
-
-        WSPlayer wp = WSPlayer.getFromPlayer(player);
-        for (NMSEntities entity : wp.getEntities()) {
-            if (id == entity.getID()) {
-                NMSEntityInteract.execute(new NMSEntityInteractEvent(player, Action.LEFT_CLICK, entity));
-                return;
-            }
-        }
+    public void onEntityUse(NMSEntityUseEvent event) {
+        EntityUse.execute(event);
     }
 
-    @Override
-    public void onRightClick(Player player, int id) {
-        APlayer ap = APlayer.get(player);
-        for (NPC npc : ap.npcs) {
-            if (id == npc.getEntityId()) {
-                NPCInteract.execute(new NMSNPCInteractEvent(player, Action.RIGHT_CLICK, npc));
-                return;
-            }
-        }
-
-        WSPlayer wp = WSPlayer.getFromPlayer(player);
-        for (NMSEntities entity : wp.getEntities()) {
-            if (id == entity.getID()) {
-                NMSEntityInteract.execute(new NMSEntityInteractEvent(player, Action.RIGHT_CLICK, entity));
-                return;
-            }
-        }
-    }
 }

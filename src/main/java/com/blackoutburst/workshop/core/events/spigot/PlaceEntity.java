@@ -1,7 +1,6 @@
 package com.blackoutburst.workshop.core.events.spigot;
 
 import com.blackoutburst.workshop.core.WSPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

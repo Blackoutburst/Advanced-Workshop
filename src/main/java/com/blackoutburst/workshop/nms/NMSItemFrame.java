@@ -1,49 +1,81 @@
 package com.blackoutburst.workshop.nms;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-public class NMSItemFrame {
+public class NMSItemFrame extends NMSEntity {
 
-    private static Object toNMSItemStack(ItemStack stack) {
-        try {
-            final Class<?> itemStackClass = NMS.getClass("ItemStack");
-            final Class<?> itemClass = NMS.getClass("Item");
+    protected NMSEnumDirection.Direction direction;
+    protected ItemStack itemStack;
 
-            final Constructor<?> stackConstructor = itemStackClass.getConstructor(itemClass, int.class, int.class);
-
-            final Method method = itemClass.getMethod("getById", int.class);
-
-            return stackConstructor.newInstance(method.invoke(null, stack.getType().getId()), stack.getAmount(), (int) stack.getData().getData());
-        } catch (Exception ignored) {}
-        try {
-            final Class<?> itemStackClass = NMS.getClass("ItemStack");
-            final Class<?> blockClass = NMS.getClass("Block");
-
-            final Constructor<?> stackConstructor = itemStackClass.getConstructor(blockClass, int.class, int.class);
-
-            final Method method = blockClass.getMethod("getById", int.class);
-
-            return stackConstructor.newInstance(method.invoke(null, stack.getType().getId()), stack.getAmount(), (int) stack.getData().getData());
-        } catch (Exception ignored) {}
-        return null;
+    public NMSItemFrame(World world, Object... parameters) {
+        super(world, NMSEntityType.ITEM_FRAME, parameters);
     }
 
-    public static void setItem(Player player, NMSEntities entity, ItemStack stack) {
+    public void setDirection(NMSEnumDirection.Direction direction) {
         try {
-            final Class<?> entityClass = entity.entity.getClass();
-            final Class<?> itemStackClass = NMS.getClass("ItemStack");
+            setYawPitch(direction.getYaw(), direction.getPitch());
 
-            final Method method = entityClass.getMethod("setItem", itemStackClass);
-
-            method.invoke(entity.entity, toNMSItemStack(stack));
-            NMSEntityMetadata.send(player, entity);
+            this.direction = direction;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private Object toNMSItemStack(ItemStack stack) {
+        try {
+            Class<?> itemStackClass = NMS.getClass("ItemStack");
+            Class<?> blocksClass = NMS.getClass("Blocks");
+            Class<?> iMaterialClass = NMS.getClass("IMaterial");
+
+            Constructor<?> stackConstructor = itemStackClass.getConstructor(iMaterialClass);
+            Object block = blocksClass.getField(stack.getType().toString()).get(null);
+
+            return stackConstructor.newInstance(block);
+        } catch (Exception ignored) {}
+        try {
+            Class<?> itemStackClass = NMS.getClass("ItemStack");
+            Class<?> itemsClass = NMS.getClass("Items");
+            Class<?> iMaterialClass = NMS.getClass("IMaterial");
+
+            Constructor<?> stackConstructor = itemStackClass.getConstructor(iMaterialClass);
+            Object item = itemsClass.getField(stack.getType().toString()).get(null);
+
+            return stackConstructor.newInstance(item);
+        } catch (Exception ignored) {}
+        return null;
+    }
+
+    public void setItem(Player player, ItemStack stack) {
+        try {
+            Class<?> entityClass = this.entity.getClass();
+            Class<?> itemStackClass = NMS.getClass("ItemStack");
+
+            Method method = entityClass.getMethod("setItem", itemStackClass);
+
+            method.invoke(this.entity, toNMSItemStack(stack));
+            NMSPacketPlayOutEntityMetadata.send(player, this);
+
+            itemStack = stack;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void spawn(Player player) {
+        NMSPacketPlayOutSpawnEntity.send(player, this, this.direction.getLogicalDirection());
+        NMSPacketPlayOutEntityMetadata.send(player, this);
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
+
+    public NMSEnumDirection.Direction getDirection() {
+        return direction;
+    }
 }

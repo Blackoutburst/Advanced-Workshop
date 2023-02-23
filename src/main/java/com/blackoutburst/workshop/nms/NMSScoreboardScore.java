@@ -9,6 +9,8 @@ public class NMSScoreboardScore {
 
     protected String name;
 
+    protected int score;
+
     private Class<?> scoreClass;
 
     public String getName() {
@@ -17,7 +19,7 @@ public class NMSScoreboardScore {
 
     public int getScore() {
         try {
-            final Method method = scoreClass.getMethod("getScore");
+            Method method = scoreClass.getMethod("getScore");
 
             return (int) method.invoke(scoreboardScore);
         } catch(Exception e) {
@@ -30,10 +32,10 @@ public class NMSScoreboardScore {
         try {
             scoreClass = NMS.getClass("ScoreboardScore");
 
-            final Class<?> scoreboardClass = NMS.getClass("Scoreboard");
-            final Class<?> scoreboardObjectiveClass = NMS.getClass("ScoreboardObjective");
+            Class<?> scoreboardClass = NMS.getClass("Scoreboard");
+            Class<?> scoreboardObjectiveClass = NMS.getClass("ScoreboardObjective");
 
-            final Constructor<?> scoreboardConstructor = scoreClass.getConstructor(scoreboardClass, scoreboardObjectiveClass, String.class);
+            Constructor<?> scoreboardConstructor = scoreClass.getConstructor(scoreboardClass, scoreboardObjectiveClass, String.class);
 
             scoreboardScore = scoreboardConstructor.newInstance(scoreboard.scoreboard, scoreboard.objective, name);
             this.name = name;
@@ -46,12 +48,13 @@ public class NMSScoreboardScore {
         try {
             scoreClass = NMS.getClass("ScoreboardScore");
 
-            final Class<?> scoreboardClass = NMS.getClass("Scoreboard");
-            final Class<?> scoreboardObjectiveClass = NMS.getClass("ScoreboardObjective");
+            Class<?> scoreboardClass = NMS.getClass("Scoreboard");
+            Class<?> scoreboardObjectiveClass = NMS.getClass("ScoreboardObjective");
 
-            final Constructor<?> scoreboardConstructor = scoreClass.getConstructor(scoreboardClass, scoreboardObjectiveClass, String.class);
+            Constructor<?> scoreboardConstructor = scoreClass.getConstructor(scoreboardClass, scoreboardObjectiveClass, String.class);
 
             scoreboardScore = scoreboardConstructor.newInstance(scoreboard.scoreboard, scoreboard.objective, name);
+            this.score = score;
             this.name = name;
             setScore(score);
         } catch(Exception e) {
@@ -61,7 +64,7 @@ public class NMSScoreboardScore {
 
     public void setScore(int value) {
         try {
-            final Method method = scoreClass.getMethod("setScore", int.class);
+            Method method = scoreClass.getMethod("setScore", int.class);
 
             method.invoke(scoreboardScore, value);
         } catch(Exception e) {

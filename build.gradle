@@ -48,8 +48,6 @@ configurations {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:23.0.0'
-    priority 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
-    implementation files('lib/NPC-API-0.1.2.jar')
+    implementation 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
     implementation files('lib/item-nbt-api-plugin-2.11.1.jar')
 }

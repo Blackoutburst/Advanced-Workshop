@@ -1,6 +1,5 @@
 package com.blackoutburst.workshop.core.blocks;
 
-import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
 
 public class RandomItem {

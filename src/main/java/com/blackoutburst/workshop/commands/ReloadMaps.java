@@ -1,7 +1,7 @@
 package com.blackoutburst.workshop.commands;
 
 import com.blackoutburst.workshop.Main;
-import com.blackoutburst.workshop.utils.MapUtils;
+import com.blackoutburst.workshop.utils.map.MapUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

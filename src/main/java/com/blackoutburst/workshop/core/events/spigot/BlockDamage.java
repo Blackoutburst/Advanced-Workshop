@@ -2,8 +2,8 @@ package com.blackoutburst.workshop.core.events.spigot;
 
 import com.blackoutburst.workshop.core.blocks.MaterialBlock;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.utils.EffectsUtils;
-import com.blackoutburst.workshop.utils.GameUtils;
+import com.blackoutburst.workshop.utils.minecraft.BlockUtils;
+import com.blackoutburst.workshop.utils.misc.EffectsUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -16,11 +16,11 @@ public class BlockDamage {
         Player player = wsplayer.getPlayer();
         if (wsplayer.getPlayArea() == null) return;
 
-        MaterialBlock materialBlock = GameUtils.getMaterialBlock(wsplayer, block.getLocation());
+        MaterialBlock materialBlock = BlockUtils.getMaterialBlock(wsplayer, block.getLocation());
 
         if (materialBlock == null) return;
 
-        if (!(GameUtils.canBreak(materialBlock,player))) {
+        if (!(BlockUtils.canBreak(materialBlock,player))) {
             return;
         }
 

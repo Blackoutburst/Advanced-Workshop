@@ -6,9 +6,13 @@ public class NMSBoard {
 
     private final NMSScoreboard scoreboard;
 
+    private final Player player;
+
     public NMSBoard(Player player, String title) {
+        this.player = player;
+
         scoreboard = new NMSScoreboard();
-        scoreboard.registerObjective(player.getName(), "dummy");
+        scoreboard.registerObjective(player.getName(), NMSScoreboard.EnumScoreboardHealthDisplay.INTEGER);
         scoreboard.setDisplaySlot(NMSScoreboard.DisplaySlot.SIDEBAR);
         scoreboard.setDisplayName(title);
 
@@ -21,29 +25,29 @@ public class NMSBoard {
         NMSScoreboardObjective.send(player, scoreboard, NMSScoreboardObjective.ObjectiveOption.EDIT);
     }
 
-    public void set(Player player, int line, String text) {
-        removeLine(player, line);
+    public void set(int line, String text) {
+        removeLine(line);
 
         NMSScoreboardScore score = new NMSScoreboardScore(scoreboard, text, line);
-        NMSScoreboardScorePacket.send(player, score);
+        NMSPacketPlayOutScoreboardScore.send(player, score);
         scoreboard.getLines().add(score);
     }
 
-    public void removeLine(Player player, int line) {
+    public void removeLine(int line) {
         for (int i = 0; i < scoreboard.getLines().size(); i++) {
             NMSScoreboardScore s = scoreboard.getLines().get(i);
 
             if (s.getScore() == line) {
-                NMSScoreboardScorePacket.remove(player, s);
+                NMSPacketPlayOutScoreboardScore.remove(player, s);
                 scoreboard.getLines().remove(s);
                 break;
             }
         }
     }
 
-    public void clear(Player player) {
+    public void clear() {
         for (NMSScoreboardScore s : scoreboard.getLines())
-            NMSScoreboardScorePacket.remove(player, s);
+            NMSPacketPlayOutScoreboardScore.remove(player, s);
 
         scoreboard.getLines().clear();
     }

@@ -1,7 +1,7 @@
 package com.blackoutburst.workshop.core.events.spigot;
 
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.utils.GameUtils;
+import com.blackoutburst.workshop.utils.minecraft.FurnaceUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Furnace;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -13,7 +13,7 @@ public class Interaction {
         Furnace furnace = (Furnace) event.getClickedBlock().getState();
         furnace.getInventory().setFuel(new ItemStack(Material.COAL, 64));
 
-        GameUtils.instantSmelt(furnace);
+        FurnaceUtils.instantSmelt(furnace);
     }
 
     public static void execute(PlayerInteractEvent event) {

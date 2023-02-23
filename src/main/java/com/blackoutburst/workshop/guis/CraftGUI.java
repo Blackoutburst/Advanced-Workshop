@@ -1,9 +1,9 @@
 package com.blackoutburst.workshop.guis;
 
-import com.blackoutburst.workshop.Craft;
+import com.blackoutburst.workshop.core.Craft;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.utils.GUIUtils;
+import com.blackoutburst.workshop.utils.minecraft.GUIUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

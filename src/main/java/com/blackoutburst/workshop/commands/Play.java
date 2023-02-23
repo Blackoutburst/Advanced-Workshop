@@ -1,25 +1,23 @@
 package com.blackoutburst.workshop.commands;
 
-import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
-import com.blackoutburst.workshop.core.GameOptions;
-import com.blackoutburst.workshop.core.GameStarter;
+import com.blackoutburst.workshop.core.game.GameOptions;
+import com.blackoutburst.workshop.core.game.GameStarter;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.utils.CountdownDisplay;
-import com.blackoutburst.workshop.utils.DBUtils;
-import com.blackoutburst.workshop.utils.GameUtils;
-import org.bukkit.Bukkit;
+import com.blackoutburst.workshop.core.game.RoundLogic;
+import com.blackoutburst.workshop.utils.map.LogicUtils;
+import com.blackoutburst.workshop.utils.files.DBUtils;
+import com.blackoutburst.workshop.utils.map.MapUtils;
+import com.blackoutburst.workshop.utils.minecraft.CraftUtils;
+import com.blackoutburst.workshop.utils.misc.EntityUtils;
+import com.blackoutburst.workshop.utils.misc.MiscUtils;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-
-import java.time.Instant;
-import java.util.Objects;
 
 public class Play implements CommandExecutor {
 
@@ -28,99 +26,121 @@ public class Play implements CommandExecutor {
             wsplayer.getPlayer().sendMessage("§cInvalid craft amount provided, using your current settings.");
             return;
         }
-        int limit = Integer.parseInt(value);
 
+        int limit = Integer.parseInt(value);
         if (limit <= 0) {
             wsplayer.getGameOptions().setUnlimitedCrafts(true);
-        } else {
-            wsplayer.getGameOptions().setUnlimitedCrafts(false);
-            wsplayer.getGameOptions().setCraftLimit(limit);
+            return;
         }
+
+        wsplayer.getGameOptions().setUnlimitedCrafts(false);
+        wsplayer.getGameOptions().setCraftLimit(limit);
     }
-    public void setTimeLimit(WSPlayer wsplayer, String value) {
+
+    private void setTimeLimit(WSPlayer wsplayer, String value) {
         GameOptions gameoptions = wsplayer.getGameOptions();
+
         if (!value.matches("([0-9]+([.][0-9]+)?)?")) {
             wsplayer.getPlayer().sendMessage("§cInvalid time limit provided, using your current settings.");
             gameoptions.setTimeLimited(true);
             gameoptions.setUnlimitedCrafts(true);
             return;
         }
+
         if (value.equals("")) {
             gameoptions.setTimeLimited(true);
             gameoptions.setTimeLimit(gameoptions.getDefaultTimeLimit());
             gameoptions.setUnlimitedCrafts(true);
+            return;
         }
-        else {
-            float limit = Float.parseFloat(value);
-            gameoptions.setTimeLimited(true);
-            gameoptions.setTimeLimit(limit);
-            gameoptions.setUnlimitedCrafts(true);
+
+        float limit = Float.parseFloat(value);
+        gameoptions.setTimeLimited(true);
+        gameoptions.setTimeLimit(limit);
+        gameoptions.setUnlimitedCrafts(true);
+
+    }
+
+    private void initPlayer(WSPlayer wsplayer, PlayArea area) {
+        wsplayer.getPlayer().sendMessage("§eThe game is about to start!");
+        wsplayer.setPlayArea(area);
+        wsplayer.setCurrentCraftIndex(0);
+        wsplayer.setWaiting(true);
+        wsplayer.setInGame(true);
+        wsplayer.setNextRound(false);
+        wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
+        wsplayer.getBoard().set(14, "Map: §e" + area.getType());
+
+        CraftUtils.loadCraft(wsplayer, area.getType());
+        MapUtils.loadMaterials(wsplayer, area.getType());
+        MapUtils.readSigns(wsplayer, area.getType());
+    }
+
+    private void setGameLimits(WSPlayer wsplayer, GameOptions gameoptions, String[] args) {
+        if (args.length < 2) {
+            gameoptions.setCraftLimit(gameoptions.getDefaultCraftLimit());
+            return;
         }
+
+        switch (args[1]) {
+            case "time" -> {
+                if (args.length == 2) setTimeLimit(wsplayer, "");
+                if (args.length > 2) setTimeLimit(wsplayer, args[2]);
+            }
+            case "all" -> gameoptions.setCraftLimit(wsplayer.getCrafts().size());
+            default -> setCraftAmount(wsplayer, args[1]);
+        }
+    }
+
+    private void setBagSize(WSPlayer wsplayer, GameOptions gameoptions) {
+        switch (gameoptions.getRandomType()) {
+            case 'N' -> gameoptions.setBagSize(wsplayer.getCrafts().size());
+            case 'R' -> gameoptions.setBagSize(10);
+        }
+    }
+
+    private void startGame(WSPlayer wsplayer, GameOptions gameoptions, PlayArea area) {
+        int start_delay = gameoptions.getCountDownTime();
+
+        BukkitRunnable displayCountdown = new LogicUtils.CountdownDisplay(start_delay, wsplayer);
+
+        displayCountdown.runTaskTimer(Main.getPlugin(Main.class),0,20);
+
+        RoundLogic.prepareNextRound(wsplayer);
+
+        Integer gameCount = DBUtils.getData(wsplayer.getPlayer(), "gameCount", Integer.class);
+        Integer mapGameCount = DBUtils.getData(wsplayer.getPlayer(), area.getType() + ".gameCount", Integer.class);
+
+        GameStarter startGame = new GameStarter(wsplayer, area, gameCount, mapGameCount);
+        wsplayer.setGamestarter(startGame);
+
+        startGame.runTaskLater(Main.getPlugin(Main.class), start_delay * 20L);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
+        if (sender instanceof Player player) {
+            WSPlayer wsplayer = WSPlayer.getFromPlayer(player);
             if (wsplayer == null || wsplayer.isInGame()) return true;
+
             GameOptions gameoptions = wsplayer.getGameOptions();
 
             for (PlayArea area : Main.playAreas) {
                 if (area.isBusy()) continue;
                 if (args.length > 0 && !args[0].equals(area.getType())) continue;
                 area.setBusy(true);
-                wsplayer.getPlayer().sendMessage("§eThe game is about to start!");
-                wsplayer.setPlayArea(area);
-                wsplayer.setCurrentCraftIndex(0);
-                GameUtils.loadCraft(wsplayer, area.getType());
-                GameUtils.loadMaterials(wsplayer, area.getType());
-                GameUtils.spawnEntities(wsplayer, area.getType());
-                wsplayer.setWaiting(true);
-                wsplayer.setInGame(true);
-                wsplayer.setNextRound(false);
-                wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
 
-                wsplayer.getBoard().set(wsplayer.getPlayer(), 14, "Map: §e" + area.getType());
-                if (args.length > 1) {
-                    if (args[1].equals("time")) {
-                        if (args.length == 2) setTimeLimit(wsplayer, "");
-                        if (args.length > 2) setTimeLimit(wsplayer, args[2]);
-                    }
-                    else if (args[1].equals("all")) {
-                        gameoptions.setCraftLimit(wsplayer.getCrafts().size());
-                    }
-                    else setCraftAmount(wsplayer, args[1]);
-                }
-                else gameoptions.setCraftLimit(gameoptions.getDefaultCraftLimit());
+                initPlayer(wsplayer, area);
+                setGameLimits(wsplayer, gameoptions, args);
+                setBagSize(wsplayer, gameoptions);
 
-                if (gameoptions.getRandomType() == 'N') {
-                    gameoptions.setBagSize(wsplayer.getCrafts().size());
-                }
-                if (gameoptions.getRandomType() == 'R') {
-                    gameoptions.setBagSize(10);
-                }
+                CraftUtils.updateCraftList(wsplayer);
 
-                GameUtils.updateCraftList(wsplayer);
-
-                int start_delay = gameoptions.getCountDownTime();
-
-                BukkitRunnable displayCountdown = new CountdownDisplay(start_delay, wsplayer);
-
-                displayCountdown.runTaskTimer(Main.getPlugin(Main.class),0,20);
-
-                GameUtils.prepareNextRound(wsplayer);
-                wsplayer.getPlayer().getInventory().clear();
-
-                Integer gameCount = DBUtils.getData(wsplayer.getPlayer(), "gameCount", Integer.class);
-                Integer mapGameCount = DBUtils.getData(wsplayer.getPlayer(), area.getType() + ".gameCount", Integer.class);
-
-                GameStarter startGame = new GameStarter(wsplayer, area, gameCount, mapGameCount);
-                wsplayer.setGamestarter(startGame);
-
-                startGame.runTaskLater(Main.getPlugin(Main.class), start_delay * 20L);
+                startGame(wsplayer, gameoptions, area);
                 return true;
             }
-            wsplayer.getPlayer().sendMessage("No game available");
+
+            player.sendMessage("No game available");
         }
 
         return true;

@@ -1,13 +1,13 @@
 package com.blackoutburst.workshop.core;
 
-import com.blackout.npcapi.core.NPC;
-import com.blackoutburst.workshop.Craft;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.blocks.DecoBlock;
 import com.blackoutburst.workshop.core.blocks.MaterialBlock;
 import com.blackoutburst.workshop.core.blocks.NeededBlock;
+import com.blackoutburst.workshop.core.game.GameOptions;
+import com.blackoutburst.workshop.core.game.GameStarter;
 import com.blackoutburst.workshop.nms.NMSBoard;
-import com.blackoutburst.workshop.nms.NMSEntities;
+import com.blackoutburst.workshop.nms.NMSEntity;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -30,10 +30,6 @@ public class WSPlayer {
 
     protected String inventoryType;
 
-    protected NMSEntities[] itemFrames = new NMSEntities[10];
-
-    protected List<NPC> npcs = new ArrayList<>();
-
     protected Location scanWand1;
     protected Location scanWand2;
 
@@ -42,9 +38,7 @@ public class WSPlayer {
     protected List<Craft> crafts = new ArrayList<>();
 
     protected List<MaterialBlock> materialBlocks = new ArrayList<>();
-
     protected List<DecoBlock> decoBlocks = new ArrayList<>();
-
     protected List<NeededBlock> neededBlocks = new ArrayList<>();
 
     protected Timers timers = new Timers();
@@ -58,21 +52,21 @@ public class WSPlayer {
 
     protected GameOptions gameOptions;
 
-    protected List<NMSEntities> entities = new ArrayList<>();
+    protected List<NMSEntity> entities = new ArrayList<>();
 
     public WSPlayer(Player player) {
         this.player = player;
         this.board = new NMSBoard(player, "§6Workshop");
-        board.set(player,15, "§e§m--------------------");
-        board.set(player, 14, "Map: §enone");
-        board.set(player, 12, "Game Time: §b0.00s");
-        board.set(player, 11, " ");
-        board.set(player, 10, "Craft: §enone");
-        board.set(player, 9, "Craft Time: §b0.00s");
-        board.set(player, 8, "    ");
-        board.set(player, 7, "Round: §enone");
-        board.set(player, 6, "Time remaining: §bN/A");
-        board.set(player,5, "§e§m-------------------- ");
+        board.set(15, "§e§m--------------------");
+        board.set(14, "Map: §enone");
+        board.set(12, "Game Time: §b0.00s");
+        board.set(11, " ");
+        board.set(10, "Craft: §enone");
+        board.set(9, "Craft Time: §b0.00s");
+        board.set(8, "    ");
+        board.set(7, "Round: §enone");
+        board.set(6, "Time remaining: §bN/A");
+        board.set(5, "§e§m-------------------- ");
 
         gameOptions = new GameOptions(this);
     }
@@ -148,20 +142,12 @@ public class WSPlayer {
         return neededBlocks;
     }
 
-    public List<NPC> getNpcs() {
-        return npcs;
-    }
-
     public boolean isNextRound() {
         return nextRound;
     }
 
     public void setNextRound(boolean nextRound) {
         this.nextRound = nextRound;
-    }
-
-    public NMSEntities[] getItemFrames() {
-        return itemFrames;
     }
 
     public String getInventoryType() {
@@ -212,7 +198,7 @@ public class WSPlayer {
         this.jumpPadCooldown = jumpPadCooldown;
     }
 
-    public List<NMSEntities> getEntities() {
+    public List<NMSEntity> getEntities() {
         return entities;
     }
 }

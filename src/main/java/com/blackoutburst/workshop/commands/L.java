@@ -2,12 +2,7 @@ package com.blackoutburst.workshop.commands;
 
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.utils.GameUtils;
-import com.blackoutburst.workshop.utils.MapFileUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.inventory.ItemStack;
+import com.blackoutburst.workshop.core.game.EndGameLogic;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,17 +14,17 @@ public class L implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
+        if (sender instanceof Player player) {
+            WSPlayer wsplayer = WSPlayer.getFromPlayer(player);
 
             if (wsplayer == null || !wsplayer.isInGame()) {
                 sender.sendMessage("§aTeleporting...");
-                ((Player) sender).teleport(Main.spawn);
+                (player).teleport(Main.spawn);
                 return true;
             }
 
             wsplayer.getTimers().setMapEnd(Instant.now());
-            GameUtils.endGame(wsplayer);
+            EndGameLogic.endGame(wsplayer);
         }
         return true;
     }

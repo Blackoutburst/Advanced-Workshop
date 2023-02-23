@@ -14,12 +14,12 @@ public class NMSScoreboardObjective {
 
     public static void send(Player player, NMSScoreboard scoreboard, ObjectiveOption option) {
         try {
-            final Class<?> packetClass = NMS.getClass("PacketPlayOutScoreboardObjective");
-            final Class<?> objectiveClass = NMS.getClass("ScoreboardObjective");
+            Class<?> packetClass = NMS.getClass("PacketPlayOutScoreboardObjective");
+            Class<?> objectiveClass = NMS.getClass("ScoreboardObjective");
 
-            final Constructor<?> packetConstructor = packetClass.getConstructor(objectiveClass, int.class);
+            Constructor<?> packetConstructor = packetClass.getConstructor(objectiveClass, int.class);
 
-            final Object packet = packetConstructor.newInstance(scoreboard.objective, option.ordinal());
+            Object packet = packetConstructor.newInstance(scoreboard.objective, option.ordinal());
 
             NMS.sendPacket(player, packet);
         } catch (Exception e) {
