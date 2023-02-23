@@ -2,6 +2,8 @@ package com.blackoutburst.workshop.core;
 
 public class GameOptions {
 
+    protected boolean showNonPBs;
+
     protected int craftLimit;
 
     protected int defaultCraftLimit;
@@ -28,6 +30,7 @@ public class GameOptions {
         this.isTimeLimited = false;
         this.defaultTimeLimit = 60.0f;
         this.countDownTime = 5;
+        this.showNonPBs = false;
         load(player);
     }
 
@@ -80,4 +83,8 @@ public class GameOptions {
     public int getCountDownTime() { return countDownTime; }
 
     public void setCountDownTime(int countDownTime) { this.countDownTime = countDownTime; }
+
+    public boolean isShowNonPBs() { return showNonPBs; }
+
+    public void setShowNonPBs(boolean showNonPBs) { this.showNonPBs = showNonPBs; }
 }

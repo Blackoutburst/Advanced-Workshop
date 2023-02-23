@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class EffectsUtils {
 
     public static void playLevelUPSound(Player player) {
-        player.getWorld().playSound(player.getLocation(), Sound.LEVEL_UP, 3f, 1f);
+        player.playSound(player.getLocation(), Sound.LEVEL_UP, 3f, 1f);
     }
 
     public static void breakBlock(Block block) {
