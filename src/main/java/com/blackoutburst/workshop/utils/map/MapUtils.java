@@ -5,7 +5,7 @@ import com.blackoutburst.workshop.core.*;
 import com.blackoutburst.workshop.core.blocks.*;
 import com.blackoutburst.workshop.nms.NMSEntityType;
 import com.blackoutburst.workshop.utils.minecraft.BlockUtils;
-import com.blackoutburst.workshop.utils.misc.EntityUtils;
+import com.blackoutburst.workshop.utils.minecraft.EntityUtils;
 import com.blackoutburst.workshop.utils.misc.MiscUtils;
 import de.tr7zw.nbtapi.*;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;

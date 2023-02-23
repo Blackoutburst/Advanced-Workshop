@@ -3,12 +3,12 @@ package com.blackoutburst.workshop.nms;
 public class NMSEnumDirection {
 
     public enum Direction {
-        DOWN(1, 0, -90),
-        UP(0, 0, 90),
-        NORTH(3, 0, 0),
-        SOUTH(2, 180, 0),
-        WEST(5, -90, 0),
-        EAST(4, 90, 0);
+        DOWN(1, 0, 90),
+        UP(0, 0, -90),
+        NORTH(2, 180, 0),
+        SOUTH(3, 0, 0),
+        WEST(4, 90, 0),
+        EAST(5, -90, 0);
 
         private final int logicalDirection;
         private final int yaw;

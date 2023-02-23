@@ -1,4 +1,4 @@
-package com.blackoutburst.workshop.utils.misc;
+package com.blackoutburst.workshop.utils.minecraft;
 
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
@@ -9,6 +9,16 @@ import com.blackoutburst.workshop.nms.NMSItemFrame;
 import org.bukkit.block.BlockFace;
 
 public class EntityUtils {
+
+    public static void clearEntity(WSPlayer wsplayer) {
+        int size = wsplayer.getEntities().size();
+        for (int i = 0; i < size; i++) {
+            NMSEntity entity = wsplayer.getEntities().get(i);
+            entity.delete();
+            size--;
+            i--;
+        }
+    }
 
     public static void spawnEntity(NMSEntityType type, WSPlayer wsPlayer, String[] data, PlayArea area) {
         String tag = data[0];

@@ -92,9 +92,13 @@ public class NMSEntity {
         Player player = wsPlayer.getPlayer();
 
         for (NMSEntity e : GLOBAL_ENTITIES) {
+            if (e instanceof NMSItemFrame itemFrame) {
+                itemFrame.spawn(player);
+            } else {
+                NMSPacketPlayOutSpawnEntityLiving.send(player, e);
+                NMSPacketPlayOutEntityHeadRotation.send(player, e, e.location.getYaw());
+            }
             wsPlayer.getEntities().add(e);
-            NMSPacketPlayOutSpawnEntityLiving.send(player, e);
-            NMSPacketPlayOutEntityHeadRotation.send(player, e, e.location.getYaw());
         }
     }
 
@@ -106,8 +110,12 @@ public class NMSEntity {
         for (WSPlayer wsPlayer : Main.players) {
             Player player = wsPlayer.getPlayer();
 
-            NMSPacketPlayOutSpawnEntityLiving.send(player, this);
-            NMSPacketPlayOutEntityHeadRotation.send(player, this, this.location.getYaw());
+            if (this instanceof NMSItemFrame itemFrame) {
+                itemFrame.spawn(player);
+            } else {
+                NMSPacketPlayOutSpawnEntityLiving.send(player, this);
+                NMSPacketPlayOutEntityHeadRotation.send(player, this, this.location.getYaw());
+            }
             wsPlayer.getEntities().add(this);
             GLOBAL_ENTITIES.add(this);
         }
@@ -117,10 +125,13 @@ public class NMSEntity {
         for (WSPlayer wsPlayer : Main.players) {
             Player player = wsPlayer.getPlayer();
 
-            for (NMSEntity e : wsPlayer.getEntities()) {
-                if (e.uuid == this.uuid) {
+            int size = wsPlayer.getEntities().size();
+            for (int i = 0; i < size; i++) {
+                NMSEntity entity = wsPlayer.getEntities().get(i);
+                if (entity.uuid == this.uuid) {
                     NMSPacketPlayOutEntityDestroy.send(player, this.getID());
                     wsPlayer.getEntities().remove(this);
+                    break;
                 }
             }
         }

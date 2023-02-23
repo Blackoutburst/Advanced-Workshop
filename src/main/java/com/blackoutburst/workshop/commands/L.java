@@ -3,6 +3,7 @@ package com.blackoutburst.workshop.commands;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.game.EndGameLogic;
+import com.blackoutburst.workshop.nms.NMSEntity;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,6 +25,7 @@ public class L implements CommandExecutor {
             }
 
             wsplayer.getTimers().setMapEnd(Instant.now());
+
             EndGameLogic.endGame(wsplayer);
         }
         return true;

@@ -6,6 +6,7 @@ import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.nms.NMSEntity;
 import com.blackoutburst.workshop.utils.map.MapUtils;
 import com.blackoutburst.workshop.utils.minecraft.ArmorUtils;
+import com.blackoutburst.workshop.utils.minecraft.EntityUtils;
 import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
 import com.blackoutburst.workshop.utils.misc.PBUtils;
 import com.blackoutburst.workshop.utils.misc.StringUtils;
@@ -27,10 +28,7 @@ public class EndGameLogic {
         wsplayer.getTimers().setMapBegin(null);
 
         ArmorUtils.removeArmor(player);
-
-        for (NMSEntity entity : wsplayer.getEntities()) {
-            entity.delete();
-        }
+        EntityUtils.clearEntity(wsplayer);
 
         player.sendMessage("§eThe game ended! §b(" + getEndMessage(wsplayer) + ")");
         player.setGameMode(GameMode.ADVENTURE);

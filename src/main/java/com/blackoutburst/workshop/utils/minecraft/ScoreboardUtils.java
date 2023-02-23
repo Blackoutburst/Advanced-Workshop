@@ -5,6 +5,19 @@ import com.blackoutburst.workshop.utils.misc.StringUtils;
 
 public class ScoreboardUtils {
 
+    public static void basic(WSPlayer wsplayer) {
+        wsplayer.getBoard().set(15, "§e§m--------------------");
+        wsplayer.getBoard().set(14, "Map: §enone");
+        wsplayer.getBoard().set(12, "Game Time: §b0.00s");
+        wsplayer.getBoard().set(11, " ");
+        wsplayer.getBoard().set(10, "Craft: §enone");
+        wsplayer.getBoard().set(9, "Craft Time: §b0.00s");
+        wsplayer.getBoard().set(8, "    ");
+        wsplayer.getBoard().set(7, "Round: §enone");
+        wsplayer.getBoard().set(6, "Time remaining: §bN/A");
+        wsplayer.getBoard().set(5, "§e§m-------------------- ");
+    }
+
     public static void waiting(WSPlayer wsplayer) {
         wsplayer.getBoard().set(12, "Game Time: §b0.00s");
         wsplayer.getBoard().set(9, "Craft Time: §b0.00s");

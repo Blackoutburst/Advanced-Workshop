@@ -8,6 +8,7 @@ import com.blackoutburst.workshop.core.game.GameOptions;
 import com.blackoutburst.workshop.core.game.GameStarter;
 import com.blackoutburst.workshop.nms.NMSBoard;
 import com.blackoutburst.workshop.nms.NMSEntity;
+import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -57,16 +58,7 @@ public class WSPlayer {
     public WSPlayer(Player player) {
         this.player = player;
         this.board = new NMSBoard(player, "§6Workshop");
-        board.set(15, "§e§m--------------------");
-        board.set(14, "Map: §enone");
-        board.set(12, "Game Time: §b0.00s");
-        board.set(11, " ");
-        board.set(10, "Craft: §enone");
-        board.set(9, "Craft Time: §b0.00s");
-        board.set(8, "    ");
-        board.set(7, "Round: §enone");
-        board.set(6, "Time remaining: §bN/A");
-        board.set(5, "§e§m-------------------- ");
+        ScoreboardUtils.basic(this);
 
         gameOptions = new GameOptions(this);
     }
