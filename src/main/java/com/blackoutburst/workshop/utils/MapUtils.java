@@ -2,13 +2,12 @@ package com.blackoutburst.workshop.utils;
 
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.*;
-import com.blackoutburst.workshop.core.blocks.DecoBlock;
-import com.blackoutburst.workshop.core.blocks.MaterialBlock;
-import com.blackoutburst.workshop.core.blocks.NeededBlock;
+import com.blackoutburst.workshop.core.blocks.*;
 import de.tr7zw.nbtapi.*;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
 import de.tr7zw.nbtapi.plugin.NBTAPI;
 import de.tr7zw.nbtapi.plugin.tests.blocks.BlockNBTTest;
+import de.tr7zw.nbtapi.plugin.tests.items.ItemConversionTest;
 import de.tr7zw.nbtinjector.NBTInjector;
 import de.tr7zw.nbtinjector.javassist.bytecode.analysis.ControlFlow;
 import de.tr7zw.nbtinjector.javassist.bytecode.stackmap.BasicBlock;
@@ -24,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -33,150 +33,106 @@ import java.util.List;
 public class MapUtils {
 
     public static void decoScan(WSPlayer wsplayer, String name) {
-        try {
-            PrintWriter writer = new PrintWriter("./plugins/Workshop/" + name + ".deco");
-            int x1 = wsplayer.getScanWand1().getBlockX();
-            int y1 = wsplayer.getScanWand1().getBlockY();
-            int z1 = wsplayer.getScanWand1().getBlockZ();
-            int x2 = wsplayer.getScanWand2().getBlockX();
-            int y2 = wsplayer.getScanWand2().getBlockY();
-            int z2 = wsplayer.getScanWand2().getBlockZ();
+        MapFileUtils.deleteDecoFile(name);
 
-            World world = wsplayer.getScanWand1().getWorld();
+        int x1 = wsplayer.getScanWand1().getBlockX();
+        int y1 = wsplayer.getScanWand1().getBlockY();
+        int z1 = wsplayer.getScanWand1().getBlockZ();
+        int x2 = wsplayer.getScanWand2().getBlockX();
+        int y2 = wsplayer.getScanWand2().getBlockY();
+        int z2 = wsplayer.getScanWand2().getBlockZ();
 
-            int minX = Math.min(x1, x2);
-            int minY = Math.min(y1, y2);
-            int minZ = Math.min(z1, z2);
+        World world = wsplayer.getScanWand1().getWorld();
 
-            int maxX = Math.max(x1, x2);
-            int maxY = Math.max(y1, y2);
-            int maxZ = Math.max(z1, z2);
+        int minX = Math.min(x1, x2);
+        int minY = Math.min(y1, y2);
+        int minZ = Math.min(z1, z2);
 
-            for (int x = minX; x <= maxX; x++) {
-                for (int y = minY; y <= maxY; y++) {
-                    for (int z = minZ; z <= maxZ; z++) {
-                        Block b = world.getBlockAt(x, y, z);
+        int maxX = Math.max(x1, x2);
+        int maxY = Math.max(y1, y2);
+        int maxZ = Math.max(z1, z2);
 
-                        int relX = x - minX;
-                        int relY = y - minY;
-                        int relZ = z - minZ;
-                        String relCoords = relX + "," + relY + "," + relZ;
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    Block b = world.getBlockAt(x, y, z);
 
-                        if (b.getType().equals(Material.AIR)) continue;
-                        ArrayList<ArrayList<Object>> blocks = null;
-                        if (b.getType().equals(Material.DISPENSER)) {
-                            Dispenser dispenser = (Dispenser) b.getState();
-                            if (dispenser.getInventory().getContents()[0] != null) {
-                                blocks = readDropper(dispenser.getInventory().getContents()[0]);
-                            }
+                    int relX = x - minX;
+                    int relY = y - minY;
+                    int relZ = z - minZ;
+                    Location relativeLoc = new Location(world, relX, relY,relZ);
+
+                    StringBuilder blocksString = new StringBuilder();
+
+                    if (b.getType().equals(Material.AIR)) continue;
+                    RandomBlock[] blocks = null;
+                    if (b.getType().equals(Material.DISPENSER) || b.getType().equals(Material.DROPPER)) {
+                        InventoryHolder dropper = (InventoryHolder) b.getState();
+                        if (dropper.getInventory().getContents()[0] != null) {
+                            blocks = readDecoDropper(dropper.getInventory().getContents()[0]);
                         }
-                        if (b.getType().equals(Material.DROPPER)) {
-                            Dropper dropper = (Dropper) b.getState();
-                            if (dropper.getInventory().getContents()[0] != null) {
-                                blocks = readDropper(dropper.getInventory().getContents()[0]);
-                            }
-                        }
-                        StringBuilder blocksString = new StringBuilder();
-                        StringBuilder neededBlocksString = new StringBuilder();
-                        if (!(blocks == null)) {
-
-                            for (ArrayList<Object> i : blocks) {
-
-                                String id = (String) i.get(0);
-                                int data = (int) i.get(1);
-                                ReadWriteNBT nbtObject = NBT.createNBTObject();
-                                nbtObject.setString("id",id);
-                                nbtObject.setInteger("Damage",data);
-                                nbtObject.setInteger("Count",1);
-                                ItemStack convertedItem = NBTItem.convertNBTtoItem((NBTCompound) nbtObject);
-
-
-                                if (!(boolean) i.get(2)) {
-                                    if (blocksString.length() == 0) {
-                                        blocksString.append(convertedItem.getType()).append(" ").append(convertedItem.getData().getData());
-                                        continue;
-                                    }
-                                    blocksString.append(",").append(convertedItem.getType()).append(" ").append(convertedItem.getData().getData());
-                                    continue;
-                                }
-                                if (b.getType().equals(Material.DROPPER)) {
-                                    continue;
-                                }
-                                if (neededBlocksString.length() == 0) {
-                                    neededBlocksString.append(convertedItem.getType()).append(" ").append(convertedItem.getData().getData());
-                                    continue;
-                                }
-                                neededBlocksString.append(",").append(convertedItem.getType()).append(" ").append(convertedItem.getData().getData());
-                            }
-                        }
-                        else {
-                            blocksString.append(b.getType()).append(" ").append(b.getData());
-                        }
-
-                        writer.write(relCoords + ";" + blocksString + ";" + neededBlocksString + "\n");
                     }
+                    if (blocks != null) {
+                        for (int i = 0; i < blocks.length; i++) {
+                            String blockData = blocks[i].getBlockData().getAsString();
+                            MapFileUtils.saveDecoFile(name,relativeLoc, blockData, i);
+                        }
+                        return;
+                    }
+                    blocksString.append(b.getBlockData().getAsString());
+                    MapFileUtils.saveDecoFile(name, relativeLoc, String.valueOf(blocksString), 0);
                 }
             }
-
-            writer.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         }
     }
 
     public static void logicScan(WSPlayer wsplayer, String name) {
-        try {
-            PrintWriter writer = new PrintWriter("./plugins/Workshop/" + name + ".logic");
-            int x1 = wsplayer.getScanWand1().getBlockX();
-            int y1 = wsplayer.getScanWand1().getBlockY();
-            int z1 = wsplayer.getScanWand1().getBlockZ();
-            int x2 = wsplayer.getScanWand2().getBlockX();
-            int y2 = wsplayer.getScanWand2().getBlockY();
-            int z2 = wsplayer.getScanWand2().getBlockZ();
+        MapFileUtils.deleteLogicFile(name);
+        int x1 = wsplayer.getScanWand1().getBlockX();
+        int y1 = wsplayer.getScanWand1().getBlockY();
+        int z1 = wsplayer.getScanWand1().getBlockZ();
+        int x2 = wsplayer.getScanWand2().getBlockX();
+        int y2 = wsplayer.getScanWand2().getBlockY();
+        int z2 = wsplayer.getScanWand2().getBlockZ();
 
-            World world = wsplayer.getScanWand1().getWorld();
+        World world = wsplayer.getScanWand1().getWorld();
 
-            int minX = Math.min(x1, x2);
-            int minY = Math.min(y1, y2);
-            int minZ = Math.min(z1, z2);
+        int minX = Math.min(x1, x2);
+        int minY = Math.min(y1, y2);
+        int minZ = Math.min(z1, z2);
 
-            int maxX = Math.max(x1, x2);
-            int maxY = Math.max(y1, y2);
-            int maxZ = Math.max(z1, z2);
+        int maxX = Math.max(x1, x2);
+        int maxY = Math.max(y1, y2);
+        int maxZ = Math.max(z1, z2);
 
-            for (int x = minX; x <= maxX; x++) {
-                for (int y = minY; y <= maxY; y++) {
-                    for (int z = minZ; z <= maxZ; z++) {
-                        Block b = world.getBlockAt(x, y, z);
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    Block b = world.getBlockAt(x, y, z);
 
-                        int relX = x - minX;
-                        int relY = y - minY;
-                        int relZ = z - minZ;
-                        String relCoords = relX + "," + relY + "," + relZ;
+                    int relX = x - minX;
+                    int relY = y - minY;
+                    int relZ = z - minZ;
+                    Location relLoc = new Location(world, relX, relY, relZ);
 
-                        if (b.getType().equals(Material.DROPPER)) {
-                            writer.write(resourceScan(b,relCoords,"R"));
-                        }
-                        if (b.getType().equals(Material.DISPENSER)) {
-                            writer.write(resourceScan(b,relCoords,"P"));
-                        }
-                        if (b.getType().equals(Material.OAK_SIGN)|| b.getType().equals(Material.OAK_WALL_SIGN)) {
-                            Sign sign = (Sign) b.getState();
-                            if (sign.getLines().length == 0) continue;
-                            String text = sign.getLine(0);
+                    if (b.getType().equals(Material.DROPPER)) {
+                        resourceScan(b,relLoc,"R", name);
+                    }
+                    if (b.getType().equals(Material.DISPENSER)) {
+                        resourceScan(b,relLoc,"P", name);
+                    }
+                    if (b.getType().equals(Material.OAK_SIGN) || b.getType().equals(Material.OAK_WALL_SIGN)) {
+                        Sign sign = (Sign) b.getState();
+                        if (sign.getLines().length == 0) continue;
+                        String text = sign.getLine(0);
 
-                            org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign) sign.getData();
-                            BlockFace directionFacing = sign2.getFacing();
+                        org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign) sign.getData();
+                        BlockFace directionFacing = sign2.getFacing();
 
-                            writer.write("S, " + text + ", " + relX + ", " + relY + ", " + relZ + ", " + directionFacing.toString() + "\n");
-                        }
+                        //writer.write("S, " + text + ", " + relX + ", " + relY + ", " + relZ + ", " + directionFacing.toString() + "\n");
                     }
                 }
             }
-
-            writer.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -243,21 +199,6 @@ public class MapUtils {
 
                 Block b = world.getBlockAt(anchor.getBlockX() + xOffset, anchor.getBlockY() + yOffset, anchor.getBlockZ() + zOffset);
                 b.setType(type);
-                NBTBlock test = new NBTBlock(b);
-
-                String boop = test.getData().toString();
-
-                ReadWriteNBT a = NBT.parseNBT(boop);
-
-                NBTContainer c = new NBTContainer();
-
-                c.setCompound(a);
-
-                BasicBlock.Maker d = new BasicBlock.Maker();
-
-                NBTTileEntity e = new NBTTileEntity((BlockState) b);
-
-                e.addCompound(boop);
             }
 
             String areaData = name + ", " + world.getName() + ", " + anchor.getBlockX() + ", " + anchor.getBlockY() + ", " + anchor.getBlockZ() + "\n";
@@ -294,95 +235,96 @@ public class MapUtils {
         return chest_tags.getCompoundList("Items");
     }
 
-    public static ArrayList<ArrayList<Object>> readDropper(ItemStack item) {
-        NBTCompound ItemNBT = NBTItem.convertItemtoNBT(item);
-        if (item.getType() == Material.CHEST) {
+    public static RandomBlock[] readDecoDropper(ItemStack item) {
+        if (item.getType() == Material.CHEST || item.getType() == Material.SHULKER_BOX) {
             NBTContainer chest_nbt = NBTItem.convertItemtoNBT(item);
 
             if (chest_nbt.getKeys().contains("tag")) {
                 NBTList<ReadWriteNBT> chestItems = readChestItemNBT(item);
-                ArrayList<ArrayList<Object>> ChestItemArray = new ArrayList<>();
+                RandomBlock[] randomBlocks = new RandomBlock[chestItems.size()];
                 for (int i = 0; i < chestItems.size(); i++) {
                     boolean needed = false;
                     ReadWriteNBT itemNBT = chestItems.get(i);
-                    ArrayList<Object> itemsFormatted = new ArrayList<>();
                     if (itemNBT.getInteger("Slot") == i + 1) {
                         needed = true;
                     }
-                    itemsFormatted.add(itemNBT.getString("id"));
-                    itemsFormatted.add(needed);
-                    ChestItemArray.add(itemsFormatted);
+                    BlockData block = Material.AIR.createBlockData();
+                    ItemStack chestItem = NBTItem.convertNBTtoItem((NBTCompound) itemNBT);
+                    if (chestItem.getType().isBlock()) {
+                        block = Bukkit.createBlockData(itemNBT.getString("id"));
+                    }
+                    RandomBlock randomBlock = new RandomBlock(block, needed);
+                    randomBlocks[i] = randomBlock;
                 }
-                return ChestItemArray;
+                return randomBlocks;
             }
         }
-        boolean needed = false;
-        ArrayList<Object> itemsFormatted = new ArrayList<>();
-        itemsFormatted.add(ItemNBT.getString("id"));
-        itemsFormatted.add(needed);
-        ArrayList<ArrayList<Object>> itemArray = new ArrayList<>();
-
-        itemArray.add(itemsFormatted);
-        return itemArray;
+        BlockData block = Material.AIR.createBlockData();
+        if (item.getType().isBlock()) {
+            block = item.getType().createBlockData();
+        }
+        return new RandomBlock[]{new RandomBlock(block,false)};
     }
 
-    public static String resourceScan(Block b, String relCoords, String type) {
-        ItemStack[] items;
-        if (type.equals("R")) {
-            Dropper dropper = (Dropper) b.getState();
-            items = dropper.getInventory().getContents();
-        } else {
-            Dispenser dispenser = (Dispenser) b.getState();
-            items = dispenser.getInventory().getContents();
+    public static RandomItem[] readLogicDropper(ItemStack item) {
+        if (item.getType() == Material.CHEST || item.getType() == Material.SHULKER_BOX) {
+            NBTContainer chest_nbt = NBTItem.convertItemtoNBT(item);
+
+            if (chest_nbt.getKeys().contains("tag")) {
+                NBTList<ReadWriteNBT> chestItems = readChestItemNBT(item);
+                RandomItem[] randomItems = new RandomItem[chestItems.size()];
+                for (int i = 0; i < chestItems.size(); i++) {
+                    boolean needed = false;
+                    ReadWriteNBT itemNBT = chestItems.get(i);
+                    if (itemNBT.getInteger("Slot") == i + 1) {
+                        needed = true;
+                    }
+                    ItemStack chestItem = NBTItem.convertNBTtoItem((NBTCompound) itemNBT);
+                    randomItems[i] = new RandomItem(chestItem, needed);
+                }
+                return randomItems;
+            }
         }
-        StringBuilder ItemString = new StringBuilder();
-        StringBuilder NeededItemString = new StringBuilder();
+        return new RandomItem[]{new RandomItem(item,false)};
+    }
+    public static void resourceScan(Block b, Location relLoc, String type, String mapName) {
+        ItemStack[] items;
+        InventoryHolder container = (InventoryHolder) b.getState();
+        items = container.getInventory().getContents();
+
         if (items[0] != null) {
-            ArrayList<ArrayList<Object>> dropperItem = readDropper(items[0]);
+            RandomItem[] dropperItems = readLogicDropper(items[0]);
 
-            for (ArrayList<Object> i : dropperItem) {
+            for (int i = 0; i < dropperItems.length; i++) {
 
-                String id = (String) i.get(0);
+                RandomItem randomItem = dropperItems[i];
+                ItemStack item = randomItem.GetItem();
 
-                if (!(boolean) i.get(1)) {
-                    ItemString.append((ItemString.length() == 0) ? "" : ",").append(id);
+                if (!randomItem.isPriority()) {
+                    MapFileUtils.saveLogicFileItems(mapName, relLoc, item, i, "Regular");
                     continue;
                 }
                 if (type.equals("R")) {
                     continue;
                 }
-                NeededItemString.append((NeededItemString.length() == 0) ? "" : ",").append(id);
+                MapFileUtils.saveLogicFileItems(mapName, relLoc, item, i, "Priority");
             }
         } else {
-            ItemString.append("minecraft:air");
+            MapFileUtils.saveLogicFileItems(mapName, relLoc, new ItemStack(Material.AIR), 0, "Regular");
         }
-
-        StringBuilder allToolString = new StringBuilder();
-
-        List<List<String>> allToolsList =  new ArrayList<>(new ArrayList<>());
 
         for (int i = 1; i < items.length; i++) {
             if (items[i] != null) {
-                ArrayList<ArrayList<Object>> SlotTools = readDropper(items[i]);
+                RandomItem[] SlotTools = readLogicDropper(items[i]);
 
-                List<String> toolList = new ArrayList<>();
+                for (int j = 0; j < SlotTools.length; j++) {
+                     ItemStack item = SlotTools[j].GetItem();
 
-                for (ArrayList<Object> tool : SlotTools) {
-                    toolList.add((String) tool.get(0));
+                     MapFileUtils.saveLogicFileTools(mapName, relLoc, item, j, i);
                 }
-                allToolsList.add(toolList);
+
             }
         }
-        for (List<String> toolList : allToolsList) {
-            StringBuilder toolString = new StringBuilder();
-
-            for (String tool : toolList) {
-                toolString.append(toolList.indexOf(tool) == 0 ? "" : ",").append(tool);
-            }
-            allToolString.append(allToolsList.indexOf(toolList) == 0 ? "" : ";").append(toolString);
-        }
-
-        return type + ";" + relCoords + ";" + ItemString + ";" + NeededItemString + ";" + allToolString + "\n";
     }
 
     public static void getNeededBlocks(WSPlayer wsplayer) {
@@ -495,7 +437,6 @@ public class MapUtils {
                     typeList.add(itemMat);
                 }
                 Material[] materials = typeList.toArray(new Material[0]);
-                Byte[] matsData = dataList.toArray(new Byte[0]);
 
                 int relX = Integer.parseInt(data[0].split(",")[0]);
                 int relY = Integer.parseInt(data[0].split(",")[1]);
