@@ -61,6 +61,7 @@ public class Main extends JavaPlugin {
         getCommand("reloadmaps").setExecutor(new ReloadMaps());
         getCommand("settimelimit").setExecutor(new SetTimeLimit());
         getCommand("setcountdown").setExecutor(new SetCountdown());
+        getCommand("shownonpbs").setExecutor(new ShowNonPbs());
         MapUtils.loadPlayAreas();
         MapUtils.loadSpawn();
         SkinLoader.loadSkinFromUUID(0, "92deafa9430742d9b00388601598d6c0");

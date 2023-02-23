@@ -61,6 +61,9 @@ commands:
   setcountdown:
     description: Sets the countdown length at the start of games
     usage: /setcountdown
+  shownonpbs:
+    description: Enables/disables showing difference to PB for non-PBing games
+    usage: /shownonpbs
 
   permissions:
     workshop.admin:

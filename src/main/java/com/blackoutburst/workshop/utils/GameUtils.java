@@ -628,7 +628,10 @@ public class GameUtils {
 
                 if (currentDuration != Double.MAX_VALUE && (duration < currentDuration)) {
                     Webhook.send("**"+ wsplayer.getPlayer().getName() + "** got a new PB on the map **" + wsplayer.getPlayArea().getType() + "**!\\nTime: **" +StringUtils.ROUND.format( duration) + "s**\\nImprovement: **" + StringUtils.ROUND.format(duration - currentDuration) + "s**");
-                    wsplayer.getPlayer().sendMessage("§d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s" + ")");
+                    wsplayer.getPlayer().sendMessage("§d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s)");
+                }
+                if (gameoptions.isShowNonPBs() && duration >= currentDuration) {
+                    wsplayer.getPlayer().sendMessage("§c§l(+" + StringUtils.ROUND.format(duration - currentDuration) + "s)");
                 }
             }
             if (wsplayer.getCurrentCraftIndex() == wsplayer.getCrafts().size() && gameoptions.getRandomType() == 'N') {
@@ -643,6 +646,9 @@ public class GameUtils {
                 if (currentDuration != Double.MAX_VALUE && (duration < currentDuration)) {
                     Webhook.send("**"+ wsplayer.getPlayer().getName() + "** got a new PB on the map **" + wsplayer.getPlayArea().getType() + "** for all crafts!\\nTime: **" +StringUtils.ROUND.format( duration) + "s**\\nImprovement: **" + StringUtils.ROUND.format(duration - currentDuration) + "s**");
                     wsplayer.getPlayer().sendMessage("§d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s" + ")");
+                }
+                if (gameoptions.isShowNonPBs() && duration >= currentDuration) {
+                    wsplayer.getPlayer().sendMessage("§d§l(+" + StringUtils.ROUND.format(duration - currentDuration) + "s)");
                 }
             }
             endGame(wsplayer);

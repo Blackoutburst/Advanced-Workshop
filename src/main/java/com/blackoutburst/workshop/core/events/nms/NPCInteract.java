@@ -40,9 +40,13 @@ public class NPCInteract {
         if (duration < currentDuration)
             DBUtils.saveData(player, wsPlayer.getPlayArea().getType() + "." + "crafts" + "." + wsPlayer.getCurrentCraft().getName(), duration, Float.class);
 
-        String pb = (currentDuration != Double.MAX_VALUE && (duration < currentDuration) ? " §d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s" + ")" : "");
+        String message = (currentDuration != Double.MAX_VALUE && (duration < currentDuration) ? "§d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s" + ")" : "");
 
-        player.sendMessage("§ePerfect! Just what I needed. §b(" + roundTime + ")" + pb);
+        if (wsPlayer.getGameOptions().isShowNonPBs() && duration >= currentDuration) {
+            message = ("§c§l(+" + StringUtils.ROUND.format(duration - currentDuration) + "s)");
+        }
+
+        player.sendMessage("§ePerfect! Just what I needed. §b(" + roundTime + ") " + message);
     }
 
     public static synchronized void execute(NMSNPCInteractEvent event) {
