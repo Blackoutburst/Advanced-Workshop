@@ -3,7 +3,6 @@ package com.blackoutburst.workshop.core.game;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.nms.NMSEntity;
 import com.blackoutburst.workshop.utils.map.MapUtils;
 import com.blackoutburst.workshop.utils.minecraft.ArmorUtils;
 import com.blackoutburst.workshop.utils.minecraft.EntityUtils;
