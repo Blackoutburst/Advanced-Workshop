@@ -81,13 +81,13 @@ public class CraftSelectorGUI {
 
         if (slot == 53 && wsplayer.getCrafts().size() > 36 * (page + 1)) {
             page++;
-            CraftSelectorGUI.open(wsplayer, page);
+            open(wsplayer, page);
             return true;
         }
 
         if (slot == 45 && page > 0) {
             page--;
-            CraftSelectorGUI.open(wsplayer, page);
+            open(wsplayer, page);
             return true;
         }
 

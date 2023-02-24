@@ -10,6 +10,7 @@ import com.blackoutburst.workshop.utils.map.LogicUtils;
 import com.blackoutburst.workshop.utils.files.DBUtils;
 import com.blackoutburst.workshop.utils.map.MapUtils;
 import com.blackoutburst.workshop.utils.minecraft.CraftUtils;
+import com.blackoutburst.workshop.utils.misc.CountdownDisplay;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -100,7 +101,7 @@ public class Play implements CommandExecutor {
     private void startGame(WSPlayer wsplayer, GameOptions gameoptions, PlayArea area) {
         int start_delay = gameoptions.getCountDownTime();
 
-        BukkitRunnable displayCountdown = new LogicUtils.CountdownDisplay(start_delay, wsplayer);
+        BukkitRunnable displayCountdown = new CountdownDisplay(start_delay, wsplayer);
 
         displayCountdown.runTaskTimer(Main.getPlugin(Main.class),0,20);
 

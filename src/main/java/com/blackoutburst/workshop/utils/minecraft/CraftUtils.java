@@ -3,11 +3,15 @@ package com.blackoutburst.workshop.utils.minecraft;
 import com.blackoutburst.workshop.core.Craft;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.game.GameOptions;
+import com.blackoutburst.workshop.utils.files.CraftFileUtils;
+import com.blackoutburst.workshop.utils.files.FileReader;
+import com.blackoutburst.workshop.utils.misc.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.nio.file.Files;
+import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,39 +35,16 @@ public class CraftUtils {
     public static void loadCraft(WSPlayer wsPlayer, String type) {
         wsPlayer.getCrafts().clear();
 
-        String name = null;
-        try {
-            List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + type + ".craft"));
+        File craftFile = FileReader.getFileByMap(type, 'C');
+        String[] crafts = FileReader.getAllKeys(craftFile);
 
-            // TODO
-            // THIS IS BROKEN
-            // update .craft format
+        for (String craft : crafts) {
+            ItemStack requiredItem = getItem(craft);
+            String name = MiscUtils.getItemName(requiredItem.getType());
+            ItemStack[] craftMats = CraftFileUtils.readCraftFile(type, craft, 'C');
+            ItemStack[] materials = CraftFileUtils.readCraftFile(type, craft, 'R');
 
-            for (String line : lines) {
-                String[] data = line.split(", ");
-                name = data[0];
-                ItemStack requiredItem = getItem(data[1]);
-
-                ItemStack[] craftingTable = new ItemStack[]{
-                        getItem(data[2]), getItem(data[3]), getItem(data[4]),
-                        getItem(data[5]), getItem(data[6]), getItem(data[7]),
-                        getItem(data[8]), getItem(data[9]), getItem(data[10])
-                };
-
-                List<ItemStack> materials = new ArrayList<>();
-                for (int i = 11; i < data.length; i++) {
-                    String[] subData = data[i].split(":");
-                    Material itemType = Material.getMaterial(subData[0]);
-                    int itemAmount = Integer.parseInt(subData[2]);
-
-                    materials.add(new ItemStack(itemType, itemAmount));
-                }
-
-                wsPlayer.getCrafts().add(new Craft(name, requiredItem, craftingTable, materials));
-            }
-        } catch (Exception e) {
-            Bukkit.broadcastMessage("Error loading craft: " + name);
-            e.printStackTrace();
+            wsPlayer.getCrafts().add(new Craft(name, requiredItem, craftMats, List.of(materials)));
         }
     }
 

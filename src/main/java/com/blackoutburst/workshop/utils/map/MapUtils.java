@@ -105,7 +105,6 @@ public class MapUtils {
                     blockType = blockTypes[0].split(" ");
                 }
                 Material type = Material.getMaterial(blockType[0]);
-                byte dataType = Byte.parseByte(blockType[1]);
                 int xOffset = Integer.parseInt(data[0].split(",")[0]);
                 int yOffset = Integer.parseInt(data[0].split(",")[1]);
                 int zOffset = Integer.parseInt(data[0].split(",")[2]);

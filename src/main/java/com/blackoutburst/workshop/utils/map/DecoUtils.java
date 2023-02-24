@@ -130,7 +130,6 @@ public class DecoUtils {
                 String[] rItems = data[1].split(",");
 
                 List<Material> typeList = new ArrayList<>();
-                List<Byte> dataList = new ArrayList<>();
                 for (String item : items) {
                     Material itemMat = Material.getMaterial(item.split(" ")[0]);
                     typeList.add(itemMat);

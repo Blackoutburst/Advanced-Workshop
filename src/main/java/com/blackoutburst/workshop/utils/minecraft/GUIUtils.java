@@ -3,6 +3,7 @@ package com.blackoutburst.workshop.utils.minecraft;
 import com.blackoutburst.workshop.core.Craft;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.guis.CraftSelectorGUI;
+import com.blackoutburst.workshop.utils.files.CraftFileUtils;
 import com.blackoutburst.workshop.utils.misc.StringUtils;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -71,14 +72,13 @@ public class GUIUtils {
 
     public static void saveCraft(Inventory inv, WSPlayer p) {
         if (p.getInventoryType() == null) return;
+        String type = p.getInventoryType();
 
         boolean updated = false;
 
         int[] order = new int[] { 23, 10, 11, 12, 19, 20, 21, 28, 29, 30, 7, 8, 16, 17, 25, 26, 34, 35, 43, 44, 52, 53 };
-
+        //                     result <-------------materials---------->  <------------------raw materials----------->
         try {
-            PrintWriter writer = new PrintWriter("./plugins/Workshop/" + p.getInventoryType() + ".craft");
-
             ItemStack reqItem = inv.getItem(order[0]);
             if (reqItem == null) throw new Exception();
 
@@ -93,7 +93,6 @@ public class GUIUtils {
             }
 
             for (Craft c : p.getCrafts()) {
-                writer.write(c.getName() + ", ");
                 writer.write(c.getItemRequired().getType() + ", ");
 
                 for (int i  = 0; i < 9; i++)
