@@ -4,6 +4,8 @@ import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.*;
 import com.blackoutburst.workshop.core.blocks.*;
 import com.blackoutburst.workshop.nms.NMSEntityType;
+import com.blackoutburst.workshop.utils.files.DecoFileUtils;
+import com.blackoutburst.workshop.utils.files.FileReader;
 import com.blackoutburst.workshop.utils.minecraft.BlockUtils;
 import com.blackoutburst.workshop.utils.minecraft.EntityUtils;
 import com.blackoutburst.workshop.utils.misc.MiscUtils;
@@ -14,10 +16,13 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.*;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.block.Block;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -76,7 +81,7 @@ public class MapUtils {
             Location location = i.getLocation();
             Block b = location.getBlock();
 
-            b.setType(i.getType());
+            b.setType(i.getType().getMaterial());
 
             if (!clear_inventories) continue;
 
@@ -89,28 +94,22 @@ public class MapUtils {
 
     public static void pasteMap(WSPlayer wsplayer, String name) {
         try {
-            List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + name + ".deco"));
             Player player = wsplayer.getPlayer();
             World world = player.getWorld();
             Location anchor = player.getLocation();
 
-            for (String line : lines) {
-                String[] data = line.split(";");
-                String[] blockTypes = data[1].split(",");
-                String[] blockType;
-                if (blockTypes.length > 1) {
-                    blockType = new String[]{"AIR", "0"};
-                }
-                else {
-                    blockType = blockTypes[0].split(" ");
-                }
-                Material type = Material.getMaterial(blockType[0]);
-                int xOffset = Integer.parseInt(data[0].split(",")[0]);
-                int yOffset = Integer.parseInt(data[0].split(",")[1]);
-                int zOffset = Integer.parseInt(data[0].split(",")[2]);
+            File decoFile = FileReader.getFileByMap(name, 'D');
+            Location[] keys = FileReader.getLocationKeys(decoFile, world);
 
-                Block b = world.getBlockAt(anchor.getBlockX() + xOffset, anchor.getBlockY() + yOffset, anchor.getBlockZ() + zOffset);
-                b.setType(type);
+            for (Location key : keys) {
+                BlockData[] blocks = DecoFileUtils.readFile(name, key, false);
+                Location location = key.add(anchor);
+
+                if (blocks.length > 1) {
+                    location.getBlock().setType(Material.AIR);
+                    continue;
+                }
+                location.getBlock().setBlockData(blocks[0]);
             }
 
             String areaData = name + ", " + world.getName() + ", " + anchor.getBlockX() + ", " + anchor.getBlockY() + ", " + anchor.getBlockZ() + "\n";
@@ -286,13 +285,12 @@ public class MapUtils {
                         }
                     }
                     Material[] itemArray = allItems.toArray(new Material[]{});
-                    Byte[] dataArray = allItemData.toArray(new Byte[]{});
 
                     Location offset = area.getAnchor();
                     Location relLoc = new Location(area.getAnchor().getWorld(), relX, relY, relZ);
                     Location location = relLoc.add(offset);
 
-                    wsPlayer.getMaterialBlocks().add(new MaterialBlock(itemArray, dataArray, location, location.getWorld(), allToolsArray, 0));
+                    wsPlayer.getMaterialBlocks().add(new MaterialBlock(itemArray, location, location.getWorld(), allToolsArray, 0));
                 }
             }
         } catch (Exception e) {

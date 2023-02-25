@@ -8,8 +8,6 @@ public class MaterialBlock {
 
     protected Material[] types;
 
-    protected Byte[] data;
-
     protected Location location;
 
     protected World world;
@@ -18,9 +16,8 @@ public class MaterialBlock {
 
     protected int index;
 
-    public MaterialBlock(Material[] types, Byte[] data, Location location, World world, String[][] tools, int index) {
+    public MaterialBlock(Material[] types, Location location, World world, String[][] tools, int index) {
         this.types = types;
-        this.data = data;
         this.location = location;
         this.world = world;
         this.tools = tools;
@@ -38,8 +35,6 @@ public class MaterialBlock {
     public String[][] getAllTools() {
         return tools;
     }
-
-    public Byte getData() {return data[index];}
 
     public Location getLocation() {return location;}
 
