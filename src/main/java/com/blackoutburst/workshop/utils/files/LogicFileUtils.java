@@ -67,8 +67,8 @@ public class LogicFileUtils {
         File mapFolder = new File("./plugins/Workshop/maps/" + mapName);
 
         if (!mapFolder.mkdir()) {
-            File decoFile = new File("./plugins/Workshop/maps/" + mapName + "/logic.yml");
-            decoFile.delete();
+            File logicFile = new File("./plugins/Workshop/maps/" + mapName + "/logic.yml");
+            logicFile.delete();
         }
     }
 

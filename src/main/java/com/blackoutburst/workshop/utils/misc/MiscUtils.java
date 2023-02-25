@@ -4,9 +4,13 @@ import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.game.EndGameLogic;
 import com.blackoutburst.workshop.core.game.GameOptions;
 import com.blackoutburst.workshop.core.WSPlayer;
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -79,4 +83,12 @@ public class MiscUtils {
         return false;
     }
 
+    public static String getItemName(Material item) {
+        NBTItem itemNBT = new NBTItem(new ItemStack(item));
+        String name = itemNBT.getString("id");
+
+        String filteredName = name.substring(10).replace("_", " ");
+
+        return filteredName;
+    }
 }
