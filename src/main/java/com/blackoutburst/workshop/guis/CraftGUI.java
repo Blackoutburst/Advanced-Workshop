@@ -6,6 +6,7 @@ import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.minecraft.GUIUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -80,6 +81,7 @@ public class CraftGUI {
         if (wsplayer == null) return true;
 
         if (inv == null || !title.equals(NAME)) return false;
+        if (inv.getType() == InventoryType.PLAYER) return false;
 
         if (slot == 46 || slot == 47) {
             GUIUtils.saveCraft(inv, wsplayer);
