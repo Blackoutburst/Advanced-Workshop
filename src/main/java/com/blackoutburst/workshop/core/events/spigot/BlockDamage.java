@@ -24,7 +24,7 @@ public class BlockDamage {
             return;
         }
 
-        player.getInventory().addItem(new ItemStack(materialBlock.getType(), 1, materialBlock.getData()));
+        player.getInventory().addItem(new ItemStack(materialBlock.getType(), 1));
 
         // GameUtils.supportIterator(block.getLocation(), wsplayer, '0');
 

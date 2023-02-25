@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DecoFileUtils {
 
-    public static void saveFile(String mapName, Location location, String blockData, int index) {
+    public static void saveFile(String mapName, Location location, String blockData, int index, boolean needed) {
         try {
             File mapFolder = new File("./plugins/Workshop/maps/" + mapName);
             mapFolder.mkdir();
@@ -21,8 +21,9 @@ public class DecoFileUtils {
             File decoFile = new File("./plugins/Workshop/maps/" + mapName + "/deco.yml");
             YamlConfiguration deco = YamlConfiguration.loadConfiguration(decoFile);
             String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+            String type = needed ? "Needed." : "Normal.";
 
-            deco.set(locationString + "." + index, blockData);
+            deco.set(type + locationString + "." + index, blockData);
             deco.save(decoFile);
 
         } catch (IOException e) {
@@ -39,12 +40,13 @@ public class DecoFileUtils {
         }
     }
 
-    public static BlockData[] readFile(String mapName, Location location) {
+    public static BlockData[] readFile(String mapName, Location location, boolean needed) {
         File decoFile = new File("./plugins/Workshop/maps/" + mapName + "/deco.yml");
         YamlConfiguration deco = YamlConfiguration.loadConfiguration(decoFile);
         String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+        String type = needed ? "Needed." : "Normal.";
 
-        ConfigurationSection blocks = (ConfigurationSection) deco.get(locationString);
+        ConfigurationSection blocks = (ConfigurationSection) deco.get(type + locationString);
         List<String> indexes = new ArrayList<>(blocks.getKeys(false));
         BlockData[] blockData = new BlockData[indexes.size()];
 
