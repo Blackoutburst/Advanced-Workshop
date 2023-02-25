@@ -1,5 +1,6 @@
 package com.blackoutburst.workshop.utils.files;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -49,18 +50,29 @@ public class CraftFileUtils {
     }
 
     public static ItemStack[] readCraftFile(String mapName, String craftResult, char type) {
-
         File craftFile = new File("./plugins/Workshop/maps/" + mapName + "/craft.yml");
         YamlConfiguration craft = YamlConfiguration.loadConfiguration(craftFile);
         String typeString = (type == 'R') ? "rawMats" : "craftMats";
 
         ConfigurationSection mats = craft.getConfigurationSection(craftResult + "." + typeString);
-        List<String> keys = craft.getKeys(false).stream().toList();
+        List<String> keys = mats.getKeys(false).stream().toList();
         ItemStack[] result = new ItemStack[keys.size()];
 
         for (int i = 0; i < keys.size(); i++) {
             result[i] = mats.getItemStack(keys.get(i));
         }
         return result;
+    }
+
+    public static void deleteCraft(String mapName, String craftResult) {
+        try {
+            File craftFile = new File("./plugins/Workshop/maps/" + mapName + "/craft.yml");
+            YamlConfiguration craft = YamlConfiguration.loadConfiguration(craftFile);
+
+            craft.set(craftResult, null);
+            craft.save(craftFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

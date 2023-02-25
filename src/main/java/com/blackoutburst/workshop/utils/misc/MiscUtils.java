@@ -6,6 +6,8 @@ import com.blackoutburst.workshop.core.game.GameOptions;
 import com.blackoutburst.workshop.core.WSPlayer;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTItem;
+import org.apache.commons.lang.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -84,10 +86,12 @@ public class MiscUtils {
     }
 
     public static String getItemName(Material item) {
-        NBTItem itemNBT = new NBTItem(new ItemStack(item));
+        NBTCompound itemNBT = NBTItem.convertItemtoNBT(new ItemStack(item));
         String name = itemNBT.getString("id");
 
+        if (name.length() < 10) return "";
         String filteredName = name.substring(10).replace("_", " ");
+        filteredName = WordUtils.capitalize(filteredName);
 
         return filteredName;
     }

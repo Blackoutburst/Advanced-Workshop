@@ -4,8 +4,11 @@ import com.blackoutburst.workshop.core.Craft;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.misc.StringUtils;
+import com.blackoutburst.workshop.utils.misc.MiscUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,7 +23,7 @@ public class CraftSelectorGUI {
         for (int i = 0; i < p.getCrafts().size(); i++) {
             Craft c = p.getCrafts().get(i);
 
-            if (c.getName().equals(StringUtils.formatItemName(reqItem.getType().name()))) {
+            if (c.getName().equals(MiscUtils.getItemName(reqItem.getType()))) {
                 return c;
             }
         }
@@ -74,6 +77,7 @@ public class CraftSelectorGUI {
         if (wsplayer == null) return true;
 
         if (inv == null || !title.equals(NAME)) return false;
+        if (inv.getType() == InventoryType.PLAYER) return false;
 
         if (slot >= 0 && slot < 36 && inv.getItem(slot) != null) {
             CraftGUI.open(wsplayer, getCorrectCraft(wsplayer, inv.getItem(slot)));
