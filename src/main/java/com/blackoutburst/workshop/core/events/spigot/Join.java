@@ -1,5 +1,6 @@
 package com.blackoutburst.workshop.core.events.spigot;
 
+import com.blackoutburst.workshop.ClientVersion;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.events.listeners.NMSListener;
 import com.blackoutburst.workshop.core.WSPlayer;
@@ -12,7 +13,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class Join {
 
     public static void execute(PlayerJoinEvent event) {
-        WSPlayer wsPlayer = new WSPlayer(event.getPlayer());
+        int protocolVersion = Main.VIA_API.getPlayerVersion(event.getPlayer());
+
+        WSPlayer wsPlayer = new WSPlayer(event.getPlayer(), ClientVersion.getFromProtocolVersion(protocolVersion));
         DBUtils.createPlayerData(event.getPlayer());
         Main.players.add(wsPlayer);
         event.getPlayer().setGameMode(GameMode.ADVENTURE);

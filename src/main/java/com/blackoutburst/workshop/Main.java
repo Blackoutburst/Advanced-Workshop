@@ -6,6 +6,8 @@ import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.events.listeners.EventListener;
 import com.blackoutburst.workshop.utils.map.MapUtils;
+import com.viaversion.viaversion.api.Via;
+import com.viaversion.viaversion.api.ViaAPI;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends JavaPlugin {
+
+    public static final ViaAPI VIA_API = Via.getAPI();
 
     public static Location spawn;
 

@@ -1,5 +1,6 @@
 package com.blackoutburst.workshop.core;
 
+import com.blackoutburst.workshop.ClientVersion;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.blocks.DecoBlock;
 import com.blackoutburst.workshop.core.blocks.MaterialBlock;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WSPlayer {
+
+    protected ClientVersion clientVersion;
 
     protected GameStarter gamestarter;
 
@@ -55,7 +58,8 @@ public class WSPlayer {
 
     protected List<NMSEntity> entities = new ArrayList<>();
 
-    public WSPlayer(Player player) {
+    public WSPlayer(Player player, ClientVersion clientVersion) {
+        this.clientVersion = clientVersion;
         this.player = player;
         this.board = new NMSBoard(player, "§6Workshop");
         ScoreboardUtils.basic(this);

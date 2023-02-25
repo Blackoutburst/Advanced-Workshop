@@ -15,7 +15,8 @@ compileJava {
 
 repositories {
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'}
-    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'}
+    maven { url = 'https://repo.viaversion.com' }
     mavenCentral()
 }
 
@@ -49,5 +50,6 @@ configurations {
 
 dependencies {
     implementation 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    implementation 'com.viaversion:viaversion-api:4.5.1'
     implementation files('lib/item-nbt-api-plugin-2.11.1.jar')
 }
