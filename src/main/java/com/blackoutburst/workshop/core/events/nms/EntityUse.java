@@ -52,16 +52,16 @@ public class EntityUse {
     }
 
     public static void execute(NMSEntityUseEvent event) {
-        if (event.hand().equals(NMSEntityUseEvent.Hand.OFF_HAND)) return;
+        if (event.getHand().equals(NMSEntityUseEvent.Hand.OFF_HAND)) return;
 
-        Player player = event.player();
-        NMSEntity entity = event.entity();
+        Player player = event.getPlayer();
+        NMSEntity entity = event.getEntity();
 
         if (entity.getType().equals(NMSEntityType.CHICKEN)) {
             chicken(player);
         }
 
-        if (entity.getType().equals(NMSEntityType.VILLAGER) && event.action().equals(NMSEntityUseEvent.Action.RIGHT_CLICK)) {
+        if (entity.getType().equals(NMSEntityType.VILLAGER) && event.getAction().equals(NMSEntityUseEvent.Action.RIGHT_CLICK)) {
             villager(player);
         }
     }

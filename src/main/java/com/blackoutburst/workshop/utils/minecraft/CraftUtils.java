@@ -57,7 +57,7 @@ public class CraftUtils {
         int bagSize = gameoptions.getBagSize();
 
         switch (type) {
-            case 'N', 'B' -> {
+            case 'N': case 'B': {
                 List<Craft> bags = new ArrayList<>();
 
                 if (wsplayer.getCraftList() == null) {
@@ -75,8 +75,9 @@ public class CraftUtils {
 
                 finalCraftList.addAll(tempCraftList);
                 finalCraftList.addAll(bag);
+                break;
             }
-            case 'R' -> {
+            case 'R': {
                 List<Craft> last5 = wsplayer.getCraftList().subList(5, 10);
 
                 finalCraftList.addAll(last5);
@@ -86,6 +87,7 @@ public class CraftUtils {
 
                     finalCraftList.add(validCrafts.get(n));
                 }
+                break;
             }
         }
         wsplayer.setCraftList(finalCraftList);

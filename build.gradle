@@ -8,8 +8,8 @@ group 'com.blackoutburst'
 version '2.0.1'
 
 compileJava {
-    sourceCompatibility = '16'
-    targetCompatibility = '16'
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
     options.encoding = "UTF-8"
 }
 

@@ -92,8 +92,8 @@ public class NMSEntity {
         Player player = wsPlayer.getPlayer();
 
         for (NMSEntity e : GLOBAL_ENTITIES) {
-            if (e instanceof NMSItemFrame itemFrame) {
-                itemFrame.spawn(player);
+            if (e instanceof NMSItemFrame) {
+                ((NMSItemFrame) e).spawn(player);
             } else {
                 NMSPacketPlayOutSpawnEntityLiving.send(player, e);
                 NMSPacketPlayOutEntityHeadRotation.send(player, e, e.location.getYaw());
@@ -110,8 +110,8 @@ public class NMSEntity {
         for (WSPlayer wsPlayer : Main.players) {
             Player player = wsPlayer.getPlayer();
 
-            if (this instanceof NMSItemFrame itemFrame) {
-                itemFrame.spawn(player);
+            if (this instanceof NMSItemFrame) {
+                ((NMSItemFrame) this).spawn(player);
             } else {
                 NMSPacketPlayOutSpawnEntityLiving.send(player, this);
                 NMSPacketPlayOutEntityHeadRotation.send(player, this, this.location.getYaw());

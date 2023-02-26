@@ -9,11 +9,12 @@ import org.bukkit.entity.Player;
 public class SetUnlimitedCraft implements CommandExecutor {
 
     private boolean isUnlimited(String value) {
-        return switch (value) {
-            case "yes", "1", "true" -> true;
-            default -> false;
-        };
+        switch (value) {
+            case "yes": case "1": case "true": return true;
+            default: return false;
+        }
     }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {

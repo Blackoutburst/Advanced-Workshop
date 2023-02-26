@@ -82,7 +82,7 @@ public class NettyListener {
         Class<?> packetClass = NMS.getClass(packet.getClass().getSimpleName());
 
         switch (NMSPackets.getFromClassName(packet.getClass().getSimpleName())) {
-            case USE_ENTITY -> {
+            case USE_ENTITY: {
                 Field entityIdField = packetClass.getDeclaredField("a");
                 Method getAction = packetClass.getMethod("b");
                 Method getHand = packetClass.getMethod("c");
@@ -112,6 +112,7 @@ public class NettyListener {
 
                 NMSEntityUseEvent event = new NMSEntityUseEvent(player, entity, action, hand);
                 nmsPacket.onEntityUse(event);
+                break;
             }
         }
     }

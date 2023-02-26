@@ -13,7 +13,8 @@ public class ItemFrameUtils {
         ItemStack outputItem = wsplayer.getCurrentCraft().getItemRequired();
 
         for (NMSEntity entity : wsplayer.getEntities()) {
-            if (entity instanceof NMSItemFrame itemFrame) {
+            if (entity instanceof NMSItemFrame) {
+                NMSItemFrame itemFrame = (NMSItemFrame) entity;
                 if (itemFrame.getTag().equals("0")) {
                     itemFrame.setItem(player, outputItem);
                     continue;

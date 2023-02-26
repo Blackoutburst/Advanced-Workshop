@@ -12,12 +12,12 @@ import java.util.*;
 public class FileReader {
 
     public static File getFileByMap(String mapName, char type) {
-        return switch (type) {
-            case 'D' -> new File("./plugins/Workshop/maps/" + mapName + "/deco.yml");
-            case 'L' -> new File("./plugins/Workshop/maps/" + mapName + "/logic.yml");
-            case 'C' -> new File("./plugins/Workshop/maps/" + mapName + "/craft.yml");
-            default -> null;
-        };
+        switch (type) {
+            case 'D': return new File("./plugins/Workshop/maps/" + mapName + "/deco.yml");
+            case 'L': return new File("./plugins/Workshop/maps/" + mapName + "/logic.yml");
+            case 'C': return new File("./plugins/Workshop/maps/" + mapName + "/craft.yml");
+            default: return null;
+        }
     }
 
     public static String[] getAllKeys(File f) {

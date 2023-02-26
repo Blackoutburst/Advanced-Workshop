@@ -2,7 +2,7 @@ package com.blackoutburst.workshop.nms;
 
 import org.bukkit.entity.Player;
 
-public record NMSEntityUseEvent(Player player, NMSEntity entity, NMSEntityUseEvent.Action action, NMSEntityUseEvent.Hand hand) {
+public class NMSEntityUseEvent {
 
     public enum Action {
         LEFT_CLICK("ATTACK"),
@@ -28,4 +28,31 @@ public record NMSEntityUseEvent(Player player, NMSEntity entity, NMSEntityUseEve
         OFF_HAND
     }
 
+    protected Player player;
+    protected NMSEntity entity;
+    protected Action action;
+    protected Hand hand;
+
+    public NMSEntityUseEvent(Player player, NMSEntity entity, Action action, Hand hand) {
+        this.player = player;
+        this.entity = entity;
+        this.action = action;
+        this.hand = hand;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public NMSEntity getEntity() {
+        return entity;
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
+    public Hand getHand() {
+        return hand;
+    }
 }

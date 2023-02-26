@@ -28,10 +28,12 @@ public class InventoryClick {
         WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) event.getWhoClicked());
 
         switch (event.getView().getTitle()) {
-            case CraftGUI.NAME ->
+            case CraftGUI.NAME:
                     event.setCancelled(CraftGUI.click(event.getClickedInventory(), event.getSlot(), (Player) event.getWhoClicked(), event.getView().getTitle()));
-            case CraftSelectorGUI.NAME ->
+            break;
+            case CraftSelectorGUI.NAME:
                     event.setCancelled(CraftSelectorGUI.click(event.getClickedInventory(), event.getSlot(), (Player) event.getWhoClicked(), event.getView().getTitle()));
+            break;
         }
 
         preventArmorClick(event, wsplayer);

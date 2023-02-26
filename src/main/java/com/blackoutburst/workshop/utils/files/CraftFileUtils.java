@@ -55,11 +55,13 @@ public class CraftFileUtils {
         String typeString = (type == 'R') ? "rawMats" : "craftMats";
 
         ConfigurationSection mats = craft.getConfigurationSection(craftResult + "." + typeString);
-        List<String> keys = mats.getKeys(false).stream().toList();
+        List<Object> keys = new ArrayList<>();
+        Object[] tmp = mats.getKeys(false).stream().toArray();
+        keys.addAll(List.of(tmp));
         ItemStack[] result = new ItemStack[keys.size()];
 
         for (int i = 0; i < keys.size(); i++) {
-            result[i] = mats.getItemStack(keys.get(i));
+            result[i] = mats.getItemStack((String)keys.get(i));
         }
         return result;
     }

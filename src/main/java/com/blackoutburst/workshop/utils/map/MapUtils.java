@@ -52,11 +52,20 @@ public class MapUtils {
                 Location location = sign.getLocation();
 
                 switch (sign.getText()) {
-                    case "player" -> MiscUtils.teleportPlayerToArea(wsPlayer.getPlayer(), location, direction, area);
-                    case "chicken" -> EntityUtils.spawnEntity(NMSEntityType.CHICKEN, wsPlayer, location, direction, sign.getText(), area);
-                    case "villager" -> EntityUtils.spawnEntity(NMSEntityType.VILLAGER, wsPlayer, location, direction, sign.getText(), area);
-                    case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ->
-                                EntityUtils.spawnEntity(NMSEntityType.ITEM_FRAME, wsPlayer, location, direction, sign.getText(), area);
+                    case "player": MiscUtils.teleportPlayerToArea(wsPlayer.getPlayer(), location, direction, area); break;
+                    case "chicken": EntityUtils.spawnEntity(NMSEntityType.CHICKEN, wsPlayer, location, direction, sign.getText(), area); break;
+                    case "villager": EntityUtils.spawnEntity(NMSEntityType.VILLAGER, wsPlayer, location, direction, sign.getText(), area); break;
+                    case "0":
+                    case "1":
+                    case "2":
+                    case "3":
+                    case "4":
+                    case "5":
+                    case "6":
+                    case "7":
+                    case "8":
+                    case "9":
+                                EntityUtils.spawnEntity(NMSEntityType.ITEM_FRAME, wsPlayer, location, direction, sign.getText(), area); break;
                 }
             }
         } catch (Exception e) {
@@ -177,7 +186,10 @@ public class MapUtils {
                 if (needed == null) continue;
                 ItemStack[] regular = LogicFileUtils.readFileItem(mapName, key, "Regular");
                 if (regular == null) regular = new ItemStack[]{};
-                List<ItemStack> allItems = Stream.concat(Arrays.stream(needed), Arrays.stream(regular)).toList();
+                List<ItemStack> allItems = new ArrayList<>();
+                allItems.addAll(List.of(needed));
+                allItems.addAll(List.of(regular));
+
                 Location location = key.add(anchor);
 
                 boolean match = false;
@@ -220,7 +232,9 @@ public class MapUtils {
                 if (needed == null) needed = new ItemStack[]{};
                 ItemStack[] regular = LogicFileUtils.readFileItem(type, key, "Regular");
                 if (regular == null) regular = new ItemStack[]{};
-                List<ItemStack> allItems = Stream.concat(Arrays.stream(needed), Arrays.stream(regular)).toList();
+                List<ItemStack> allItems = new ArrayList<>();
+                allItems.addAll(List.of(needed));
+                allItems.addAll(List.of(regular));
                 ConfigurationSection locData = FileReader.getConfigSection(logicFile, key, 'L');
                 ConfigurationSection locTools = FileReader.getConfigSection(locData, "Tools");
                 String[] toolKeys = FileReader.getAllKeys(locTools);

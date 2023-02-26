@@ -25,11 +25,12 @@ import java.util.List;
 public class MiscUtils {
 
     public static void teleportPlayerToArea(Player player, Location location, BlockFace direction, PlayArea area) {
-        int yaw = switch (direction) {
-            case NORTH -> 180;
-            case EAST -> -90;
-            case WEST -> 90;
-            default -> 0;
+        int yaw = 0;
+        switch (direction) {
+            case NORTH: yaw = 180; break;
+            case EAST: yaw = -90; break;
+            case WEST: yaw = 90; break;
+            default: yaw = 0; break;
         };
         location.add(area.getAnchor()).add(0.5,0,0.5);
         location.setYaw(yaw);
@@ -69,11 +70,11 @@ public class MiscUtils {
             String timeType;
 
             switch (timeLimit) {
-                case 60 -> timeType = ".1mCrafts";
-                case 90 -> timeType = ".90sCrafts";
-                case 120 -> timeType = ".2mCrafts";
-                case 300 -> timeType = ".5mCrafts";
-                default -> {
+                case 60: timeType = ".1mCrafts"; break;
+                case 90: timeType = ".90sCrafts"; break;
+                case 120: timeType = ".2mCrafts"; break;
+                case 300: timeType = ".5mCrafts"; break;
+                default: {
                     EndGameLogic.endGame(wsplayer);
                     return true;
                 }

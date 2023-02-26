@@ -24,11 +24,12 @@ public class EntityUtils {
     public static void spawnEntity(NMSEntityType type, WSPlayer wsPlayer, Location location, BlockFace direction,
                                    String EntityName, PlayArea area) {
         location.add(area.getAnchor()).add(0.5, 0, 0.5);
-        float yaw = switch (direction) {
-            case NORTH -> 180;
-            case EAST -> -90;
-            case WEST -> 90;
-            default -> 0;
+        float yaw = 0;
+        switch (direction) {
+            case NORTH: yaw = 180; break;
+            case EAST: yaw = -90; break;
+            case WEST: yaw = 90; break;
+            default: yaw = 0; break;
         };
         location.setYaw(yaw);
         location.setPitch(0);
