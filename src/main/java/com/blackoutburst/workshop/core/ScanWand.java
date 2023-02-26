@@ -12,7 +12,7 @@ import org.bukkit.inventory.PlayerInventory;
 public class ScanWand {
 
     private static boolean isWand(PlayerInventory inv) {
-        ItemStack item = inv.getItemInHand();
+        ItemStack item = inv.getItemInMainHand();
 
         return (item.getType() == Material.BLAZE_ROD && item.getItemMeta().getDisplayName().equals("§6Scan wand"));
     }

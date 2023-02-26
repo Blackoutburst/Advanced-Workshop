@@ -85,12 +85,23 @@ public class MapUtils {
     public static void restoreArea(WSPlayer wsplayer, boolean clear_inventories) {
 
         wsplayer.getNeededBlocks().clear();
+        if (wsplayer.getDecoBlocks().size() == 0) {
+            DecoUtils.loadBlocks(wsplayer);
+        }
+        else {
+            List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
+            for (DecoBlock decoBlock : decoBlocks) {
+                if (decoBlock.getTypes().length > 1) {
+                    decoBlocks.remove(decoBlock);
+                }
+            }
+            DecoUtils.updateBlocks(wsplayer);
+        }
+
         wsplayer.getDecoBlocks().clear();
         if (wsplayer.getCurrentCraft() != null) {
             getNeededBlocks(wsplayer);
         }
-
-        DecoUtils.updateBlocks(wsplayer);
 
         List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
         List<Material> inventories = Arrays.asList(
@@ -121,9 +132,12 @@ public class MapUtils {
             File decoFile = FileReader.getFileByMap(name, 'D');
             Location[] keys = FileReader.getDecoLocationKeys(decoFile, world);
 
-            for (Location key : keys) {
-                BlockData[] blocks = DecoFileUtils.readFile(name, key, false);
-                Location location = key.add(anchor);
+            BlockData[][] allBlocks = DecoFileUtils.readFile(name, keys, false);
+
+            for (int i = 0; i < allBlocks.length; i++) {
+                BlockData[] blocks = allBlocks[i];
+                Location location = keys[i];
+                location.add(anchor);
 
                 if (blocks.length > 1) {
                     location.getBlock().setType(Material.AIR);

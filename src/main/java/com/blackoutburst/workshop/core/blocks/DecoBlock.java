@@ -15,11 +15,11 @@ public class DecoBlock {
 
     protected int index;
 
-    public DecoBlock(BlockData[] blocks, Location location, World world, int index) {
+    public DecoBlock(BlockData[] blocks, Location location, World world) {
         this.blocks = blocks;
         this.location = location;
         this.world = world;
-        this.index = index;
+        this.index = 0;
     }
 
     public BlockData getType() { return blocks[index]; }

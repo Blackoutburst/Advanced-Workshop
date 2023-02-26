@@ -13,6 +13,7 @@ import de.tr7zw.nbtapi.NBTContainer;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtapi.NBTList;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,10 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class DecoUtils {
@@ -54,6 +52,11 @@ public class DecoUtils {
         int maxY = Math.max(y1, y2);
         int maxZ = Math.max(z1, z2);
 
+        List<Location> locations = new ArrayList<>();
+        List<List<Boolean>> allNeeded = new ArrayList<>();
+        List<List<String>> allBlockData = new ArrayList<>();
+
+
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
@@ -64,9 +67,8 @@ public class DecoUtils {
                     int relZ = z - minZ;
                     Location relativeLoc = new Location(world, relX, relY,relZ);
 
-                    StringBuilder blocksString = new StringBuilder();
-
                     if (b.getType().equals(Material.AIR)) continue;
+                    locations.add(relativeLoc);
                     RandomBlock[] blocks = null;
                     if (b.getType().equals(Material.DISPENSER) || b.getType().equals(Material.DROPPER)) {
                         InventoryHolder dropper = (InventoryHolder) b.getState();
@@ -75,18 +77,22 @@ public class DecoUtils {
                         }
                     }
                     if (blocks != null) {
-                        for (int i = 0; i < blocks.length; i++) {
-                            String blockData = blocks[i].getBlockData().getAsString();
-                            boolean needed = blocks[i].isPriority();
-                            DecoFileUtils.saveFile(name,relativeLoc, blockData, i, needed);
+                        List<String> blockData = new ArrayList<>();
+                        List<Boolean> needed = new ArrayList<>();
+                        for (RandomBlock block : blocks) {
+                            blockData.add(block.getBlockData().getAsString());
+                            needed.add(block.isPriority());
                         }
+                        allBlockData.add(blockData);
+                        allNeeded.add(needed);
                         continue;
                     }
-                    blocksString.append(b.getBlockData().getAsString());
-                    DecoFileUtils.saveFile(name, relativeLoc, String.valueOf(blocksString), 0, false);
+                    allBlockData.add(new ArrayList<>(Collections.singleton(b.getBlockData().getAsString())));
+                    allNeeded.add(new ArrayList<>(Collections.singleton(false)));
                 }
             }
         }
+        DecoFileUtils.saveFile(name,locations, allBlockData, allNeeded);
     }
 
     private static RandomBlock[] readDropper(ItemStack item) {
@@ -129,38 +135,87 @@ public class DecoUtils {
         try {
             File decoFile = FileReader.getFileByMap(mapName, 'D');
             Location[] keys = FileReader.getDecoLocationKeys(decoFile, world);
+            BlockData[][] blocks = DecoFileUtils.readFile(mapName, keys, false);
+            BlockData[][] neededBlocks = DecoFileUtils.readFile(mapName, keys, true);
+            BlockData[][] allBlocks = (BlockData[][]) ArrayUtils.addAll(blocks, neededBlocks);
+            List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
 
-            for (Location key : keys) {
-                BlockData[] blocks = DecoFileUtils.readFile(mapName, key, false);
-                BlockData[] neededBlocks = DecoFileUtils.readFile(mapName, key, true);
-                BlockData[] allBlocks = Stream.concat(Arrays.stream(blocks), Arrays.stream(neededBlocks))
-                        .toArray(BlockData[]::new);
-                Location location = key.add(anchor);
+            for (int i = 0; i < allBlocks.length; i++) {
+                BlockData[] locBlocks = allBlocks[i];
+                Location location = keys[i].add(anchor);
+                if (locBlocks.length == 1) continue;
 
-                wsplayer.getDecoBlocks().add(new DecoBlock(allBlocks, location, world, 0));
+                DecoBlock decoBlock = new DecoBlock(locBlocks, location, world);
+                decoBlocks.add(decoBlock);
 
-                if (getNeededBlock(wsplayer, location) != null) {
-                    int index = getNeededBlock(wsplayer,location).getIndex();
-                    getBlock(wsplayer, location).setIndex(index);
-                    if (BlockUtils.getMaterialBlock(wsplayer, location) != null) {
-                        BlockUtils.getMaterialBlock(wsplayer,location).setIndex(index);
+                NeededBlock neededBlock = getNeededBlock(wsplayer, location);
+                MaterialBlock materialBlock = BlockUtils.getMaterialBlock(wsplayer, location);
+                if (neededBlock != null) {
+                    int index = neededBlock.getIndex();
+                    if (materialBlock != null) {
+                        materialBlock.setIndex(index);
                     }
                     continue;
                 }
-                if (allBlocks.length > 1 && wsplayer.isInGame()) {
-                    DecoBlock decoblock = getBlock(wsplayer, location);
+                if (locBlocks.length > 1 && wsplayer.isInGame()) {
                     Random rng = new Random();
-                    int randomBlockIndex = rng.nextInt(blocks.length);
+                    int randomBlockIndex = rng.nextInt(blocks[i].length);
 
-                    decoblock.setIndex(randomBlockIndex);
-                    MaterialBlock materialBlock = BlockUtils.getMaterialBlock(wsplayer, location);
+                    decoBlock.setIndex(randomBlockIndex);
                     if (materialBlock != null) {
-                        BlockUtils.getMaterialBlock(wsplayer, location).setIndex(randomBlockIndex);
+                        materialBlock.setIndex(randomBlockIndex);
                     }
                 }
                 else if (allBlocks.length > 1) {
-                    DecoBlock materialBlock = getBlock(wsplayer, location);
-                    materialBlock.setTypes(new BlockData[]{Material.AIR.createBlockData()});
+                    decoBlock.setTypes(new BlockData[]{Material.AIR.createBlockData()});
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadBlocks(WSPlayer wsplayer) {
+
+        String mapName = wsplayer.getPlayArea().getType();
+        Location anchor = wsplayer.getPlayArea().getAnchor();
+        World world = wsplayer.getPlayer().getWorld();
+
+        try {
+            File decoFile = FileReader.getFileByMap(mapName, 'D');
+            Location[] keys = FileReader.getDecoLocationKeys(decoFile, world);
+            BlockData[][] blocks = DecoFileUtils.readFile(mapName, keys, false);
+            BlockData[][] neededBlocks = DecoFileUtils.readFile(mapName, keys, true);
+            BlockData[][] allBlocks = (BlockData[][]) ArrayUtils.addAll(blocks, neededBlocks);
+            List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
+
+            for (int i = 0; i < allBlocks.length; i++) {
+                BlockData[] locBlocks = allBlocks[i];
+                Location location = keys[i].add(anchor);
+
+                DecoBlock decoBlock = new DecoBlock(locBlocks, location, world);
+                decoBlocks.add(decoBlock);
+
+                NeededBlock neededBlock = getNeededBlock(wsplayer, location);
+                MaterialBlock materialBlock = BlockUtils.getMaterialBlock(wsplayer, location);
+                if (neededBlock != null) {
+                    int index = neededBlock.getIndex();
+                    if (materialBlock != null) {
+                        materialBlock.setIndex(index);
+                    }
+                    continue;
+                }
+                if (locBlocks.length > 1 && wsplayer.isInGame()) {
+                    Random rng = new Random();
+                    int randomBlockIndex = rng.nextInt(blocks[i].length);
+
+                    decoBlock.setIndex(randomBlockIndex);
+                    if (materialBlock != null) {
+                        materialBlock.setIndex(randomBlockIndex);
+                    }
+                }
+                else if (allBlocks.length > 1) {
+                    decoBlock.setTypes(new BlockData[]{Material.AIR.createBlockData()});
                 }
             }
         } catch (Exception e) {
