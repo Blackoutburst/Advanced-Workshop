@@ -153,6 +153,26 @@ public class NMSEntity {
             e.printStackTrace();
         }
     }
+    public void setLocation(Location location) {
+        try {
+            double x = location.getX();
+            double y = location.getY();
+            double z = location.getZ();
+            float pitch = location.getPitch();
+            float yaw = location.getYaw();
+
+            Method method = ENTITY_CLASS.getMethod("setLocation", double.class, double.class, double.class, float.class, float.class);
+
+            method.invoke(this.entity, x, y, z, yaw, pitch);
+            this.location.setX(x);
+            this.location.setY(y);
+            this.location.setZ(z);
+            this.location.setPitch(pitch);
+            this.location.setYaw(yaw);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void setYawPitch(float yaw, float pitch) {
         try {
@@ -174,6 +194,22 @@ public class NMSEntity {
             location.setX(x);
             location.setY(y);
             location.setZ(z);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void setPosition(Location location) {
+        try {
+            double x = location.getX();
+            double y = location.getY();
+            double z = location.getZ();
+
+            Method method = ENTITY_CLASS.getMethod("setPosition", double.class, double.class, double.class);
+
+            method.invoke(this.entity, x, y, z);
+            this.location.setX(x);
+            this.location.setY(y);
+            this.location.setZ(z);
         } catch (Exception e) {
             e.printStackTrace();
         }

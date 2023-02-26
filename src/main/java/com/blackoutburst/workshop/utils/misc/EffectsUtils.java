@@ -18,6 +18,5 @@ public class EffectsUtils {
         Location location = block.getLocation();
 
         world.playEffect(location, Effect.STEP_SOUND, 10);
-        world.playEffect(location, Effect.WITHER_BREAK_BLOCK, 10);
     }
 }

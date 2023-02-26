@@ -20,7 +20,7 @@ public class ItemFrameUtils {
                 }
 
                 if (itemFrame.getTag().matches("([0-9]+([.][0-9]+)?)?")) {
-                    int index = Integer.parseInt(itemFrame.getTag());
+                    int index = Integer.parseInt(itemFrame.getTag()) - 1;
                     ItemStack item = wsplayer.getCurrentCraft().getCraftingTable()[index];
 
                     itemFrame.setItem(player, item);

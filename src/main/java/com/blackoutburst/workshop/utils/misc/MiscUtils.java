@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,18 +24,17 @@ import java.util.List;
 
 public class MiscUtils {
 
-    public static void teleportPlayerToArea(Player player, String[] data, PlayArea area) {
-        float x = Integer.parseInt(data[2]) + area.getAnchor().getBlockX() + 0.5f;
-        int y = Integer.parseInt(data[3]) + area.getAnchor().getBlockY();
-        float z = Integer.parseInt(data[4]) + area.getAnchor().getBlockZ() + 0.5f;
-        int yaw = switch (BlockFace.valueOf(data[5])) {
+    public static void teleportPlayerToArea(Player player, Location location, BlockFace direction, PlayArea area) {
+        int yaw = switch (direction) {
             case NORTH -> 180;
             case EAST -> -90;
             case WEST -> 90;
             default -> 0;
         };
-
-        player.teleport(new Location(player.getWorld(), x, y, z, yaw, 0));
+        location.add(area.getAnchor()).add(0.5,0,0.5);
+        location.setYaw(yaw);
+        location.setPitch(0);
+        player.teleport(location);
     }
 
     public static <E> List<List<E>> transpose2dList(List<List<E>> startList) {

@@ -2,6 +2,7 @@ package com.blackoutburst.workshop.utils.files;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -47,6 +48,8 @@ public class DecoFileUtils {
         String type = needed ? "Needed." : "Normal.";
 
         ConfigurationSection blocks = (ConfigurationSection) deco.get(type + locationString);
+        if (blocks == null) return new BlockData[]{};
+
         List<String> indexes = new ArrayList<>(blocks.getKeys(false));
         BlockData[] blockData = new BlockData[indexes.size()];
 

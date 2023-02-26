@@ -6,6 +6,7 @@ import com.blackoutburst.workshop.core.blocks.*;
 import com.blackoutburst.workshop.nms.NMSEntityType;
 import com.blackoutburst.workshop.utils.files.DecoFileUtils;
 import com.blackoutburst.workshop.utils.files.FileReader;
+import com.blackoutburst.workshop.utils.files.LogicFileUtils;
 import com.blackoutburst.workshop.utils.minecraft.BlockUtils;
 import com.blackoutburst.workshop.utils.minecraft.EntityUtils;
 import com.blackoutburst.workshop.utils.misc.MiscUtils;
@@ -17,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -28,25 +30,33 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class MapUtils {
 
     public static void readSigns(WSPlayer wsPlayer, String type) {
         try {
-            List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + type + ".logic"));
             PlayArea area = wsPlayer.getPlayArea();
+            World world = wsPlayer.getPlayer().getWorld();
+            File mapFile = FileReader.getFileByMap(type, 'L');
 
-            for (String line : lines) {
-                if (line.startsWith("S")) {
-                    String[] data = line.split(", ");
+            Location[] signLocations = FileReader.getLogicLocationKeys(mapFile, world, 'S');
+            LogicSign[] signs = new LogicSign[signLocations.length];
+            for (int i = 0; i < signLocations.length; i++) {
+                Location signLocation = signLocations[i];
+                signs[i] = LogicFileUtils.readSigns(type, signLocation);
+            }
 
-                    switch (data[1]) {
-                        case "player" -> MiscUtils.teleportPlayerToArea(wsPlayer.getPlayer(), data, area);
-                        case "chicken" -> EntityUtils.spawnEntity(NMSEntityType.CHICKEN, wsPlayer, data, area);
-                        case "villager" -> EntityUtils.spawnEntity(NMSEntityType.VILLAGER, wsPlayer, data, area);
-                        case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ->
-                                EntityUtils.spawnEntity(NMSEntityType.ITEM_FRAME, wsPlayer, data, area);
-                    }
+            for (LogicSign sign : signs) {
+                BlockFace direction = sign.getDirection();
+                Location location = sign.getLocation();
+
+                switch (sign.getText()) {
+                    case "player" -> MiscUtils.teleportPlayerToArea(wsPlayer.getPlayer(), location, direction, area);
+                    case "chicken" -> EntityUtils.spawnEntity(NMSEntityType.CHICKEN, wsPlayer, location, direction, sign.getText(), area);
+                    case "villager" -> EntityUtils.spawnEntity(NMSEntityType.VILLAGER, wsPlayer, location, direction, sign.getText(), area);
+                    case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ->
+                                EntityUtils.spawnEntity(NMSEntityType.ITEM_FRAME, wsPlayer, location, direction, sign.getText(), area);
                 }
             }
         } catch (Exception e) {
@@ -64,6 +74,7 @@ public class MapUtils {
     }
 
     public static void restoreArea(WSPlayer wsplayer, boolean clear_inventories) {
+
         wsplayer.getNeededBlocks().clear();
         wsplayer.getDecoBlocks().clear();
         if (wsplayer.getCurrentCraft() != null) {
@@ -81,11 +92,11 @@ public class MapUtils {
             Location location = i.getLocation();
             Block b = location.getBlock();
 
-            b.setType(i.getType().getMaterial());
+            b.setBlockData(i.getType());
 
             if (!clear_inventories) continue;
 
-            if (inventories.contains(i.getType())) {
+            if (inventories.contains(i.getType().getMaterial())) {
                 InventoryHolder container = (InventoryHolder) b.getState();
                 container.getInventory().clear();
             }
@@ -99,7 +110,7 @@ public class MapUtils {
             Location anchor = player.getLocation();
 
             File decoFile = FileReader.getFileByMap(name, 'D');
-            Location[] keys = FileReader.getLocationKeys(decoFile, world);
+            Location[] keys = FileReader.getDecoLocationKeys(decoFile, world);
 
             for (Location key : keys) {
                 BlockData[] blocks = DecoFileUtils.readFile(name, key, false);
@@ -155,47 +166,30 @@ public class MapUtils {
         for (ItemStack material : materials) {
             materialsCopy.add(material.clone());
         }
-        
+
         try {
-            List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + mapName + ".logic"));
-            Collections.shuffle(lines);
+            File logicFile = FileReader.getFileByMap(mapName, 'L');
+            List<Location> keys = Arrays.asList(FileReader.getLogicLocationKeys(logicFile, world, 'R'));
+            Collections.shuffle(keys);
 
-            for (String line : lines) {
-                if (!(line.startsWith("P"))) { continue; }
-
-                String[] data = line.split(";",-1);
-                List<String> items = Arrays.asList((data[2] + "," + data[3]).split(","));
-
-                int relX = Integer.parseInt(data[1].split(",")[0]);
-                int relY = Integer.parseInt(data[1].split(",")[1]);
-                int relZ = Integer.parseInt(data[1].split(",")[2]);
-
-                Location relLoc = new Location(world,relX,relY,relZ);
-                Location location = relLoc.add(anchor);
+            for (Location key : keys) {
+                ItemStack[] needed = LogicFileUtils.readFileItem(mapName, key, "Priority");
+                if (needed == null) continue;
+                ItemStack[] regular = LogicFileUtils.readFileItem(mapName, key, "Regular");
+                if (regular == null) regular = new ItemStack[]{};
+                List<ItemStack> allItems = Stream.concat(Arrays.stream(needed), Arrays.stream(regular)).toList();
+                Location location = key.add(anchor);
 
                 boolean match = false;
-                for (String item : items) {
-                    String id = item.split(" ")[0];
-                    int itemData = Integer.parseInt(item.split(" ")[1]);
-
-                    ReadWriteNBT nbtObject = NBT.createNBTObject();
-                    nbtObject.setString("id",id);
-                    nbtObject.setInteger("Damage",itemData);
-                    nbtObject.setInteger("Count",1);
-                    ItemStack checkItem = NBTItem.convertNBTtoItem((NBTCompound) nbtObject);
+                for (ItemStack item : allItems) {
                     for (ItemStack material : materialsCopy) {
                         if (material.getAmount() == 0 || material.getType() == Material.AIR) { continue; }
-
-                        byte checkData = checkItem.getData().getData();
-                        byte materialData = material.getData().getData();
-                        Material checkType = checkItem.getType();
+                        Material checkType = item.getType();
                         Material materialType = material.getType();
-
-                        if (checkType != materialType || checkData != materialData) { continue; }
+                        if (checkType != materialType) { continue; }
 
                         match = true;
-                        int index = items.indexOf(item);
-
+                        int index = allItems.indexOf(item);
                         material.setAmount(material.getAmount() - 1);
                         wsplayer.getNeededBlocks().add(new NeededBlock(location, index, world));
                         BlockUtils.getMaterialBlock(wsplayer, location).setIndex(index);
@@ -204,7 +198,6 @@ public class MapUtils {
                     if (match) { break; }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -215,83 +208,38 @@ public class MapUtils {
         wsPlayer.getMaterialBlocks().clear();
         PlayArea area = wsPlayer.getPlayArea();
         if (area == null) return;
+        Location anchor = area.getAnchor();
+        World world = wsPlayer.getPlayer().getWorld();
 
         try {
-            List<String> lines = Files.readAllLines(Paths.get("./plugins/Workshop/" + type + ".logic"));
+            File logicFile = FileReader.getFileByMap(type, 'L');
+            List<Location> keys = Arrays.asList(FileReader.getLogicLocationKeys(logicFile, world, 'R'));
 
-            for (String line : lines) {
+            for (Location key : keys) {
+                ItemStack[] needed = LogicFileUtils.readFileItem(type, key, "Priority");
+                if (needed == null) needed = new ItemStack[]{};
+                ItemStack[] regular = LogicFileUtils.readFileItem(type, key, "Regular");
+                if (regular == null) regular = new ItemStack[]{};
+                List<ItemStack> allItems = Stream.concat(Arrays.stream(needed), Arrays.stream(regular)).toList();
+                ConfigurationSection locData = FileReader.getConfigSection(logicFile, key, 'L');
+                ConfigurationSection locTools = FileReader.getConfigSection(locData, "Tools");
+                String[] toolKeys = FileReader.getAllKeys(locTools);
+                ItemStack[][] tools = new ItemStack[toolKeys.length][];
+                Material[] itemMaterials = new Material[allItems.size()];
 
-                if ((line.startsWith("R")) || (line.startsWith("P"))) {
-                    String[] data = line.split(";",-1);
-
-                    int relX = Integer.parseInt(data[1].split(",")[0]);
-                    int relY = Integer.parseInt(data[1].split(",")[1]);
-                    int relZ = Integer.parseInt(data[1].split(",")[2]);
-
-                    String[] items = data[2].split(",");
-                    String[] neededItems = {};
-                    List<List<String>> allTools = new ArrayList<>();
-
-                    if (!(data[3].equals(""))) {
-                        neededItems = data[3].split(",");
-                    }
-                    if (!(data[4].equals(""))) {
-                        for (int i = 4; i < data.length; i++) {
-                            List<String> toolsList = Arrays.asList(data[i].split(","));
-
-                            allTools.add(toolsList);
-                        }
-                    }
-
-                    allTools = MiscUtils.transpose2dList(allTools);
-
-                    String[][] allToolsArray = new String[allTools.size()][];
-
-                    for (List<String> tools : allTools) {
-                        String[] toolArray = new String[tools.size()];
-                        for (String tool : tools) {
-                            toolArray[tools.indexOf(tool)] = tool;
-                        }
-                        allToolsArray[allTools.indexOf(tools)] = toolArray;
-                    }
-
-                    List<Material> allItems = new ArrayList<>();
-                    List<Byte> allItemData = new ArrayList<>();
-
-                    for (String item : items) {
-                        String id = item.split(" ")[0];
-                        int itemData = Integer.parseInt(item.split(" ")[1]);
-
-                        ReadWriteNBT nbtObject = NBT.createNBTObject();
-                        nbtObject.setString("id",id);
-                        nbtObject.setInteger("Damage",itemData);
-                        nbtObject.setInteger("Count",1);
-                        ItemStack convertedItem = NBTItem.convertNBTtoItem((NBTCompound) nbtObject);
-                        allItems.add(convertedItem.getType());
-                        allItemData.add(convertedItem.getData().getData());
-                    }
-                    if ((neededItems.length != 0) && !(neededItems[0].equals(""))) {
-                        for (String item : neededItems) {
-                            String id = item.split(" ")[0];
-                            int itemData = Integer.parseInt(item.split(" ")[1]);
-
-                            ReadWriteNBT nbtObject = NBT.createNBTObject();
-                            nbtObject.setString("id", id);
-                            nbtObject.setInteger("Damage", itemData);
-                            nbtObject.setInteger("Count", 1);
-                            ItemStack convertedItem = NBTItem.convertNBTtoItem((NBTCompound) nbtObject);
-                            allItems.add(convertedItem.getType());
-                            allItemData.add(convertedItem.getData().getData());
-                        }
-                    }
-                    Material[] itemArray = allItems.toArray(new Material[]{});
-
-                    Location offset = area.getAnchor();
-                    Location relLoc = new Location(area.getAnchor().getWorld(), relX, relY, relZ);
-                    Location location = relLoc.add(offset);
-
-                    wsPlayer.getMaterialBlocks().add(new MaterialBlock(itemArray, location, location.getWorld(), allToolsArray, 0));
+                for (int i = 0; i < toolKeys.length; i++) {
+                    String toolKey = toolKeys[i];
+                    ItemStack[] indexTools = LogicFileUtils.readFileTools(type, key, Integer.parseInt(toolKey));
+                    tools[i] = indexTools;
                 }
+
+                for (int i = 0; i < allItems.size(); i++) {
+                    ItemStack item = allItems.get(i);
+                    itemMaterials[i] = item.getType();
+                }
+
+                Location location = key.add(anchor);
+                wsPlayer.getMaterialBlocks().add(new MaterialBlock(itemMaterials, location, world, tools, 0));
             }
         } catch (Exception e) {
             e.printStackTrace();

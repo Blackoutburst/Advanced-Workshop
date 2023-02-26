@@ -64,10 +64,19 @@ public class LogicUtils {
                         if (sign.getLines().length == 0) continue;
                         String text = sign.getLine(0);
 
-                        org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign) sign.getData();
-                        BlockFace directionFacing = sign2.getFacing();
+                        BlockFace directionFacing = BlockFace.NORTH;
 
-                        //writer.write("S, " + text + ", " + relX + ", " + relY + ", " + relZ + ", " + directionFacing.toString() + "\n");
+                        if (sign.getBlock().getType() != Material.OAK_WALL_SIGN) {
+                            org.bukkit.block.data.type.Sign signData = (org.bukkit.block.data.type.Sign) sign.getBlockData();
+                            directionFacing = signData.getRotation();
+                        }
+                        else {
+                            org.bukkit.block.data.type.WallSign signData = (org.bukkit.block.data.type.WallSign) sign.getBlockData();
+                            directionFacing = signData.getFacing();
+                        }
+
+
+                        LogicFileUtils.saveFileSigns(name, relLoc, text, directionFacing);
                     }
                 }
             }

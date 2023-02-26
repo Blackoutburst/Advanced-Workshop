@@ -38,9 +38,11 @@ public class Updater {
         String roundTime = "0.00s";
 
         if (timer.getRoundBegin() != null) {
-            String completeTime = StringUtils.ROUND.format(((float) Duration.between(wsPlayer.getTimers().getRoundBegin(), wsPlayer.getTimers().getRoundEnd()).toMillis() / 1000.0f)) + "s";;
+            String completeTime = "0.00s";
             String currentTime = StringUtils.ROUND.format(((float) Duration.between(wsPlayer.getTimers().getRoundBegin(), Instant.now()).toMillis() / 1000.0f)) + "s";
-
+            if (wsPlayer.getTimers().getRoundEnd() != null) {
+                completeTime = StringUtils.ROUND.format(((float) Duration.between(wsPlayer.getTimers().getRoundBegin(), wsPlayer.getTimers().getRoundEnd()).toMillis() / 1000.0f)) + "s";
+            }
             roundTime = wsPlayer.isNextRound() ? completeTime : currentTime;
         }
 

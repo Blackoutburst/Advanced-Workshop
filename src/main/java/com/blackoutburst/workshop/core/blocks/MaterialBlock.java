@@ -3,6 +3,7 @@ package com.blackoutburst.workshop.core.blocks;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 
 public class MaterialBlock {
 
@@ -12,11 +13,11 @@ public class MaterialBlock {
 
     protected World world;
 
-    protected String[][] tools;
+    protected ItemStack[][] tools;
 
     protected int index;
 
-    public MaterialBlock(Material[] types, Location location, World world, String[][] tools, int index) {
+    public MaterialBlock(Material[] types, Location location, World world, ItemStack[][] tools, int index) {
         this.types = types;
         this.location = location;
         this.world = world;
@@ -32,7 +33,7 @@ public class MaterialBlock {
         return types;
     }
 
-    public String[][] getAllTools() {
+    public ItemStack[][] getAllTools() {
         return tools;
     }
 
@@ -40,9 +41,9 @@ public class MaterialBlock {
 
     public World getWorld() {return world;}
 
-    public String[] getTools() {
+    public ItemStack[] getTools() {
         if (tools.length == 0) {
-            return new String[]{""};
+            return new ItemStack[]{};
         }
         return tools[index];}
 
