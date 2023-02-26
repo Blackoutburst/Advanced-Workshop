@@ -67,6 +67,7 @@ public class Play implements CommandExecutor {
         wsplayer.setWaiting(true);
         wsplayer.setInGame(true);
         wsplayer.setNextRound(false);
+        wsplayer.getPlayer().setCanPickupItems(false);
         wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
         wsplayer.getBoard().set(14, "Map: §e" + area.getType());
 
