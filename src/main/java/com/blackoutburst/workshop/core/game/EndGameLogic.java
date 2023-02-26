@@ -24,14 +24,15 @@ public class EndGameLogic {
         wsplayer.setCurrentCraft(null);
         wsplayer.setCraftList(null);
         wsplayer.setWaiting(false);
-        wsplayer.getTimers().setMapBegin(null);
 
         ArmorUtils.removeArmor(player);
         EntityUtils.clearEntity(wsplayer);
 
         player.sendMessage("§eThe game ended! §b(" + getEndMessage(wsplayer) + ")");
+        player.setCanPickupItems(true);
         player.setGameMode(GameMode.ADVENTURE);
         player.teleport(Main.spawn);
+        wsplayer.getTimers().setMapBegin(null);
         player.getInventory().clear();
     }
 
@@ -53,7 +54,9 @@ public class EndGameLogic {
         GameOptions gameoptions = wsplayer.getGameOptions();
 
         if (gameoptions.isTimeLimited()) {
-            PBUtils.craftPB(wsplayer, timeTypes[0]);
+            if (timeTypes.length > 0) {
+                PBUtils.craftPB(wsplayer, timeTypes[0]);
+            }
             return;
         }
 
