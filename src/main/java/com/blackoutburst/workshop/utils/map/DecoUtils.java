@@ -80,7 +80,7 @@ public class DecoUtils {
                             boolean needed = blocks[i].isPriority();
                             DecoFileUtils.saveFile(name,relativeLoc, blockData, i, needed);
                         }
-                        return;
+                        continue;
                     }
                     blocksString.append(b.getBlockData().getAsString());
                     DecoFileUtils.saveFile(name, relativeLoc, String.valueOf(blocksString), 0, false);
@@ -128,13 +128,14 @@ public class DecoUtils {
 
         try {
             File decoFile = FileReader.getFileByMap(mapName, 'D');
-            Location[] keys = FileReader.getLocationKeys(decoFile, world);
+            Location[] keys = FileReader.getDecoLocationKeys(decoFile, world);
+
             for (Location key : keys) {
-                Location location = key.add(anchor);
                 BlockData[] blocks = DecoFileUtils.readFile(mapName, key, false);
                 BlockData[] neededBlocks = DecoFileUtils.readFile(mapName, key, true);
                 BlockData[] allBlocks = Stream.concat(Arrays.stream(blocks), Arrays.stream(neededBlocks))
                         .toArray(BlockData[]::new);
+                Location location = key.add(anchor);
 
                 wsplayer.getDecoBlocks().add(new DecoBlock(allBlocks, location, world, 0));
 
@@ -149,7 +150,7 @@ public class DecoUtils {
                 if (allBlocks.length > 1 && wsplayer.isInGame()) {
                     DecoBlock decoblock = getBlock(wsplayer, location);
                     Random rng = new Random();
-                    int randomBlockIndex = rng.nextInt(allBlocks.length);
+                    int randomBlockIndex = rng.nextInt(blocks.length);
 
                     decoblock.setIndex(randomBlockIndex);
                     MaterialBlock materialBlock = BlockUtils.getMaterialBlock(wsplayer, location);

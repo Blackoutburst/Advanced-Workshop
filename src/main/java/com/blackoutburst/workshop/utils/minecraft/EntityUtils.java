@@ -6,6 +6,7 @@ import com.blackoutburst.workshop.nms.NMSEntity;
 import com.blackoutburst.workshop.nms.NMSEntityType;
 import com.blackoutburst.workshop.nms.NMSEnumDirection;
 import com.blackoutburst.workshop.nms.NMSItemFrame;
+import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 
 public class EntityUtils {
@@ -20,33 +21,29 @@ public class EntityUtils {
         }
     }
 
-    public static void spawnEntity(NMSEntityType type, WSPlayer wsPlayer, String[] data, PlayArea area) {
-        String tag = data[0];
-
-        float x = Integer.parseInt(data[2]) + area.getAnchor().getBlockX() + 0.5f;
-        int y = Integer.parseInt(data[3]) + area.getAnchor().getBlockY();
-        float z = Integer.parseInt(data[4]) + area.getAnchor().getBlockZ() + 0.5f;
-        int yaw = 0;
-
-        BlockFace blockFace = BlockFace.valueOf(data[5]);
-
-        switch (BlockFace.valueOf(data[5])) {
-            case NORTH -> yaw = 180;
-            case EAST -> yaw = -90;
-            case WEST -> yaw = 90;
-        }
+    public static void spawnEntity(NMSEntityType type, WSPlayer wsPlayer, Location location, BlockFace direction,
+                                   String EntityName, PlayArea area) {
+        location.add(area.getAnchor()).add(0.5, 0, 0.5);
+        float yaw = switch (direction) {
+            case NORTH -> 180;
+            case EAST -> -90;
+            case WEST -> 90;
+            default -> 0;
+        };
+        location.setYaw(yaw);
+        location.setPitch(0);
 
         if (type.equals(NMSEntityType.ITEM_FRAME)) {
             NMSItemFrame itemFrame = new NMSItemFrame(wsPlayer.getPlayer().getWorld());
-            NMSEnumDirection.Direction.valueOf(String.valueOf(blockFace));
+            NMSEnumDirection.Direction.valueOf(String.valueOf(direction));
             itemFrame.setDirection(NMSEnumDirection.Direction.NORTH);
-            itemFrame.setPosition(x, y, z);
-            itemFrame.setTag(tag);
+            itemFrame.setPosition(location);
+            itemFrame.setTag(EntityName);
             itemFrame.spawn();
         } else {
             NMSEntity entity = new NMSEntity(wsPlayer.getPlayer().getWorld(), type);
-            entity.setLocation(x, y, z, yaw, 0);
-            entity.setTag(tag);
+            entity.setLocation(location);
+            entity.setTag(EntityName);
             entity.spawn();
         }
     }

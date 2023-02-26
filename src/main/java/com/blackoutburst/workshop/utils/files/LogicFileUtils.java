@@ -1,5 +1,7 @@
 package com.blackoutburst.workshop.utils.files;
 
+import com.blackoutburst.workshop.core.blocks.LogicSign;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
@@ -55,7 +57,7 @@ public class LogicFileUtils {
             String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
 
             logic.set("Signs." + locationString + ".text", text);
-            logic.set("Signs." + locationString + ".direction", direction);
+            logic.set("Signs." + locationString + ".direction", direction.toString());
             logic.save(logicFile);
 
         } catch (IOException e) {
@@ -78,7 +80,7 @@ public class LogicFileUtils {
         String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
 
         ConfigurationSection items = (ConfigurationSection) logic.get("Resources." + locationString + "." + type);
-        if (items == null) return new ItemStack[]{};
+        if (items == null) return null;
 
         List<String> indexes = new ArrayList<>(items.getKeys(false));
         ItemStack[] itemStacks = new ItemStack[indexes.size()];
@@ -107,6 +109,17 @@ public class LogicFileUtils {
         }
 
         return itemStacks;
+    }
+
+    public static LogicSign readSigns(String mapName, Location location) {
+        File logicFile = new File("./plugins/Workshop/maps/" + mapName + "/logic.yml");
+        YamlConfiguration logic = YamlConfiguration.loadConfiguration(logicFile);
+        String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+        String text = logic.getString("Signs." + locationString + ".text");
+        BlockFace direction = BlockFace.valueOf(logic.getString("Signs." + locationString + ".direction"));
+
+        return new LogicSign(text, direction, location);
     }
 
 }

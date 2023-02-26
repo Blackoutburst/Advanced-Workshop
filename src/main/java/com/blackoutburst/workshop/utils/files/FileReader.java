@@ -1,15 +1,13 @@
 package com.blackoutburst.workshop.utils.files;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class FileReader {
 
@@ -27,7 +25,7 @@ public class FileReader {
         return file.getKeys(false).toArray(new String[]{});
     }
 
-    public static Location[] getLocationKeys(File f, World world) {
+    public static Location[] getDecoLocationKeys(File f, World world) {
         YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
         List<String> xKeys = new ArrayList<>();
         ConfigurationSection normalBlocks = file.getConfigurationSection("Normal");
@@ -51,16 +49,72 @@ public class FileReader {
                 }
             }
         }
+
+        Set<Location> locationSet = new HashSet<>(locations);
+        return locationSet.toArray(new Location[]{});
+    }
+
+    public static Location[] getLogicLocationKeys(File f, World world, char type) {
+        YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
+        List<String> xKeys = new ArrayList<>();
+        String section = (type == 'S') ? "Signs." : "Resources.";
+
+        ConfigurationSection blocks = file.getConfigurationSection(section);
+        blocks.getKeys(false).forEach(x -> xKeys.add(section + x));
+
+        List<Location> locations = new ArrayList<>();
+
+        for (String x : xKeys) {
+            Set<String> yValues = file.getConfigurationSection(x).getKeys(false);
+            for (String y : yValues) {
+                Set<String> zValues = file.getConfigurationSection(x).getConfigurationSection(y).getKeys(false);
+                for (String z : zValues) {
+                    int xInt = Integer.parseInt(x.split("[.]")[1]);
+                    int yInt = Integer.parseInt(y);
+                    int zInt = Integer.parseInt(z);
+                    locations.add(new Location(world, xInt, yInt, zInt));
+                }
+            }
+        }
         return locations.toArray(new Location[]{});
     }
 
     public static String[] getAllKeys(ConfigurationSection section) {
-        return section.getKeys(false).toArray(new String[]{});
+        return (section == null) ? new String[]{} : section.getKeys(false).toArray(new String[]{});
     }
 
     public static ConfigurationSection getConfigSection(File f, String path) {
         YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
         if (!file.isConfigurationSection(path)) return null;
         return file.getConfigurationSection(path);
+    }
+
+    public static ConfigurationSection getConfigSection(File f, Location location, char type) {
+        YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
+        if (type == 'L') {
+            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+            String path = "Resources." + locationString;
+            return file.getConfigurationSection(path);
+        }
+        if (type == 'R') {
+            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+            String path = "Normal." + locationString;
+            return file.getConfigurationSection(path);
+        }
+        if (type == 'P') {
+            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+            String path = "Needed." + locationString;
+            return file.getConfigurationSection(path);
+        }
+        if (type == 'S') {
+            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+            String path = "Signs." + locationString;
+            return file.getConfigurationSection(path);
+        }
+        return null;
+    }
+
+    public static ConfigurationSection getConfigSection(ConfigurationSection c, String path) {
+        return c.getConfigurationSection(path);
     }
 }

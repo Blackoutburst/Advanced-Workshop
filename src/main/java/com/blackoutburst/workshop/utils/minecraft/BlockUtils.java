@@ -2,11 +2,10 @@ package com.blackoutburst.workshop.utils.minecraft;
 
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.blocks.MaterialBlock;
-import de.tr7zw.nbtapi.NBTContainer;
-import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class BlockUtils {
 
@@ -24,16 +23,13 @@ public class BlockUtils {
 
     public static boolean canBreak(MaterialBlock materialBlock, Player player) {
         if (WSPlayer.getFromPlayer(player).isWaiting()) return false;
-        if (materialBlock.getTools()[0].isEmpty()) return true;
+        if (materialBlock.getTools().length == 0) return true;
 
-        for (String tool : materialBlock.getTools()) {
-            if (player.getItemInHand().getType() == Material.AIR) {
+        for (ItemStack tool : materialBlock.getTools()) {
+            if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
                 return false;
             }
-
-            NBTContainer handItemNBT = NBTItem.convertItemtoNBT(player.getItemInHand());
-            String handItem = handItemNBT.getString("id");
-            if (handItem.equals(tool)) {
+            if (player.getInventory().getItemInMainHand().getType() == tool.getType()) {
                 return true;
             }
         }

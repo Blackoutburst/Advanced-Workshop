@@ -40,12 +40,12 @@ public class FurnaceUtils {
                         case NETHERRACK -> fastCook(furnace, stack, Material.NETHER_BRICK);
                         case COBBLESTONE -> fastCook(furnace, stack, Material.STONE);
                         case CACTUS -> fastCook(furnace, stack, Material.GREEN_DYE);
-                        case OAK_LOG -> fastCook(furnace, stack, Material.COAL);
-                        case BIRCH_LOG -> fastCook(furnace, stack, Material.COAL);
-                        case SPRUCE_LOG -> fastCook(furnace, stack, Material.COAL);
-                        case JUNGLE_LOG -> fastCook(furnace, stack, Material.COAL);
-                        case ACACIA_LOG -> fastCook(furnace, stack, Material.COAL);
-                        case DARK_OAK_LOG -> fastCook(furnace, stack, Material.COAL);
+                        case OAK_LOG -> fastCook(furnace, stack, Material.CHARCOAL);
+                        case BIRCH_LOG -> fastCook(furnace, stack, Material.CHARCOAL);
+                        case SPRUCE_LOG -> fastCook(furnace, stack, Material.CHARCOAL);
+                        case JUNGLE_LOG -> fastCook(furnace, stack, Material.CHARCOAL);
+                        case ACACIA_LOG -> fastCook(furnace, stack, Material.CHARCOAL);
+                        case DARK_OAK_LOG -> fastCook(furnace, stack, Material.CHARCOAL);
                         case COAL_ORE -> fastCook(furnace, stack, Material.COAL);
                         case DIAMOND_ORE -> fastCook(furnace, stack, Material.DIAMOND);
                         case EMERALD_ORE -> fastCook(furnace, stack, Material.EMERALD);
