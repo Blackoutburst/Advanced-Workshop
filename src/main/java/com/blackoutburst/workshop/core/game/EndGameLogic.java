@@ -22,6 +22,7 @@ public class EndGameLogic {
 
         wsplayer.setInGame(false);
         wsplayer.getGamestarter().cancel();
+        wsplayer.getGameRestarter().cancel();
         wsplayer.setCurrentCraft(null);
         wsplayer.setCraftList(null);
         wsplayer.setWaiting(false);
