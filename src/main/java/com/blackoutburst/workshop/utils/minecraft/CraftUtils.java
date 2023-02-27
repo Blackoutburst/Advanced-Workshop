@@ -65,6 +65,13 @@ public class CraftUtils {
                 break;
             }
             case 'R': {
+                if (wsplayer.getCraftList() == null) {
+                    for (int i = 0; i < 10; i++) {
+                        int n = rng.nextInt(craftAmount);
+                        finalCraftList.add(validCrafts.get(n));
+                    }
+                    break;
+                }
                 List<Craft> last5 = wsplayer.getCraftList().subList(5, 10);
 
                 finalCraftList.addAll(last5);

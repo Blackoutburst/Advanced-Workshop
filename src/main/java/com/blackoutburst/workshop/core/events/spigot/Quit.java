@@ -18,6 +18,7 @@ public class Quit {
             area.setBusy(false);
             MapUtils.restoreArea(wsPlayer, true);
         }
+        wsPlayer.getGameOptions().save(wsPlayer);
         Main.players.remove(WSPlayer.getFromPlayer(event.getPlayer()));
         NettyListener.remove(event.getPlayer());
     }

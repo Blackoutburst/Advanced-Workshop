@@ -1,6 +1,9 @@
 package com.blackoutburst.workshop.core.game;
 
 import com.blackoutburst.workshop.core.WSPlayer;
+import com.blackoutburst.workshop.utils.files.OptionsFile;
+
+import java.util.UUID;
 
 public class GameOptions {
 
@@ -33,11 +36,34 @@ public class GameOptions {
         load(player);
     }
 
-    // TODO
-    public void save(WSPlayer player) {}
+    public GameOptions(int defaultCraftLimit, boolean unlimitedCrafts, char rngType,
+                       int bagSize, float defaultTimeLimit, int countDownTime) {
+        this.defaultCraftLimit = defaultCraftLimit;
+        this.unlimitedCrafts = unlimitedCrafts;
+        this.randomType = rngType;
+        this.bagSize = bagSize;
+        this.defaultTimeLimit = defaultTimeLimit;
+        this.countDownTime = countDownTime;
+    }
 
-    // TODO
-    private void load(WSPlayer player) {}
+    public void save(WSPlayer player) {
+        GameOptions gameOptions = new GameOptions(this.defaultCraftLimit, this.unlimitedCrafts, this.randomType,
+                                                    this.bagSize, this.defaultTimeLimit, this.countDownTime);
+        UUID uuid = player.getPlayer().getUniqueId();
+        OptionsFile.save(uuid, gameOptions);
+    }
+
+    private void load(WSPlayer player) {
+        GameOptions gameOptions = OptionsFile.load(player.getPlayer().getUniqueId());
+        if (gameOptions == null) return;
+
+        this.defaultCraftLimit = gameOptions.getDefaultCraftLimit();
+        this.unlimitedCrafts = gameOptions.isUnlimitedCrafts();
+        this.randomType = gameOptions.getRandomType();
+        this.bagSize = gameOptions.getBagSize();
+        this.defaultTimeLimit = gameOptions.getDefaultTimeLimit();
+        this.countDownTime = gameOptions.getCountDownTime();
+    }
 
     public int getCraftLimit() {
         return craftLimit;

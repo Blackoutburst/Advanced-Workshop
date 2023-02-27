@@ -30,7 +30,6 @@ public class PBUtils {
 
     public static void allCraftPB(WSPlayer wsplayer) {
         Timers timers = wsplayer.getTimers();
-        timers.setMapEnd(Instant.now());
 
         Float duration = Duration.between(timers.getMapBegin(), timers.getMapEnd()).toMillis() / 1000.0f;
 
@@ -48,7 +47,6 @@ public class PBUtils {
 
     public static void regularPB(WSPlayer wsplayer) {
         Timers timers = wsplayer.getTimers();
-        timers.setMapEnd(Instant.now());
 
         Float duration = Duration.between(timers.getMapBegin(), timers.getMapEnd()).toMillis() / 1000.0f;
 

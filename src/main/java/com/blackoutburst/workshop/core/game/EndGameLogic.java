@@ -13,6 +13,7 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import java.time.Duration;
+import java.time.Instant;
 
 public class EndGameLogic {
 
@@ -59,6 +60,7 @@ public class EndGameLogic {
             }
             return;
         }
+        wsplayer.getTimers().setMapEnd(Instant.now());
 
         if (wsplayer.getCurrentCraftIndex() == 5 && gameoptions.getRandomType() == 'N') {
             PBUtils.regularPB(wsplayer);
