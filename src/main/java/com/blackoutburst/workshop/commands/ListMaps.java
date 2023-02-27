@@ -12,7 +12,7 @@ public class ListMaps implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         sender.sendMessage("§e§m--------------------");
         for (PlayArea area : Main.playAreas) {
-            sender.sendMessage(area.isBusy() ? "§c" : "§a" + area.getType()+ " §6("+area.getAnchor().getX()+", "+area.getAnchor().getY()+", "+area.getAnchor().getZ()+")");
+            sender.sendMessage((area.isBusy() ? "§c" : "§a") + area.getType()+ " §6("+area.getAnchor().getX()+", "+area.getAnchor().getY()+", "+area.getAnchor().getZ()+")");
         }
         sender.sendMessage("§e§m--------------------");
 
