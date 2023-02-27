@@ -52,7 +52,7 @@ public class NMSItemFrame extends NMSEntity {
         return null;
     }
 
-    public void setItem(Player player, ItemStack stack) {
+    public void setItem(ItemStack stack) {
         try {
             Class<?> entityClass = this.entity.getClass();
             Class<?> itemStackClass = NMS.getClass("ItemStack");
@@ -67,7 +67,7 @@ public class NMSItemFrame extends NMSEntity {
                 for (int i = 0; i < size; i++) {
                     NMSEntity entity = wsPlayer.getEntities().get(i);
                     if (entity.uuid == this.uuid) {
-                        NMSPacketPlayOutEntityMetadata.send(player, this);
+                        NMSPacketPlayOutEntityMetadata.send(wsPlayer.getPlayer(), entity);
                         break;
                     }
                 }

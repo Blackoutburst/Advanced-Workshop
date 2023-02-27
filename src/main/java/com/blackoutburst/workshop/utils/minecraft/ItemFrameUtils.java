@@ -9,14 +9,13 @@ import org.bukkit.inventory.ItemStack;
 public class ItemFrameUtils {
 
     public static void updateCraft(WSPlayer wsplayer) {
-        Player player = wsplayer.getPlayer();
         ItemStack outputItem = wsplayer.getCurrentCraft().getItemRequired();
 
         for (NMSEntity entity : wsplayer.getEntities()) {
             if (entity instanceof NMSItemFrame) {
                 NMSItemFrame itemFrame = (NMSItemFrame) entity;
                 if (itemFrame.getTag().equals("0")) {
-                    itemFrame.setItem(player, outputItem);
+                    itemFrame.setItem(outputItem);
                     continue;
                 }
 
@@ -24,7 +23,7 @@ public class ItemFrameUtils {
                     int index = Integer.parseInt(itemFrame.getTag()) - 1;
                     ItemStack item = wsplayer.getCurrentCraft().getCraftingTable()[index];
 
-                    itemFrame.setItem(player, item);
+                    itemFrame.setItem(item);
                 }
             }
         }
