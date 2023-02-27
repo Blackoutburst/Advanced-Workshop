@@ -1,5 +1,7 @@
 package com.blackoutburst.workshop.nms;
 
+import com.blackoutburst.workshop.Main;
+import com.blackoutburst.workshop.core.WSPlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -58,7 +60,18 @@ public class NMSItemFrame extends NMSEntity {
             Method method = entityClass.getMethod("setItem", itemStackClass);
 
             method.invoke(this.entity, toNMSItemStack(stack));
-            NMSPacketPlayOutEntityMetadata.send(player, this);
+
+
+            for (WSPlayer wsPlayer : Main.players) {
+                int size = wsPlayer.getEntities().size();
+                for (int i = 0; i < size; i++) {
+                    NMSEntity entity = wsPlayer.getEntities().get(i);
+                    if (entity.uuid == this.uuid) {
+                        NMSPacketPlayOutEntityMetadata.send(player, this);
+                        break;
+                    }
+                }
+            }
 
             itemStack = stack;
         } catch (Exception e) {
