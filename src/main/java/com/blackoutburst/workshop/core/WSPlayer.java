@@ -6,6 +6,7 @@ import com.blackoutburst.workshop.core.blocks.DecoBlock;
 import com.blackoutburst.workshop.core.blocks.MaterialBlock;
 import com.blackoutburst.workshop.core.blocks.NeededBlock;
 import com.blackoutburst.workshop.core.game.GameOptions;
+import com.blackoutburst.workshop.core.game.GameRestarter;
 import com.blackoutburst.workshop.core.game.GameStarter;
 import com.blackoutburst.workshop.nms.NMSBoard;
 import com.blackoutburst.workshop.nms.NMSEntity;
@@ -21,6 +22,8 @@ public class WSPlayer {
     protected ClientVersion clientVersion;
 
     protected GameStarter gamestarter;
+
+    protected GameRestarter gameRestarter;
 
     protected int jumpPadCooldown;
 
@@ -203,4 +206,8 @@ public class WSPlayer {
     public boolean hasStored() { return hasStored; }
 
     public void setHasStored(boolean hasStored) { this.hasStored = hasStored; }
+
+    public GameRestarter getGameRestarter() { return gameRestarter; }
+
+    public void setGameRestarter(GameRestarter gameRestarter) { this.gameRestarter = gameRestarter; }
 }

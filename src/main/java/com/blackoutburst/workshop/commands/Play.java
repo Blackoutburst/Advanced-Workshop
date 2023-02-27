@@ -124,6 +124,7 @@ public class Play implements CommandExecutor {
         GameRestarter restarter = new GameRestarter(wsplayer, starter);
         wsplayer.getPlayArea().setHasStarted(false);
         wsplayer.setGamestarter(starter);
+        wsplayer.setGameRestarter(restarter);
 
         starter.runTaskLater(Main.getPlugin(Main.class), start_delay * 20L);
         restarter.runTaskTimer(Main.getPlugin(Main.class), start_delay * 20L + 1, 1);
