@@ -27,19 +27,9 @@ public class NMSEntity {
     protected String tag;
 
     protected Object entity;
-    protected int networkID;
     protected NMSEntityType type;
 
     protected WSPlayer owner;
-
-    public int getNetworkID() {
-        try {
-            return networkID;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
 
     public int getID() {
         try {
@@ -90,7 +80,6 @@ public class NMSEntity {
             Object[] args = tmp.toArray();
 
             this.entity = entityConstructor.newInstance(args);
-            this.networkID = type.networkID;
             this.location = new Location(world,0,0,0,0,0);
         } catch (Exception e) {
             e.printStackTrace();

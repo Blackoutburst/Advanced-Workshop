@@ -56,8 +56,11 @@ public class MapUtils {
 
                 switch (sign.getText()) {
                     case "player": MiscUtils.teleportPlayerToArea(wsPlayer.getPlayer(), location, direction, area); break;
+                    case "blaze": EntityUtils.spawnEntity(NMSEntityType.BLAZE, wsPlayer, location, direction, sign.getText(), area); break;
                     case "chicken": EntityUtils.spawnEntity(NMSEntityType.CHICKEN, wsPlayer, location, direction, sign.getText(), area); break;
+                    case "hoglin": EntityUtils.spawnEntity(NMSEntityType.HOGLIN, wsPlayer, location, direction, sign.getText(), area); break;
                     case "villager": EntityUtils.spawnEntity(NMSEntityType.VILLAGER, wsPlayer, location, direction, sign.getText(), area); break;
+                    case "witherskeleton": EntityUtils.spawnEntity(NMSEntityType.WITHER_SKELETON, wsPlayer, location, direction, sign.getText(), area); break;
                     case "0":
                     case "1":
                     case "2":

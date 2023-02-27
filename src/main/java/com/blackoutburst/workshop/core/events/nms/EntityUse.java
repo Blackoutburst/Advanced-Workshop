@@ -17,10 +17,22 @@ import java.time.Instant;
 
 public class EntityUse {
 
+    private static void blaze(Player player) {
+        if (WSPlayer.getFromPlayer(player).isWaiting()) return;
+
+        player.getInventory().addItem(new ItemStack(Material.BLAZE_ROD));
+    }
+
     private static void chicken(Player player) {
         if (WSPlayer.getFromPlayer(player).isWaiting()) return;
 
         player.getInventory().addItem(new ItemStack(Material.EGG));
+    }
+
+    private static void hoglin(Player player) {
+        if (WSPlayer.getFromPlayer(player).isWaiting()) return;
+
+        player.getInventory().addItem(new ItemStack(Material.LEATHER));
     }
 
     private static void villager(Player player) {
@@ -58,14 +70,23 @@ public class EntityUse {
         wsPlayer.setHasStored(false);
     }
 
+    private static void witherSkeleton(Player player) {
+        if (WSPlayer.getFromPlayer(player).isWaiting()) return;
+
+        player.getInventory().addItem(new ItemStack(Material.BONE));
+    }
+
     public static void execute(NMSEntityUseEvent event) {
         if (event.getHand().equals(NMSEntityUseEvent.Hand.OFF_HAND)) return;
 
         Player player = event.getPlayer();
         NMSEntity entity = event.getEntity();
 
-        if (entity.getType().equals(NMSEntityType.CHICKEN)) {
-            chicken(player);
+        switch (entity.getType()) {
+            case BLAZE: blaze(player); break;
+            case CHICKEN: chicken(player); break;
+            case HOGLIN: hoglin(player); break;
+            case WITHER_SKELETON: witherSkeleton(player); break;
         }
 
         if (entity.getType().equals(NMSEntityType.VILLAGER) && event.getAction().equals(NMSEntityUseEvent.Action.RIGHT_CLICK)) {
