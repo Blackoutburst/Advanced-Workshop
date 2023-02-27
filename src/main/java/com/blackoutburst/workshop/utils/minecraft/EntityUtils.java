@@ -15,9 +15,11 @@ public class EntityUtils {
         int size = wsplayer.getEntities().size();
         for (int i = 0; i < size; i++) {
             NMSEntity entity = wsplayer.getEntities().get(i);
-            entity.delete();
-            size--;
-            i--;
+            if (entity.getOwner().getPlayer().getUniqueId().equals(wsplayer.getPlayer().getUniqueId())) {
+                entity.delete();
+                size--;
+                i--;
+            }
         }
     }
 
@@ -36,12 +38,14 @@ public class EntityUtils {
 
         if (type.equals(NMSEntityType.ITEM_FRAME)) {
             NMSItemFrame itemFrame = new NMSItemFrame(wsPlayer.getPlayer().getWorld());
+            itemFrame.setOwner(wsPlayer);
             itemFrame.setDirection(NMSEnumDirection.Direction.valueOf(String.valueOf(direction)));
             itemFrame.setPosition(location);
             itemFrame.setTag(EntityName);
             itemFrame.spawn();
         } else {
             NMSEntity entity = new NMSEntity(wsPlayer.getPlayer().getWorld(), type);
+            entity.setOwner(wsPlayer);
             entity.setLocation(location);
             entity.setTag(EntityName);
             entity.spawn();

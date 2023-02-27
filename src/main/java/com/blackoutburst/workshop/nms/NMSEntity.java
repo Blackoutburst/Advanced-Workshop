@@ -30,6 +30,8 @@ public class NMSEntity {
     protected int networkID;
     protected NMSEntityType type;
 
+    protected WSPlayer owner;
+
     public int getNetworkID() {
         try {
             return networkID;
@@ -57,6 +59,14 @@ public class NMSEntity {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void setOwner(WSPlayer owner) {
+        this.owner = owner;
+    }
+
+    public WSPlayer getOwner() {
+        return owner;
     }
 
     public NMSEntity(World world, NMSEntityType type, Object... parameters) {
