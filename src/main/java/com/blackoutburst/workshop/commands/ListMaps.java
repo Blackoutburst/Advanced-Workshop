@@ -11,8 +11,11 @@ public class ListMaps implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         sender.sendMessage("§e§m--------------------");
+
+        int index = 0;
         for (PlayArea area : Main.playAreas) {
-            sender.sendMessage((area.isBusy() ? "§c" : "§a") + area.getType()+ " §6("+area.getAnchor().getX()+", "+area.getAnchor().getY()+", "+area.getAnchor().getZ()+")");
+            sender.sendMessage(index + " | "+ (area.isBusy() ? "§c" : "§a") + area.getType()+ " §6("+area.getAnchor().getX()+", "+area.getAnchor().getY()+", "+area.getAnchor().getZ()+")");
+            index++;
         }
         sender.sendMessage("§e§m--------------------");
 

@@ -64,6 +64,10 @@ commands:
   listmaps:
     description: list maps
     usage: /listmaps
+  deletemap:
+    permission: workshop.admin
+    description: Delete a map
+    usage: /deletemap
 
   permissions:
     workshop.admin:

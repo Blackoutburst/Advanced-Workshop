@@ -59,6 +59,7 @@ public class Main extends JavaPlugin {
         getCommand("settimelimit").setExecutor(new SetTimeLimit());
         getCommand("setcountdown").setExecutor(new SetCountdown());
         getCommand("listmaps").setExecutor(new ListMaps());
+        getCommand("deletemap").setExecutor(new DeleteMap());
     }
 
     @Override
