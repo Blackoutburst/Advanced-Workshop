@@ -27,8 +27,7 @@ public class Updater {
     private static void updateTimes(WSPlayer wsPlayer) {
         GameOptions gameoptions = wsPlayer.getGameOptions();
         Timers timer = wsPlayer.getTimers();
-        String gameDuration = StringUtils.ROUND.format(((float) Duration.between(timer.getMapBegin(), Instant.now()).toMillis() / 1000.0f)) + "s";
-        String gameTime = (timer.getMapBegin() == null) ? "0.00s" : gameDuration;
+        String gameTime = (timer.getMapBegin() == null) ? "0.00s" : StringUtils.ROUND.format(((float) Duration.between(timer.getMapBegin(), Instant.now()).toMillis() / 1000.0f)) + "s";
 
         if (wsPlayer.isNextRound()) {
             ScoreboardUtils.waiting(wsPlayer);
@@ -37,7 +36,7 @@ public class Updater {
 
         String roundTime = "0.00s";
 
-        if (timer.getRoundBegin() != null) {
+        if (timer.getRoundBegin() != null && !wsPlayer.isWaiting()) {
             String completeTime = "0.00s";
             String currentTime = StringUtils.ROUND.format(((float) Duration.between(wsPlayer.getTimers().getRoundBegin(), Instant.now()).toMillis() / 1000.0f)) + "s";
             if (wsPlayer.getTimers().getRoundEnd() != null) {
@@ -66,10 +65,11 @@ public class Updater {
 
             GameOptions gameoptions = wsPlayer.getGameOptions();
 
+            updateTimes(wsPlayer);
+
             if (gameoptions.isTimeLimited() && MiscUtils.checkTimeLimit(wsPlayer)) continue;
             if (wsPlayer.isWaiting()) continue;
 
-            updateTimes(wsPlayer);
 
             if (wsPlayer.isNextRound()) {
                 wsPlayer.setNextRound(false);
