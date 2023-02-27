@@ -23,5 +23,6 @@ public class Join {
 
         NettyListener.init(event.getPlayer(), new NMSListener());
         NMSEntity.load(wsPlayer);
+        event.getPlayer().teleport(Main.spawn);
     }
 }
