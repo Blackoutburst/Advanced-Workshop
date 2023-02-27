@@ -19,6 +19,7 @@ import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -28,6 +29,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.List;
 
@@ -38,12 +41,13 @@ public class MapUtils {
             PlayArea area = wsPlayer.getPlayArea();
             World world = wsPlayer.getPlayer().getWorld();
             File mapFile = MapFileUtils.getMapFile(type, 'L');
+            YamlConfiguration mapConfig = YamlConfiguration.loadConfiguration(mapFile);
 
             Location[] signLocations = MapFileUtils.getLogicLocationKeys(mapFile, world, 'S');
             LogicSign[] signs = new LogicSign[signLocations.length];
             for (int i = 0; i < signLocations.length; i++) {
                 Location signLocation = signLocations[i];
-                signs[i] = LogicFileUtils.readSigns(type, signLocation);
+                signs[i] = LogicFileUtils.readSigns(mapConfig, signLocation);
             }
 
             for (LogicSign sign : signs) {
@@ -84,19 +88,10 @@ public class MapUtils {
     public static void restoreArea(WSPlayer wsplayer, boolean clear_inventories) {
 
         wsplayer.getNeededBlocks().clear();
-
         if (wsplayer.getCurrentCraft() != null) {
             getNeededBlocks(wsplayer);
         }
-
-        if (wsplayer.getDecoBlocks().size() == 0) {
-            DecoUtils.loadBlocks(wsplayer);
-        }
-        else {
-            List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
-            decoBlocks.removeIf(decoBlock -> decoBlock.getTypes().length > 1);
-            DecoUtils.updateBlocks(wsplayer);
-        }
+        DecoUtils.updateBlocks(wsplayer);
 
         List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
         List<Material> inventories = Arrays.asList(

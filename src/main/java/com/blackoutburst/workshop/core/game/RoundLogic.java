@@ -7,8 +7,10 @@ import com.blackoutburst.workshop.utils.minecraft.ArmorUtils;
 import com.blackoutburst.workshop.utils.minecraft.CraftUtils;
 import com.blackoutburst.workshop.utils.minecraft.ItemFrameUtils;
 import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.time.Duration;
 import java.time.Instant;
 
 public class RoundLogic {
@@ -32,6 +34,8 @@ public class RoundLogic {
         ArmorUtils.setArmor(player);
         ScoreboardUtils.startRound(wsplayer);
         ItemFrameUtils.updateCraft(wsplayer);
+
+
         MapUtils.restoreArea(wsplayer, false);
 
         wsplayer.setWaiting(false);
@@ -49,7 +53,6 @@ public class RoundLogic {
             EndGameLogic.endGame(wsplayer);
             return true;
         }
-
         int craftIndex = wsplayer.getCurrentCraftIndex();
         int bagSize = wsplayer.getGameOptions().getBagSize();
 

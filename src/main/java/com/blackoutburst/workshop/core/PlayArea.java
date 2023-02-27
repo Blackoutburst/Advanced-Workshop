@@ -6,6 +6,10 @@ public class PlayArea {
 
     protected boolean isBusy;
 
+    protected boolean isLoading;
+
+    protected boolean hasStarted;
+
     protected String type;
     protected Location anchor;
 
@@ -29,4 +33,12 @@ public class PlayArea {
     public void setBusy(boolean busy) {
         isBusy = busy;
     }
+
+    public boolean isLoading() { return isLoading; }
+
+    public void setLoading(boolean loading) { isLoading = loading; }
+
+    public boolean hasStarted() { return hasStarted; }
+
+    public void setHasStarted(boolean hasStarted) { this.hasStarted = hasStarted; }
 }

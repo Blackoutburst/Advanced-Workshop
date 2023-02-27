@@ -8,8 +8,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class DecoFileUtils {
 
@@ -54,6 +57,33 @@ public class DecoFileUtils {
 
         BlockData[][] blockData = new BlockData[locations.length][];
         String type = needed ? "Needed." : "Normal.";
+
+
+
+        for (int i = 0; i < locations.length; i++) {
+            Location location = locations[i];
+            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+            ConfigurationSection blocks = (ConfigurationSection) deco.get(type + locationString);
+            if (blocks == null) return new BlockData[][]{};
+
+            List<String> indexes = new ArrayList<>(blocks.getKeys(false));
+            BlockData[] locBlockData = new BlockData[indexes.size()];
+
+            for (int j = 0; j < indexes.size(); j++) {
+                String blockDataString = (String) blocks.get(indexes.get(j));
+                locBlockData[j] = Bukkit.createBlockData(blockDataString);
+            }
+            blockData[i] = locBlockData;
+        }
+
+        return blockData;
+    }
+
+    public static BlockData[][] readFile(YamlConfiguration deco, Location[] locations, boolean needed) {
+        BlockData[][] blockData = new BlockData[locations.length][];
+        String type = needed ? "Needed." : "Normal.";
+
+
 
         for (int i = 0; i < locations.length; i++) {
             Location location = locations[i];

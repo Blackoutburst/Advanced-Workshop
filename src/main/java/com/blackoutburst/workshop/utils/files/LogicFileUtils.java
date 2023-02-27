@@ -185,4 +185,12 @@ public class LogicFileUtils {
         return new LogicSign(text, direction, location);
     }
 
+    public static LogicSign readSigns(YamlConfiguration logic, Location location) {
+        String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+        String text = logic.getString("Signs." + locationString + ".text");
+        BlockFace direction = BlockFace.valueOf(logic.getString("Signs." + locationString + ".direction"));
+
+        return new LogicSign(text, direction, location);
+    }
 }

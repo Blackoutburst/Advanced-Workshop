@@ -28,18 +28,8 @@ public class CraftUtils {
 
     public static void loadCraft(WSPlayer wsPlayer, String type) {
         wsPlayer.getCrafts().clear();
-
-        File craftFile = MapFileUtils.getMapFile(type, 'C');
-        String[] crafts = MapFileUtils.getAllKeys(craftFile);
-
-        for (String craft : crafts) {
-            ItemStack requiredItem = getItem(craft);
-            String name = MiscUtils.getItemName(requiredItem.getType());
-            ItemStack[] craftMats = CraftFileUtils.readCraftFile(type, craft, 'C');
-            ItemStack[] materials = CraftFileUtils.readCraftFile(type, craft, 'R');
-
-            wsPlayer.getCrafts().add(new Craft(name, requiredItem, craftMats, List.of(materials)));
-        }
+        Craft[] crafts = CraftFileUtils.readCraftFile(type);
+        wsPlayer.getCrafts().addAll(List.of(crafts));
     }
 
     public static void updateCraftList(WSPlayer wsplayer) {

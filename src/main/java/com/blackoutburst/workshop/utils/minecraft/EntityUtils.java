@@ -36,8 +36,7 @@ public class EntityUtils {
 
         if (type.equals(NMSEntityType.ITEM_FRAME)) {
             NMSItemFrame itemFrame = new NMSItemFrame(wsPlayer.getPlayer().getWorld());
-            NMSEnumDirection.Direction.valueOf(String.valueOf(direction));
-            itemFrame.setDirection(NMSEnumDirection.Direction.NORTH);
+            itemFrame.setDirection(NMSEnumDirection.Direction.valueOf(String.valueOf(direction)));
             itemFrame.setPosition(location);
             itemFrame.setTag(EntityName);
             itemFrame.spawn();
