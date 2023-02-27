@@ -61,6 +61,9 @@ commands:
   setcountdown:
     description: Sets the countdown length at the start of games
     usage: /setcountdown
+  listmaps:
+    description: list maps
+    usage: /listmaps
 
   permissions:
     workshop.admin:
