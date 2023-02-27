@@ -74,6 +74,7 @@ public class EndGameLogic {
 
         ScoreboardUtils.endGame(wsplayer);
         MapUtils.restoreArea(wsplayer, true);
+        wsplayer.getDecoBlocks().clear();
 
         PlayArea area = wsplayer.getPlayArea();
         if (area != null)

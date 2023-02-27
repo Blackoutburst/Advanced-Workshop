@@ -5,7 +5,7 @@ import com.blackoutburst.workshop.core.*;
 import com.blackoutburst.workshop.core.blocks.*;
 import com.blackoutburst.workshop.nms.NMSEntityType;
 import com.blackoutburst.workshop.utils.files.DecoFileUtils;
-import com.blackoutburst.workshop.utils.files.FileReader;
+import com.blackoutburst.workshop.utils.files.MapFileUtils;
 import com.blackoutburst.workshop.utils.files.LogicFileUtils;
 import com.blackoutburst.workshop.utils.minecraft.BlockUtils;
 import com.blackoutburst.workshop.utils.minecraft.EntityUtils;
@@ -30,7 +30,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class MapUtils {
 
@@ -38,9 +37,9 @@ public class MapUtils {
         try {
             PlayArea area = wsPlayer.getPlayArea();
             World world = wsPlayer.getPlayer().getWorld();
-            File mapFile = FileReader.getFileByMap(type, 'L');
+            File mapFile = MapFileUtils.getMapFile(type, 'L');
 
-            Location[] signLocations = FileReader.getLogicLocationKeys(mapFile, world, 'S');
+            Location[] signLocations = MapFileUtils.getLogicLocationKeys(mapFile, world, 'S');
             LogicSign[] signs = new LogicSign[signLocations.length];
             for (int i = 0; i < signLocations.length; i++) {
                 Location signLocation = signLocations[i];
@@ -85,12 +84,19 @@ public class MapUtils {
     public static void restoreArea(WSPlayer wsplayer, boolean clear_inventories) {
 
         wsplayer.getNeededBlocks().clear();
-        wsplayer.getDecoBlocks().clear();
+
         if (wsplayer.getCurrentCraft() != null) {
             getNeededBlocks(wsplayer);
         }
 
-        DecoUtils.updateBlocks(wsplayer);
+        if (wsplayer.getDecoBlocks().size() == 0) {
+            DecoUtils.loadBlocks(wsplayer);
+        }
+        else {
+            List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
+            decoBlocks.removeIf(decoBlock -> decoBlock.getTypes().length > 1);
+            DecoUtils.updateBlocks(wsplayer);
+        }
 
         List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
         List<Material> inventories = Arrays.asList(
@@ -98,6 +104,7 @@ public class MapUtils {
                 Material.DISPENSER, Material.DROPPER, Material.BREWING_STAND, Material.HOPPER);
 
         for (DecoBlock i : decoBlocks) {
+
             Location location = i.getLocation();
             Block b = location.getBlock();
 
@@ -118,12 +125,15 @@ public class MapUtils {
             World world = player.getWorld();
             Location anchor = player.getLocation();
 
-            File decoFile = FileReader.getFileByMap(name, 'D');
-            Location[] keys = FileReader.getDecoLocationKeys(decoFile, world);
+            File decoFile = MapFileUtils.getMapFile(name, 'D');
+            Location[] keys = MapFileUtils.getDecoNormalKeys(decoFile, world);
 
-            for (Location key : keys) {
-                BlockData[] blocks = DecoFileUtils.readFile(name, key, false);
-                Location location = key.add(anchor);
+            BlockData[][] allBlocks = DecoFileUtils.readFile(name, keys, false);
+
+            for (int i = 0; i < allBlocks.length; i++) {
+                BlockData[] blocks = allBlocks[i];
+                Location location = keys[i];
+                location.add(anchor);
 
                 if (blocks.length > 1) {
                     location.getBlock().setType(Material.AIR);
@@ -177,23 +187,21 @@ public class MapUtils {
         }
 
         try {
-            File logicFile = FileReader.getFileByMap(mapName, 'L');
-            List<Location> keys = Arrays.asList(FileReader.getLogicLocationKeys(logicFile, world, 'R'));
-            Collections.shuffle(keys);
+            File logicFile = MapFileUtils.getMapFile(mapName, 'L');
+            List<Location> keyList = Arrays.asList(MapFileUtils.getLogicLocationKeys(logicFile, world, 'P'));
+            Collections.shuffle(keyList);
+            Location[] keys = keyList.toArray(new Location[0]);
+            ItemStack[][] allNeeded = LogicFileUtils.readFileItem(mapName, keys, "Priority");
 
-            for (Location key : keys) {
-                ItemStack[] needed = LogicFileUtils.readFileItem(mapName, key, "Priority");
+            for (int i = 0; i < keys.length; i++) {
+                Location key = keys[i];
+                ItemStack[] needed = allNeeded[i];
                 if (needed == null) continue;
-                ItemStack[] regular = LogicFileUtils.readFileItem(mapName, key, "Regular");
-                if (regular == null) regular = new ItemStack[]{};
-                List<ItemStack> allItems = new ArrayList<>();
-                allItems.addAll(List.of(needed));
-                allItems.addAll(List.of(regular));
-
                 Location location = key.add(anchor);
 
                 boolean match = false;
-                for (ItemStack item : allItems) {
+                for (int j = 0; j < needed.length; j++) {
+                    ItemStack item = needed[j];
                     for (ItemStack material : materialsCopy) {
                         if (material.getAmount() == 0 || material.getType() == Material.AIR) { continue; }
                         Material checkType = item.getType();
@@ -201,10 +209,9 @@ public class MapUtils {
                         if (checkType != materialType) { continue; }
 
                         match = true;
-                        int index = allItems.indexOf(item);
                         material.setAmount(material.getAmount() - 1);
-                        wsplayer.getNeededBlocks().add(new NeededBlock(location, index, world));
-                        BlockUtils.getMaterialBlock(wsplayer, location).setIndex(index);
+                        wsplayer.getNeededBlocks().add(new NeededBlock(location, j, world));
+                        BlockUtils.getMaterialBlock(wsplayer, location).setIndex(j);
                         break;
                     }
                     if (match) { break; }
@@ -224,32 +231,23 @@ public class MapUtils {
         World world = wsPlayer.getPlayer().getWorld();
 
         try {
-            File logicFile = FileReader.getFileByMap(type, 'L');
-            List<Location> keys = Arrays.asList(FileReader.getLogicLocationKeys(logicFile, world, 'R'));
+            File logicFile = MapFileUtils.getMapFile(type, 'L');
+            Location[] keys = MapFileUtils.getLogicLocationKeys(logicFile, world, 'B');
+            ItemStack[][] allItems = LogicFileUtils.readFileItem(type, keys);
+            ItemStack[][][] allTools = LogicFileUtils.readFileTools(type, keys);
 
-            for (Location key : keys) {
-                ItemStack[] needed = LogicFileUtils.readFileItem(type, key, "Priority");
-                if (needed == null) needed = new ItemStack[]{};
-                ItemStack[] regular = LogicFileUtils.readFileItem(type, key, "Regular");
-                if (regular == null) regular = new ItemStack[]{};
-                List<ItemStack> allItems = new ArrayList<>();
-                allItems.addAll(List.of(needed));
-                allItems.addAll(List.of(regular));
-                ConfigurationSection locData = FileReader.getConfigSection(logicFile, key, 'L');
-                ConfigurationSection locTools = FileReader.getConfigSection(locData, "Tools");
-                String[] toolKeys = FileReader.getAllKeys(locTools);
-                ItemStack[][] tools = new ItemStack[toolKeys.length][];
-                Material[] itemMaterials = new Material[allItems.size()];
+            for (int i = 0; i < allItems.length; i++) {
+                ItemStack[] items = allItems[i];
+                Location key = keys[i];
+                ItemStack[][] tools = allTools[i];
 
-                for (int i = 0; i < toolKeys.length; i++) {
-                    String toolKey = toolKeys[i];
-                    ItemStack[] indexTools = LogicFileUtils.readFileTools(type, key, Integer.parseInt(toolKey));
-                    tools[i] = indexTools;
-                }
+                if (items == null) items = new ItemStack[]{};
 
-                for (int i = 0; i < allItems.size(); i++) {
-                    ItemStack item = allItems.get(i);
-                    itemMaterials[i] = item.getType();
+                Material[] itemMaterials = new Material[items.length];
+
+                for (int j = 0; j < items.length; j++) {
+                    ItemStack item = items[j];
+                    itemMaterials[j] = item.getType();
                 }
 
                 Location location = key.add(anchor);

@@ -4,15 +4,12 @@ import com.blackoutburst.workshop.core.Craft;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.game.GameOptions;
 import com.blackoutburst.workshop.utils.files.CraftFileUtils;
-import com.blackoutburst.workshop.utils.files.FileReader;
+import com.blackoutburst.workshop.utils.files.MapFileUtils;
 import com.blackoutburst.workshop.utils.misc.MiscUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.nio.file.Files;
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class CraftUtils {
@@ -32,8 +29,8 @@ public class CraftUtils {
     public static void loadCraft(WSPlayer wsPlayer, String type) {
         wsPlayer.getCrafts().clear();
 
-        File craftFile = FileReader.getFileByMap(type, 'C');
-        String[] crafts = FileReader.getAllKeys(craftFile);
+        File craftFile = MapFileUtils.getMapFile(type, 'C');
+        String[] crafts = MapFileUtils.getAllKeys(craftFile);
 
         for (String craft : crafts) {
             ItemStack requiredItem = getItem(craft);

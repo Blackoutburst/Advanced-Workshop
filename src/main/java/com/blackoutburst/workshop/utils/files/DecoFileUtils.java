@@ -2,7 +2,6 @@ package com.blackoutburst.workshop.utils.files;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,17 +13,25 @@ import java.util.List;
 
 public class DecoFileUtils {
 
-    public static void saveFile(String mapName, Location location, String blockData, int index, boolean needed) {
+    public static void saveFile(String mapName, List<Location> locations, List<List<String>> allBlockData, List<List<Boolean>> needed) {
         try {
             File mapFolder = new File("./plugins/Workshop/maps/" + mapName);
             mapFolder.mkdir();
 
             File decoFile = new File("./plugins/Workshop/maps/" + mapName + "/deco.yml");
             YamlConfiguration deco = YamlConfiguration.loadConfiguration(decoFile);
-            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
-            String type = needed ? "Needed." : "Normal.";
 
-            deco.set(type + locationString + "." + index, blockData);
+            for (int i = 0; i < locations.size(); i++) {
+                Location location = locations.get(i);
+                List<String> locBlockData = allBlockData.get(i);
+                String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+                for (int j = 0; j < locBlockData.size(); j++){
+                    String type = needed.get(i).get(j) ? "Needed." : "Normal.";
+                    String blockData = locBlockData.get(j);
+                    deco.set(type + locationString + "." + j, blockData);
+                }
+            }
             deco.save(decoFile);
 
         } catch (IOException e) {
@@ -41,21 +48,27 @@ public class DecoFileUtils {
         }
     }
 
-    public static BlockData[] readFile(String mapName, Location location, boolean needed) {
+    public static BlockData[][] readFile(String mapName, Location[] locations, boolean needed) {
         File decoFile = new File("./plugins/Workshop/maps/" + mapName + "/deco.yml");
         YamlConfiguration deco = YamlConfiguration.loadConfiguration(decoFile);
-        String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+        BlockData[][] blockData = new BlockData[locations.length][];
         String type = needed ? "Needed." : "Normal.";
 
-        ConfigurationSection blocks = (ConfigurationSection) deco.get(type + locationString);
-        if (blocks == null) return new BlockData[]{};
+        for (int i = 0; i < locations.length; i++) {
+            Location location = locations[i];
+            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+            ConfigurationSection blocks = (ConfigurationSection) deco.get(type + locationString);
+            if (blocks == null) return new BlockData[][]{};
 
-        List<String> indexes = new ArrayList<>(blocks.getKeys(false));
-        BlockData[] blockData = new BlockData[indexes.size()];
+            List<String> indexes = new ArrayList<>(blocks.getKeys(false));
+            BlockData[] locBlockData = new BlockData[indexes.size()];
 
-        for (int i = 0; i < indexes.size(); i++) {
-            String blockDataString = (String) blocks.get(indexes.get(i));
-            blockData[i] = Bukkit.createBlockData(blockDataString);
+            for (int j = 0; j < indexes.size(); j++) {
+                String blockDataString = (String) blocks.get(indexes.get(j));
+                locBlockData[j] = Bukkit.createBlockData(blockDataString);
+            }
+            blockData[i] = locBlockData;
         }
 
         return blockData;
