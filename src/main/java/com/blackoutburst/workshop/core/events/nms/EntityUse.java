@@ -7,7 +7,6 @@ import com.blackoutburst.workshop.nms.NMSEntityUseEvent;
 import com.blackoutburst.workshop.utils.files.DBUtils;
 import com.blackoutburst.workshop.utils.misc.EffectsUtils;
 import com.blackoutburst.workshop.utils.misc.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,27 +17,19 @@ import java.time.Instant;
 public class EntityUse {
 
     private static void blaze(Player player) {
-        if (WSPlayer.getFromPlayer(player).isWaiting()) return;
-
         player.getInventory().addItem(new ItemStack(Material.BLAZE_ROD));
     }
 
     private static void chicken(Player player) {
-        if (WSPlayer.getFromPlayer(player).isWaiting()) return;
-
         player.getInventory().addItem(new ItemStack(Material.EGG));
     }
 
     private static void hoglin(Player player) {
-        if (WSPlayer.getFromPlayer(player).isWaiting()) return;
-
         player.getInventory().addItem(new ItemStack(Material.LEATHER));
     }
 
     private static void villager(Player player) {
         WSPlayer wsPlayer = WSPlayer.getFromPlayer(player);
-
-        if (wsPlayer.isWaiting()) return;
 
         if (!player.getInventory().containsAtLeast(wsPlayer.getCurrentCraft().getItemRequired(), 1)) {
             player.sendMessage("§cThat's not quite right. I need " + wsPlayer.getCurrentCraft().getName());
@@ -71,13 +62,12 @@ public class EntityUse {
     }
 
     private static void witherSkeleton(Player player) {
-        if (WSPlayer.getFromPlayer(player).isWaiting()) return;
-
         player.getInventory().addItem(new ItemStack(Material.BONE));
     }
 
     public static void execute(NMSEntityUseEvent event) {
         if (event.getHand().equals(NMSEntityUseEvent.Hand.OFF_HAND)) return;
+        if (WSPlayer.getFromPlayer(event.getPlayer()).isWaiting()) return;
 
         Player player = event.getPlayer();
         NMSEntity entity = event.getEntity();
