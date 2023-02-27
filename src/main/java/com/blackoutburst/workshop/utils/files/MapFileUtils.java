@@ -1,6 +1,5 @@
 package com.blackoutburst.workshop.utils.files;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -9,9 +8,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.util.*;
 
-public class FileReader {
+public class MapFileUtils {
 
-    public static File getFileByMap(String mapName, char type) {
+    public static File getMapFile(String mapName, char type) {
         switch (type) {
             case 'D': return new File("./plugins/Workshop/maps/" + mapName + "/deco.yml");
             case 'L': return new File("./plugins/Workshop/maps/" + mapName + "/logic.yml");
@@ -20,21 +19,11 @@ public class FileReader {
         }
     }
 
-    public static String[] getAllKeys(File f) {
-        YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
-        return file.getKeys(false).toArray(new String[]{});
-    }
-
-    public static Location[] getDecoLocationKeys(File f, World world) {
+    public static Location[] getDecoNormalKeys(File f, World world) {
         YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
         List<String> xKeys = new ArrayList<>();
-        ConfigurationSection normalBlocks = file.getConfigurationSection("Normal");
-        normalBlocks.getKeys(false).forEach(x -> xKeys.add("Normal." + x));
-
-        if (file.getKeys(false).contains("Needed")) {
-            ConfigurationSection neededBlocks = file.getConfigurationSection("Needed");
-            neededBlocks.getKeys(false).forEach(x -> xKeys.add("Needed." + x));
-        }
+        ConfigurationSection blocks = file.getConfigurationSection("Normal");
+        blocks.getKeys(false).forEach(x -> xKeys.add("Normal." + x));
         List<Location> locations = new ArrayList<>();
 
         for (String x : xKeys) {
@@ -49,18 +38,17 @@ public class FileReader {
                 }
             }
         }
-
-        Set<Location> locationSet = new HashSet<>(locations);
-        return locationSet.toArray(new Location[]{});
+        return locations.toArray(new Location[]{});
     }
 
-    public static Location[] getLogicLocationKeys(File f, World world, char type) {
+    public static Location[] getDecoNeededKeys(File f, World world) {
         YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
         List<String> xKeys = new ArrayList<>();
-        String section = (type == 'S') ? "Signs." : "Resources.";
 
-        ConfigurationSection blocks = file.getConfigurationSection(section);
-        blocks.getKeys(false).forEach(x -> xKeys.add(section + x));
+        if (!file.getKeys(false).contains("Needed")) { return new Location[]{}; }
+
+        ConfigurationSection blocks = file.getConfigurationSection("Needed");
+        blocks.getKeys(false).forEach(x -> xKeys.add("Needed." + x));
 
         List<Location> locations = new ArrayList<>();
 
@@ -79,8 +67,62 @@ public class FileReader {
         return locations.toArray(new Location[]{});
     }
 
+
+    public static Location[] getLogicLocationKeys(File f, World world, char type) {
+        YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
+        List<String> xKeys = new ArrayList<>();
+        String section;
+        String resourceType = "";
+        switch (type) {
+            case 'S':
+                section = "Signs.";
+                break;
+            case 'P':
+                section = "Resources.";
+                resourceType = "Priority";
+                break;
+            case 'B':
+                section = "Resources.";
+                resourceType = "Both";
+                break;
+            default:
+                section = "Resources.";
+                resourceType = "Regular";
+                break;
+        }
+
+
+        ConfigurationSection blocks = file.getConfigurationSection(section);
+        blocks.getKeys(false).forEach(x -> xKeys.add(section + x));
+
+        List<Location> locations = new ArrayList<>();
+
+        for (String x : xKeys) {
+            ConfigurationSection xSection = file.getConfigurationSection(x);
+            Set<String> yValues = xSection.getKeys(false);
+            for (String y : yValues) {
+                ConfigurationSection ySection = xSection.getConfigurationSection(y);
+                Set<String> zValues = ySection.getKeys(false);
+                for (String z : zValues) {
+                    ConfigurationSection zSection = ySection.getConfigurationSection(z);
+                    if (zSection.contains(resourceType) || resourceType.equals("Both")) {
+                        int xInt = Integer.parseInt(x.split("[.]")[1]);
+                        int yInt = Integer.parseInt(y);
+                        int zInt = Integer.parseInt(z);
+                        locations.add(new Location(world, xInt, yInt, zInt));
+                    }
+                }
+            }
+        }
+        return locations.toArray(new Location[]{});
+    }
+
     public static String[] getAllKeys(ConfigurationSection section) {
         return (section == null) ? new String[]{} : section.getKeys(false).toArray(new String[]{});
+    }
+    public static String[] getAllKeys(File f) {
+        YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
+        return file.getKeys(false).toArray(new String[]{});
     }
 
     public static ConfigurationSection getConfigSection(File f, String path) {

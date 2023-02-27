@@ -92,18 +92,15 @@ public class LogicUtils {
             RandomItem[] dropperItems = readDropper(items[0]);
 
             for (int i = 0; i < dropperItems.length; i++) {
-
                 RandomItem randomItem = dropperItems[i];
                 ItemStack item = randomItem.GetItem();
 
-                if (!randomItem.isPriority()) {
-                    LogicFileUtils.saveFileItems(mapName, relLoc, item, i, "Regular");
-                    continue;
-                }
                 if (type.equals("R")) {
-                    continue;
+                    LogicFileUtils.saveFileItems(mapName, relLoc, item, i, "Regular");
                 }
-                LogicFileUtils.saveFileItems(mapName, relLoc, item, i, "Priority");
+                if (type.equals("P")) {
+                    LogicFileUtils.saveFileItems(mapName, relLoc, item, i, "Priority");
+                }
             }
         } else {
             LogicFileUtils.saveFileItems(mapName, relLoc, new ItemStack(Material.AIR), 0, "Regular");

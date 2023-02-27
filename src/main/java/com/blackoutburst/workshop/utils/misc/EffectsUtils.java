@@ -17,6 +17,6 @@ public class EffectsUtils {
         World world = block.getWorld();
         Location location = block.getLocation();
 
-        world.playEffect(location, Effect.STEP_SOUND, 10);
+        world.playEffect(location, Effect.STEP_SOUND, block.getType());
     }
 }
