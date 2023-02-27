@@ -60,6 +60,7 @@ public class Main extends JavaPlugin {
         getCommand("setcountdown").setExecutor(new SetCountdown());
         getCommand("listmaps").setExecutor(new ListMaps());
         getCommand("deletemap").setExecutor(new DeleteMap());
+        getCommand("shownonpbs").setExecutor(new ShowNonPbs());
     }
 
     @Override

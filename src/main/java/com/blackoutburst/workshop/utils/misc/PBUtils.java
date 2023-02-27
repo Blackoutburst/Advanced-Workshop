@@ -28,7 +28,7 @@ public class PBUtils {
         }
     }
 
-    public static void allCraftPB(WSPlayer wsplayer) {
+    public static boolean allCraftPB(WSPlayer wsplayer) {
         Timers timers = wsplayer.getTimers();
 
         Float duration = Duration.between(timers.getMapBegin(), timers.getMapEnd()).toMillis() / 1000.0f;
@@ -42,10 +42,12 @@ public class PBUtils {
         if (currentDuration != Double.MAX_VALUE && (duration < currentDuration)) {
             Webhook.send("**"+ wsplayer.getPlayer().getName() + "** got a new PB on the map **" + wsplayer.getPlayArea().getType() + "** for all crafts!\\nTime: **" + StringUtils.ROUND.format( duration) + "s**\\nImprovement: **" + StringUtils.ROUND.format(duration - currentDuration) + "s**");
             wsplayer.getPlayer().sendMessage("§d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s" + ")");
+            return true;
         }
+        return false;
     }
 
-    public static void regularPB(WSPlayer wsplayer) {
+    public static boolean regularPB(WSPlayer wsplayer) {
         Timers timers = wsplayer.getTimers();
 
         Float duration = Duration.between(timers.getMapBegin(), timers.getMapEnd()).toMillis() / 1000.0f;
@@ -59,6 +61,22 @@ public class PBUtils {
         if (currentDuration != Double.MAX_VALUE && (duration < currentDuration)) {
             Webhook.send("**"+ wsplayer.getPlayer().getName() + "** got a new PB on the map **" + wsplayer.getPlayArea().getType() + "**!\\nTime: **" +StringUtils.ROUND.format( duration) + "s**\\nImprovement: **" + StringUtils.ROUND.format(duration - currentDuration) + "s**");
             wsplayer.getPlayer().sendMessage("§d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s" + ")");
+            return true;
+        }
+        return false;
+    }
+
+    public static void nonPB(WSPlayer wsplayer, char type) {
+
+        Timers timers = wsplayer.getTimers();
+        Float duration = Duration.between(timers.getMapBegin(), timers.getMapEnd()).toMillis() / 1000.0f;
+
+        String pbString = (type == 'R') ? ".time" : ".timeAll";
+
+        Double currentDuration = DBUtils.getData(wsplayer.getPlayer(), wsplayer.getPlayArea().getType() + pbString, Double.class);
+
+        if (currentDuration != null) {
+            wsplayer.getPlayer().sendMessage("§c§l(+" + StringUtils.ROUND.format(duration - currentDuration) + "s)");
         }
     }
 

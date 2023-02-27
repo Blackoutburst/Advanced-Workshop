@@ -7,6 +7,8 @@ import java.util.UUID;
 
 public class GameOptions {
 
+    protected boolean showNonPBs;
+
     protected int craftLimit;
 
     protected int defaultCraftLimit;
@@ -33,22 +35,24 @@ public class GameOptions {
         this.isTimeLimited = false;
         this.defaultTimeLimit = 60.0f;
         this.countDownTime = 5;
+        this.showNonPBs = false;
         load(player);
     }
 
     public GameOptions(int defaultCraftLimit, boolean unlimitedCrafts, char rngType,
-                       int bagSize, float defaultTimeLimit, int countDownTime) {
+                       int bagSize, float defaultTimeLimit, int countDownTime, boolean showNonPBs) {
         this.defaultCraftLimit = defaultCraftLimit;
         this.unlimitedCrafts = unlimitedCrafts;
         this.randomType = rngType;
         this.bagSize = bagSize;
         this.defaultTimeLimit = defaultTimeLimit;
         this.countDownTime = countDownTime;
+        this.showNonPBs = showNonPBs;
     }
 
     public void save(WSPlayer player) {
         GameOptions gameOptions = new GameOptions(this.defaultCraftLimit, this.unlimitedCrafts, this.randomType,
-                                                    this.bagSize, this.defaultTimeLimit, this.countDownTime);
+                                                    this.bagSize, this.defaultTimeLimit, this.countDownTime, this.showNonPBs);
         UUID uuid = player.getPlayer().getUniqueId();
         OptionsFile.save(uuid, gameOptions);
     }
@@ -63,6 +67,7 @@ public class GameOptions {
         this.bagSize = gameOptions.getBagSize();
         this.defaultTimeLimit = gameOptions.getDefaultTimeLimit();
         this.countDownTime = gameOptions.getCountDownTime();
+        this.showNonPBs = gameOptions.isShowNonPBs();
     }
 
     public int getCraftLimit() {
@@ -108,4 +113,8 @@ public class GameOptions {
     public int getCountDownTime() { return countDownTime; }
 
     public void setCountDownTime(int countDownTime) { this.countDownTime = countDownTime; }
+
+    public boolean isShowNonPBs() { return showNonPBs; }
+
+    public void setShowNonPBs(boolean showNonPBs) { this.showNonPBs = showNonPBs; }
 }
