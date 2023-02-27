@@ -7,6 +7,7 @@ import com.blackoutburst.workshop.nms.NMSEntityUseEvent;
 import com.blackoutburst.workshop.utils.files.DBUtils;
 import com.blackoutburst.workshop.utils.misc.EffectsUtils;
 import com.blackoutburst.workshop.utils.misc.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -43,12 +44,18 @@ public class EntityUse {
         if (currentDuration == null)
             currentDuration = Double.MAX_VALUE;
 
-        if (duration < currentDuration)
+        if (duration < currentDuration && !wsPlayer.hasStored())
             DBUtils.saveData(player, wsPlayer.getPlayArea().getType() + "." + "crafts" + "." + wsPlayer.getCurrentCraft().getName(), duration, Float.class);
 
-        String pb = (currentDuration != Double.MAX_VALUE && (duration < currentDuration) ? " §d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s" + ")" : "");
+        String message = (currentDuration != Double.MAX_VALUE && (duration < currentDuration) && !wsPlayer.hasStored() ? "§d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s" + ")" : "");
 
-        player.sendMessage("§ePerfect! Just what I needed. §b(" + roundTime + ")" + pb);
+        if (wsPlayer.getGameOptions().isShowNonPBs() && duration >= currentDuration) {
+            message = ("§c§l(+" + StringUtils.ROUND.format(duration - currentDuration) + "s)");
+        }
+
+        player.sendMessage("§ePerfect! Just what I needed. §b(" + roundTime + ") " + message);
+
+        wsPlayer.setHasStored(false);
     }
 
     public static void execute(NMSEntityUseEvent event) {

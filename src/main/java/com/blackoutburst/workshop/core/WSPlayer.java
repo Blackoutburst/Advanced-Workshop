@@ -24,6 +24,8 @@ public class WSPlayer {
 
     protected int jumpPadCooldown;
 
+    protected boolean hasStored = false;
+
     protected boolean waiting;
 
     protected List<Craft> craftList;
@@ -197,4 +199,8 @@ public class WSPlayer {
     public List<NMSEntity> getEntities() {
         return entities;
     }
+
+    public boolean hasStored() { return hasStored; }
+
+    public void setHasStored(boolean hasStored) { this.hasStored = hasStored; }
 }

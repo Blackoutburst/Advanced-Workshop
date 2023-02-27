@@ -20,6 +20,7 @@ public class OptionsFile {
             options.set("rngType", String.valueOf(gameOptions.getRandomType()));
             options.set("timeLimit", (double) gameOptions.getDefaultTimeLimit());
             options.set("unlimitedCrafts", gameOptions.isUnlimitedCrafts());
+            options.set("showNonPBs", gameOptions.isShowNonPBs());
 
             options.save(file);
 
@@ -40,7 +41,8 @@ public class OptionsFile {
         char rngType = options.getString("rngType").charAt(0);
         float timeLimit = (float) options.getDouble("timeLimit");
         boolean unlimitedCrafts = options.getBoolean("unlimitedCrafts");
+        boolean showNonPBs = options.getBoolean("ShowNonPBs");
 
-        return new GameOptions(craftLimit, unlimitedCrafts, rngType, bagSize, timeLimit, countDownTime);
+        return new GameOptions(craftLimit, unlimitedCrafts, rngType, bagSize, timeLimit, countDownTime, showNonPBs);
     }
 }

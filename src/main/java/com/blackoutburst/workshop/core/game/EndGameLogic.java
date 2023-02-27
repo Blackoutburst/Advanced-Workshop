@@ -63,11 +63,19 @@ public class EndGameLogic {
         wsplayer.getTimers().setMapEnd(Instant.now());
 
         if (wsplayer.getCurrentCraftIndex() == 5 && gameoptions.getRandomType() == 'N') {
-            PBUtils.regularPB(wsplayer);
+            if (PBUtils.regularPB(wsplayer)) return;
         }
 
         if (wsplayer.getCurrentCraftIndex() == wsplayer.getCrafts().size() && gameoptions.getRandomType() == 'N') {
-            PBUtils.allCraftPB(wsplayer);
+            if (PBUtils.allCraftPB(wsplayer)) return;
+        }
+
+        if (gameoptions.isShowNonPBs() && wsplayer.getCurrentCraftIndex() == wsplayer.getCrafts().size()
+                && gameoptions.getRandomType() == 'N') {
+            PBUtils.nonPB(wsplayer, 'A');
+        }
+        if (gameoptions.isShowNonPBs() && wsplayer.getCurrentCraftIndex() == 5 && gameoptions.getRandomType() == 'N') {
+            PBUtils.nonPB(wsplayer, 'R');
         }
     }
 

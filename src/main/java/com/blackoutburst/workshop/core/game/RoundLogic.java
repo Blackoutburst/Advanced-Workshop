@@ -9,6 +9,7 @@ import com.blackoutburst.workshop.utils.minecraft.ItemFrameUtils;
 import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -27,8 +28,11 @@ public class RoundLogic {
         if (!wsplayer.isInGame()) return;
 
         Player player = wsplayer.getPlayer();
-
+        if (player.getOpenInventory().getType() == InventoryType.WORKBENCH) {
+            player.getOpenInventory().getTopInventory().clear();
+        }
         player.getInventory().clear();
+        if (player.getItemOnCursor().getAmount() != 0) wsplayer.setHasStored(true);
         player.sendMessage("§eYou need to craft a §r" + wsplayer.getCurrentCraft().getName());
 
         ArmorUtils.setArmor(player);
