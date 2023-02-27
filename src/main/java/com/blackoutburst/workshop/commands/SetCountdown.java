@@ -28,6 +28,10 @@ public class SetCountdown implements CommandExecutor {
             player.sendMessage("§cThe time must be a number!");
             return true;
         }
+        if (Integer.parseInt(args[0]) < 3) {
+            player.sendMessage("§cThe time must longer than 3s!");
+            return true;
+        }
         wsplayer.getGameOptions().setCountDownTime(Integer.parseInt(args[0]));
         wsplayer.getPlayer().sendMessage("§aYou've set the countdown to§f: §e" +
                 wsplayer.getGameOptions().getCountDownTime() + "§as");

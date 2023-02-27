@@ -15,11 +15,14 @@ public class DecoBlock {
 
     protected int index;
 
-    public DecoBlock(BlockData[] blocks, Location location, World world) {
+    protected int normalBlockNum;
+
+    public DecoBlock(BlockData[] blocks, Location location, World world, int normalBlockNum) {
         this.blocks = blocks;
         this.location = location;
         this.world = world;
         this.index = 0;
+        this.normalBlockNum = normalBlockNum;
     }
 
     public BlockData getType() { return blocks[index]; }
@@ -37,4 +40,6 @@ public class DecoBlock {
     }
 
     public void setTypes(BlockData[] blocks) { this.blocks =  blocks; }
+
+    public int getNormalBlockNum() { return normalBlockNum; }
 }

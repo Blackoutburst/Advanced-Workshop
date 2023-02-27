@@ -2,21 +2,26 @@ package com.blackoutburst.workshop.commands;
 
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.game.GameOptions;
+import com.blackoutburst.workshop.core.game.GameRestarter;
 import com.blackoutburst.workshop.core.game.GameStarter;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.game.RoundLogic;
-import com.blackoutburst.workshop.utils.map.LogicUtils;
+import com.blackoutburst.workshop.utils.map.DecoBlockLoader;
 import com.blackoutburst.workshop.utils.files.DBUtils;
 import com.blackoutburst.workshop.utils.map.MapUtils;
 import com.blackoutburst.workshop.utils.minecraft.CraftUtils;
 import com.blackoutburst.workshop.utils.misc.CountdownDisplay;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.time.Duration;
+import java.time.Instant;
 
 public class Play implements CommandExecutor {
 
@@ -108,13 +113,20 @@ public class Play implements CommandExecutor {
 
         RoundLogic.prepareNextRound(wsplayer);
 
+        wsplayer.getPlayArea().setLoading(true);
+        DecoBlockLoader decoBlockLoader = new DecoBlockLoader(wsplayer);
+        decoBlockLoader.runTaskAsynchronously(Main.getPlugin(Main.class));
+
         Integer gameCount = DBUtils.getData(wsplayer.getPlayer(), "gameCount", Integer.class);
         Integer mapGameCount = DBUtils.getData(wsplayer.getPlayer(), area.getType() + ".gameCount", Integer.class);
 
-        GameStarter startGame = new GameStarter(wsplayer, area, gameCount, mapGameCount);
-        wsplayer.setGamestarter(startGame);
+        GameStarter starter = new GameStarter(wsplayer, area, gameCount, mapGameCount);
+        GameRestarter restarter = new GameRestarter(wsplayer, starter);
+        wsplayer.getPlayArea().setHasStarted(false);
+        wsplayer.setGamestarter(starter);
 
-        startGame.runTaskLater(Main.getPlugin(Main.class), start_delay * 20L);
+        starter.runTaskLater(Main.getPlugin(Main.class), start_delay * 20L);
+        restarter.runTaskTimer(Main.getPlugin(Main.class), start_delay * 20L + 1, 1);
     }
 
     @Override

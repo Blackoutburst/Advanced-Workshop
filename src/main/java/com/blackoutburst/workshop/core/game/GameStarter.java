@@ -3,6 +3,7 @@ package com.blackoutburst.workshop.core.game;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.files.DBUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.Instant;
@@ -25,7 +26,12 @@ public class GameStarter extends BukkitRunnable {
     @Override
     public void run() {
         if (!wsplayer.isInGame()) return;
+        if (wsplayer.getPlayArea().isLoading()) {
+            this.cancel();
+            return;
+        }
         RoundLogic.startRound(wsplayer);
+        wsplayer.getPlayArea().setHasStarted(true);
 
         wsplayer.getTimers().setMapBegin(Instant.now());
         DBUtils.saveData(wsplayer.getPlayer(), "gameCount", gameCount != null ? gameCount + 1 : 1, Integer.class);

@@ -1,11 +1,14 @@
 package com.blackoutburst.workshop.utils.files;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 public class MapFileUtils {
@@ -20,10 +23,47 @@ public class MapFileUtils {
     }
 
     public static Location[] getDecoNormalKeys(File f, World world) {
+
+        Instant fileReadStart = Instant.now();
+        Bukkit.broadcastMessage("starting key reading...");
+
         YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
         List<String> xKeys = new ArrayList<>();
         ConfigurationSection blocks = file.getConfigurationSection("Normal");
+        blocks.getKeys(true);
+        Bukkit.broadcastMessage("keys got in: " + Duration.between(fileReadStart, Instant.now()));
         blocks.getKeys(false).forEach(x -> xKeys.add("Normal." + x));
+        List<Location> locations = new ArrayList<>();
+
+        Bukkit.broadcastMessage("file loaded in: " + Duration.between(fileReadStart, Instant.now()));
+
+        for (String x : xKeys) {
+            Set<String> yValues = file.getConfigurationSection(x).getKeys(false);
+            for (String y : yValues) {
+                Set<String> zValues = file.getConfigurationSection(x).getConfigurationSection(y).getKeys(false);
+                for (String z : zValues) {
+                    int xInt = Integer.parseInt(x.split("[.]")[1]);
+                    int yInt = Integer.parseInt(y);
+                    int zInt = Integer.parseInt(z);
+                    locations.add(new Location(world, xInt, yInt, zInt));
+                }
+            }
+        }
+
+        Bukkit.broadcastMessage("file processed in: " + Duration.between(fileReadStart, Instant.now()));
+
+        return locations.toArray(new Location[]{});
+    }
+
+    public static Location[] getDecoNeededKeys(File f, World world) {
+        YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
+        List<String> xKeys = new ArrayList<>();
+
+        if (!file.getKeys(false).contains("Needed")) { return new Location[]{}; }
+
+        ConfigurationSection blocks = file.getConfigurationSection("Needed");
+        blocks.getKeys(false).forEach(x -> xKeys.add("Needed." + x));
+
         List<Location> locations = new ArrayList<>();
 
         for (String x : xKeys) {
@@ -41,8 +81,31 @@ public class MapFileUtils {
         return locations.toArray(new Location[]{});
     }
 
-    public static Location[] getDecoNeededKeys(File f, World world) {
-        YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
+    public static Location[] getDecoNormalKeys(YamlConfiguration file, World world) {
+
+        List<String> xKeys = new ArrayList<>();
+        ConfigurationSection blocks = file.getConfigurationSection("Normal");
+        blocks.getKeys(true);
+        blocks.getKeys(false).forEach(x -> xKeys.add("Normal." + x));
+        List<Location> locations = new ArrayList<>();
+
+        for (String x : xKeys) {
+            Set<String> yValues = file.getConfigurationSection(x).getKeys(false);
+            for (String y : yValues) {
+                Set<String> zValues = file.getConfigurationSection(x).getConfigurationSection(y).getKeys(false);
+                for (String z : zValues) {
+                    int xInt = Integer.parseInt(x.split("[.]")[1]);
+                    int yInt = Integer.parseInt(y);
+                    int zInt = Integer.parseInt(z);
+                    locations.add(new Location(world, xInt, yInt, zInt));
+                }
+            }
+        }
+
+        return locations.toArray(new Location[]{});
+    }
+
+    public static Location[] getDecoNeededKeys(YamlConfiguration file, World world) {
         List<String> xKeys = new ArrayList<>();
 
         if (!file.getKeys(false).contains("Needed")) { return new Location[]{}; }
