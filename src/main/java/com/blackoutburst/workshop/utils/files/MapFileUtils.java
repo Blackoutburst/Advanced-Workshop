@@ -25,17 +25,13 @@ public class MapFileUtils {
     public static Location[] getDecoNormalKeys(File f, World world) {
 
         Instant fileReadStart = Instant.now();
-        Bukkit.broadcastMessage("starting key reading...");
 
         YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
         List<String> xKeys = new ArrayList<>();
         ConfigurationSection blocks = file.getConfigurationSection("Normal");
         blocks.getKeys(true);
-        Bukkit.broadcastMessage("keys got in: " + Duration.between(fileReadStart, Instant.now()));
         blocks.getKeys(false).forEach(x -> xKeys.add("Normal." + x));
         List<Location> locations = new ArrayList<>();
-
-        Bukkit.broadcastMessage("file loaded in: " + Duration.between(fileReadStart, Instant.now()));
 
         for (String x : xKeys) {
             Set<String> yValues = file.getConfigurationSection(x).getKeys(false);
@@ -49,8 +45,6 @@ public class MapFileUtils {
                 }
             }
         }
-
-        Bukkit.broadcastMessage("file processed in: " + Duration.between(fileReadStart, Instant.now()));
 
         return locations.toArray(new Location[]{});
     }
