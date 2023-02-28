@@ -6,6 +6,7 @@ import com.blackoutburst.workshop.nms.NMSEntity;
 import com.blackoutburst.workshop.nms.NMSEntityType;
 import com.blackoutburst.workshop.nms.NMSEnumDirection;
 import com.blackoutburst.workshop.nms.NMSItemFrame;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 
@@ -36,14 +37,14 @@ public class EntityUtils {
         }
 
         if (type.equals(NMSEntityType.ITEM_FRAME)) {
-            NMSItemFrame itemFrame = new NMSItemFrame(wsPlayer.getPlayer().getWorld());
+            NMSItemFrame itemFrame = new NMSItemFrame(area.getAnchor().getWorld());
             itemFrame.setOwner(wsPlayer);
             itemFrame.setDirection(NMSEnumDirection.Direction.valueOf(String.valueOf(direction)));
             itemFrame.setPosition(x, y, z);
             itemFrame.setTag(EntityName);
             itemFrame.spawn();
         } else {
-            NMSEntity entity = new NMSEntity(wsPlayer.getPlayer().getWorld(), type);
+            NMSEntity entity = new NMSEntity(area.getAnchor().getWorld(), type);
             entity.setOwner(wsPlayer);
             entity.setLocation(x, y, z, yaw, 0);
             entity.setTag(EntityName);

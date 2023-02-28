@@ -31,7 +31,7 @@ public class MiscUtils {
             case EAST: yaw = -90; break;
             case WEST: yaw = 90; break;
             default: yaw = 0; break;
-        };
+        }
         location.add(area.getAnchor()).add(0.5,0,0.5);
         location.setYaw(yaw);
         location.setPitch(0);
