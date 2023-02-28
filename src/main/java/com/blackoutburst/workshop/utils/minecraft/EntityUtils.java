@@ -23,10 +23,10 @@ public class EntityUtils {
         }
     }
 
-    public static void spawnEntity(NMSEntityType type, WSPlayer wsPlayer, Location location, BlockFace direction, String EntityName) {
-        double x = location.getBlockX() + 0.5;
-        double y = location.getBlockY();
-        double z = location.getBlockZ() + 0.5;
+    public static void spawnEntity(NMSEntityType type, WSPlayer wsPlayer, Location location, BlockFace direction, String EntityName, PlayArea area) {
+        double x = location.getBlockX() + area.getAnchor().getBlockX() + 0.5;
+        double y = location.getBlockY() + area.getAnchor().getBlockY();
+        double z = location.getBlockZ() + area.getAnchor().getBlockZ() + 0.5;
         float yaw = 0;
 
         switch (direction) {
