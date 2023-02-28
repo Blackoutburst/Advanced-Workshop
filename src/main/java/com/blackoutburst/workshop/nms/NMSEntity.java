@@ -141,7 +141,6 @@ public class NMSEntity {
 
     public void setLocation(double x, double y, double z, float yaw, float pitch) {
         try {
-            System.out.println(x + " | " + y + " | " + z + " | " + yaw + " | " + pitch);
             Method method = ENTITY_CLASS.getMethod("setLocation", double.class, double.class, double.class, float.class, float.class);
 
             method.invoke(this.entity, x, y, z, yaw, pitch);
