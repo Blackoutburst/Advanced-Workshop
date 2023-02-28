@@ -39,7 +39,7 @@ public class MapUtils {
     public static void readSigns(WSPlayer wsPlayer, String type) {
         try {
             PlayArea area = wsPlayer.getPlayArea();
-            World world = wsPlayer.getPlayer().getWorld();
+            World world = area.getAnchor().getWorld();
             File mapFile = MapFileUtils.getMapFile(type, 'L');
             YamlConfiguration mapConfig = YamlConfiguration.loadConfiguration(mapFile);
 
@@ -54,8 +54,15 @@ public class MapUtils {
                 BlockFace direction = sign.getDirection();
                 Location location = sign.getLocation();
 
+                if (sign.getText().equals("player")) {
+                    MiscUtils.teleportPlayerToArea(wsPlayer.getPlayer(), location, direction, area);
+                }
+            }
+
+            for (LogicSign sign : signs) {
+                BlockFace direction = sign.getDirection();
+                Location location = sign.getLocation();
                 switch (sign.getText()) {
-                    case "player": MiscUtils.teleportPlayerToArea(wsPlayer.getPlayer(), location, direction, area); break;
                     case "blaze": EntityUtils.spawnEntity(NMSEntityType.BLAZE, wsPlayer, location, direction, sign.getText(), area); break;
                     case "chicken": EntityUtils.spawnEntity(NMSEntityType.CHICKEN, wsPlayer, location, direction, sign.getText(), area); break;
                     case "hoglin": EntityUtils.spawnEntity(NMSEntityType.HOGLIN, wsPlayer, location, direction, sign.getText(), area); break;
@@ -74,6 +81,8 @@ public class MapUtils {
                         EntityUtils.spawnEntity(NMSEntityType.ITEM_FRAME, wsPlayer, location, direction, sign.getText(), area); break;
                 }
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -178,7 +187,7 @@ public class MapUtils {
         List<ItemStack> materials = wsplayer.getCurrentCraft().getMaterials();
         String mapName = wsplayer.getPlayArea().getType();
         Location anchor = wsplayer.getPlayArea().getAnchor();
-        World world = wsplayer.getPlayer().getWorld();
+        World world = anchor.getWorld();
         List<ItemStack> materialsCopy = new ArrayList<>();
         for (ItemStack material : materials) {
             materialsCopy.add(material.clone());
@@ -226,7 +235,7 @@ public class MapUtils {
         PlayArea area = wsPlayer.getPlayArea();
         if (area == null) return;
         Location anchor = area.getAnchor();
-        World world = wsPlayer.getPlayer().getWorld();
+        World world = anchor.getWorld();
 
         try {
             File logicFile = MapFileUtils.getMapFile(type, 'L');

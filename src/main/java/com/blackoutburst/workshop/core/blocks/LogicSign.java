@@ -1,6 +1,5 @@
 package com.blackoutburst.workshop.core.blocks;
 
-import com.viaversion.viaversion.api.protocol.packet.Direction;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 
