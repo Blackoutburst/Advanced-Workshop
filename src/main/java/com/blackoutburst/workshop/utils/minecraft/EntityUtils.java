@@ -23,30 +23,29 @@ public class EntityUtils {
         }
     }
 
-    public static void spawnEntity(NMSEntityType type, WSPlayer wsPlayer, Location location, BlockFace direction,
-                                   String EntityName, PlayArea area) {
-        location.add(area.getAnchor()).add(0.5, 0, 0.5);
+    public static void spawnEntity(NMSEntityType type, WSPlayer wsPlayer, Location location, BlockFace direction, String EntityName) {
+        double x = location.getBlockX() + 0.5;
+        double y = location.getBlockY();
+        double z = location.getBlockZ() + 0.5;
         float yaw = 0;
+
         switch (direction) {
             case NORTH: yaw = 180; break;
             case EAST: yaw = -90; break;
             case WEST: yaw = 90; break;
-            default: yaw = 0; break;
-        };
-        location.setYaw(yaw);
-        location.setPitch(0);
+        }
 
         if (type.equals(NMSEntityType.ITEM_FRAME)) {
             NMSItemFrame itemFrame = new NMSItemFrame(wsPlayer.getPlayer().getWorld());
             itemFrame.setOwner(wsPlayer);
             itemFrame.setDirection(NMSEnumDirection.Direction.valueOf(String.valueOf(direction)));
-            itemFrame.setPosition(location);
+            itemFrame.setPosition(x, y, z);
             itemFrame.setTag(EntityName);
             itemFrame.spawn();
         } else {
             NMSEntity entity = new NMSEntity(wsPlayer.getPlayer().getWorld(), type);
             entity.setOwner(wsPlayer);
-            entity.setLocation(location);
+            entity.setLocation(x, y, z, yaw, 0);
             entity.setTag(EntityName);
             entity.spawn();
         }

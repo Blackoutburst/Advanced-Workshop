@@ -63,6 +63,7 @@ public class EntityUse {
 
     private static void witherSkeleton(Player player) {
         player.getInventory().addItem(new ItemStack(Material.BONE));
+        player.getInventory().addItem(new ItemStack(Material.COAL));
     }
 
     public static void execute(NMSEntityUseEvent event) {

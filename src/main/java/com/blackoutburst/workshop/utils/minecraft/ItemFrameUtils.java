@@ -14,12 +14,12 @@ public class ItemFrameUtils {
         for (NMSEntity entity : wsplayer.getEntities()) {
             if (entity instanceof NMSItemFrame) {
                 NMSItemFrame itemFrame = (NMSItemFrame) entity;
-                if (itemFrame.getTag().equals("0")) {
+                if (itemFrame.getTag().equals("0") && entity.getOwner().getPlayer().getUniqueId().equals(wsplayer.getPlayer().getUniqueId())) {
                     itemFrame.setItem(outputItem);
                     continue;
                 }
 
-                if (itemFrame.getTag().matches("([0-9]+([.][0-9]+)?)?")) {
+                if (itemFrame.getTag().matches("([1-9]+([.][1-9]+)?)?") && entity.getOwner().getPlayer().getUniqueId().equals(wsplayer.getPlayer().getUniqueId())) {
                     int index = Integer.parseInt(itemFrame.getTag()) - 1;
                     ItemStack item = wsplayer.getCurrentCraft().getCraftingTable()[index];
 

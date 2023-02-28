@@ -109,11 +109,13 @@ public class NMSEntity {
         for (WSPlayer wsPlayer : Main.players) {
             Player player = wsPlayer.getPlayer();
 
-            if (this instanceof NMSItemFrame) {
-                ((NMSItemFrame) this).spawn(player);
-            } else {
-                NMSPacketPlayOutSpawnEntityLiving.send(player, this);
-                NMSPacketPlayOutEntityHeadRotation.send(player, this, this.location.getYaw());
+            if (this.location.getWorld().getName().equals(player.getWorld().getName())) {
+                if (this instanceof NMSItemFrame) {
+                    ((NMSItemFrame) this).spawn(player);
+                } else {
+                    NMSPacketPlayOutSpawnEntityLiving.send(player, this);
+                    NMSPacketPlayOutEntityHeadRotation.send(player, this, this.location.getYaw());
+                }
             }
             wsPlayer.getEntities().add(this);
             GLOBAL_ENTITIES.add(this);
