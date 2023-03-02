@@ -40,6 +40,7 @@ public class ScoreboardUtils {
 
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         basic(wsplayer);
+        player.setScoreboard(scoreboard);
     }
 
     public static void basic(WSPlayer wsplayer) {

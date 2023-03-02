@@ -8,6 +8,7 @@ import com.blackoutburst.workshop.core.game.GameOptions;
 import com.blackoutburst.workshop.core.game.GameRestarter;
 import com.blackoutburst.workshop.core.game.GameStarter;
 import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Criteria;
@@ -64,7 +65,7 @@ public class WSPlayer {
     public WSPlayer(Player player, ClientVersion clientVersion) {
         this.clientVersion = clientVersion;
         this.player = player;
-        this.scoreboard = player.getScoreboard();
+        this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
         ScoreboardUtils.init(this);
 
