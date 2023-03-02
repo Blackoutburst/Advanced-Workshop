@@ -13,6 +13,7 @@ public class ScanWand {
 
     private static boolean isWand(PlayerInventory inv) {
         ItemStack item = inv.getItemInMainHand();
+        if (item.getItemMeta() == null) return false;
 
         return (item.getType() == Material.BLAZE_ROD && item.getItemMeta().getDisplayName().equals("§6Scan wand"));
     }
@@ -37,6 +38,7 @@ public class ScanWand {
 
         Player p = wsplayer.getPlayer();
         Block b = event.getClickedBlock();
+        if (b == null) return;
 
         if (isWand(event.getPlayer().getInventory()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             p.sendMessage("§dSecond pos: (" + b.getX() + ", " + b.getY() + " ," + b.getZ() + ")");

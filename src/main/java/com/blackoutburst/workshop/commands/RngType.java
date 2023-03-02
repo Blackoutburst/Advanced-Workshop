@@ -6,23 +6,23 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class RngType implements CommandExecutor {
     private char randomType(String value) {
         value = value.toLowerCase();
 
-        switch (value) {
-            case "n": case "normal": case "nonrepeating": return 'N';
-            case "b": case "bagged": case "bag": return 'B';
-            default: return 'R';
-        }
+        return switch (value) {
+            case "n", "normal", "nonrepeating" -> 'N';
+            case "b", "bagged", "bag" -> 'B';
+            default -> 'R';
+        };
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) { return true; }
-        Player player = ((Player) sender).getPlayer();
-        WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (!(sender instanceof Player player)) { return true; }
+        WSPlayer wsplayer = WSPlayer.getFromPlayer(player);
         if (wsplayer == null) return true;
 
         if (wsplayer.isInGame()) {
@@ -38,7 +38,7 @@ public class RngType implements CommandExecutor {
         GameOptions gameoptions = wsplayer.getGameOptions();
 
         switch (type) {
-            case 'B': {
+            case 'B' -> {
                 if (args.length == 1) {
                     player.sendMessage("§cYou must specify a bag size");
                     break;
@@ -50,17 +50,14 @@ public class RngType implements CommandExecutor {
                 gameoptions.setRandomType('B');
                 gameoptions.setBagSize(Integer.parseInt(args[1]));
                 player.sendMessage("§aRNG Type successfully changed to §ebagged");
-                break;
             }
-            case 'R': {
+            case 'R' -> {
                 gameoptions.setRandomType('R');
                 player.sendMessage("§aRNG Type successfully changed to §ecompletely random");
-                break;
             }
-            default: {
+            default -> {
                 gameoptions.setRandomType('N');
                 player.sendMessage("§aRNG Type successfully changed to §enon-repeating");
-                break;
             }
         }
         return true;

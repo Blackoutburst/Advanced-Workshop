@@ -5,12 +5,10 @@ import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.guis.CraftSelectorGUI;
 import com.blackoutburst.workshop.utils.files.CraftFileUtils;
 import com.blackoutburst.workshop.utils.misc.MiscUtils;
-import com.blackoutburst.workshop.utils.misc.StringUtils;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.io.PrintWriter;
 
 public class GUIUtils {
     //
@@ -57,8 +55,6 @@ public class GUIUtils {
         if (p.getInventoryType() == null) return;
         String type = p.getInventoryType();
 
-        boolean updated = false;
-
         int[] order = new int[] { 23, 10, 11, 12, 19, 20, 21, 28, 29, 30, 7, 8, 16, 17, 25, 26, 34, 35, 43, 44, 52, 53 };
         //                     result <-------------materials---------->  <------------------raw materials----------->
 
@@ -86,7 +82,7 @@ public class GUIUtils {
 
             CraftFileUtils.saveFileCraft(type, reqItem, cTable, mats);
 
-            p.getPlayer().sendMessage(updated ? "§aCraft updated successfully" : "§aCraft added successfully");
+            p.getPlayer().sendMessage("§aCraft added successfully");
         } catch (Exception e) {
             e.printStackTrace();
         }

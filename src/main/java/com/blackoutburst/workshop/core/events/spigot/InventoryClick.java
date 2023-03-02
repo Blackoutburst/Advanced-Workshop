@@ -3,6 +3,7 @@ package com.blackoutburst.workshop.core.events.spigot;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.guis.CraftGUI;
 import com.blackoutburst.workshop.guis.CraftSelectorGUI;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -28,12 +29,10 @@ public class InventoryClick {
         WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) event.getWhoClicked());
 
         switch (event.getView().getTitle()) {
-            case CraftGUI.NAME:
+            case CraftGUI.NAME ->
                     event.setCancelled(CraftGUI.click(event.getClickedInventory(), event.getSlot(), (Player) event.getWhoClicked(), event.getView().getTitle()));
-            break;
-            case CraftSelectorGUI.NAME:
+            case CraftSelectorGUI.NAME ->
                     event.setCancelled(CraftSelectorGUI.click(event.getClickedInventory(), event.getSlot(), (Player) event.getWhoClicked(), event.getView().getTitle()));
-            break;
         }
 
         preventArmorClick(event, wsplayer);

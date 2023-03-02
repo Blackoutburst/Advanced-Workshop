@@ -1,7 +1,7 @@
 package com.blackoutburst.workshop.utils.files;
 
-import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.game.GameOptions;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;

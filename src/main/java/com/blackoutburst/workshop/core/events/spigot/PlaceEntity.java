@@ -1,6 +1,7 @@
 package com.blackoutburst.workshop.core.events.spigot;
 
 import com.blackoutburst.workshop.core.WSPlayer;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -13,6 +14,8 @@ public class PlaceEntity {
     public static void execute(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         WSPlayer wsplayer = WSPlayer.getFromPlayer(player);
+        if (wsplayer == null) return;
+
         if (!wsplayer.isInGame()) return;
         List<Material> banned_items = Arrays.asList(
                 Material.ARMOR_STAND, Material.OAK_BOAT, Material.BIRCH_BOAT, Material.SPRUCE_BOAT,

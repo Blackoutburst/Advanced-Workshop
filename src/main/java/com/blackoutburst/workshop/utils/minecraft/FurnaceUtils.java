@@ -1,6 +1,7 @@
 package com.blackoutburst.workshop.utils.minecraft;
 
 import com.blackoutburst.workshop.Main;
+
 import org.bukkit.Material;
 import org.bukkit.block.Furnace;
 import org.bukkit.inventory.ItemStack;
@@ -27,35 +28,27 @@ public class FurnaceUtils {
 
                 if (stack != null) {
                     switch (stack.getType()) {
-                        case POTATO: fastCook(furnace, stack, Material.BAKED_POTATO); break;
-                        case CHICKEN: fastCook(furnace, stack, Material.COOKED_CHICKEN); break;
-                        case COD: fastCook(furnace, stack, Material.COOKED_COD); break;
-                        case SALMON: fastCook(furnace, stack, Material.SALMON); break;
-                        case PORKCHOP: fastCook(furnace, stack, Material.COOKED_PORKCHOP); break;
-                        case BEEF: fastCook(furnace, stack, Material.COOKED_BEEF); break;
-                        case CLAY_BALL: fastCook(furnace, stack, Material.BRICK); break;
-                        case SAND: fastCook(furnace, stack, Material.GLASS); break;
-                        case GOLD_ORE:
-                        case NETHER_GOLD_ORE:
-                            fastCook(furnace, stack, Material.GOLD_INGOT); break;
-                        case ANCIENT_DEBRIS: fastCook(furnace, stack, Material.NETHERITE_SCRAP); break;
-                        case IRON_ORE: fastCook(furnace, stack, Material.IRON_INGOT); break;
-                        case NETHERRACK: fastCook(furnace, stack, Material.NETHER_BRICK); break;
-                        case COBBLESTONE: fastCook(furnace, stack, Material.STONE); break;
-                        case CACTUS: fastCook(furnace, stack, Material.GREEN_DYE); break;
-                        case OAK_LOG:
-                        case BIRCH_LOG:
-                        case SPRUCE_LOG:
-                        case JUNGLE_LOG:
-                        case ACACIA_LOG:
-                        case DARK_OAK_LOG:
-                            fastCook(furnace, stack, Material.CHARCOAL); break;
-                        case COAL_ORE: fastCook(furnace, stack, Material.COAL); break;
-                        case DIAMOND_ORE: fastCook(furnace, stack, Material.DIAMOND); break;
-                        case EMERALD_ORE: fastCook(furnace, stack, Material.EMERALD); break;
-                        case LAPIS_ORE: fastCook(furnace, stack, Material.LAPIS_LAZULI); break;
-                        case NETHER_QUARTZ_ORE: fastCook(furnace, stack, Material.QUARTZ); break;
-                        case REDSTONE_ORE: fastCook(furnace, stack, Material.REDSTONE); break;
+                        case POTATO -> fastCook(furnace, stack, Material.BAKED_POTATO);
+                        case CHICKEN -> fastCook(furnace, stack, Material.COOKED_CHICKEN);
+                        case COD -> fastCook(furnace, stack, Material.COOKED_COD);
+                        case SALMON -> fastCook(furnace, stack, Material.SALMON);
+                        case PORKCHOP -> fastCook(furnace, stack, Material.COOKED_PORKCHOP);
+                        case BEEF -> fastCook(furnace, stack, Material.COOKED_BEEF);
+                        case CLAY_BALL -> fastCook(furnace, stack, Material.BRICK);
+                        case SAND -> fastCook(furnace, stack, Material.GLASS);
+                        case GOLD_ORE, NETHER_GOLD_ORE -> fastCook(furnace, stack, Material.GOLD_INGOT);
+                        case ANCIENT_DEBRIS -> fastCook(furnace, stack, Material.NETHERITE_SCRAP);
+                        case IRON_ORE -> fastCook(furnace, stack, Material.IRON_INGOT);
+                        case NETHERRACK -> fastCook(furnace, stack, Material.NETHER_BRICK);
+                        case COBBLESTONE -> fastCook(furnace, stack, Material.STONE);
+                        case CACTUS -> fastCook(furnace, stack, Material.GREEN_DYE);
+                        case OAK_LOG, BIRCH_LOG, SPRUCE_LOG, JUNGLE_LOG, ACACIA_LOG, DARK_OAK_LOG -> fastCook(furnace, stack, Material.CHARCOAL);
+                        case COAL_ORE -> fastCook(furnace, stack, Material.COAL);
+                        case DIAMOND_ORE -> fastCook(furnace, stack, Material.DIAMOND);
+                        case EMERALD_ORE -> fastCook(furnace, stack, Material.EMERALD);
+                        case LAPIS_ORE -> fastCook(furnace, stack, Material.LAPIS_LAZULI);
+                        case NETHER_QUARTZ_ORE -> fastCook(furnace, stack, Material.QUARTZ);
+                        case REDSTONE_ORE -> fastCook(furnace, stack, Material.REDSTONE);
                     }
                 }
                 count++;

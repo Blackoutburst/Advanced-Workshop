@@ -14,7 +14,9 @@ public class ArmorUtils {
     }
 
     public static void removeArmor(Player player) {
-
+        player.getInventory().setHelmet(new ItemStack(Material.AIR));
+        player.getInventory().setChestplate(new ItemStack(Material.AIR));
+        player.getInventory().setLeggings(new ItemStack(Material.AIR));
+        player.getInventory().setBoots(new ItemStack(Material.AIR));
     }
-
 }

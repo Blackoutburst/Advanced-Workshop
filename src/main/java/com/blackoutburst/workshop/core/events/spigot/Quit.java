@@ -5,6 +5,7 @@ import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.nms.NettyListener;
 import com.blackoutburst.workshop.utils.map.MapUtils;
+
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class Quit {

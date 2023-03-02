@@ -3,9 +3,8 @@ package com.blackoutburst.workshop.guis;
 import com.blackoutburst.workshop.core.Craft;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.utils.misc.StringUtils;
 import com.blackoutburst.workshop.utils.misc.MiscUtils;
-import org.bukkit.Bukkit;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -66,8 +65,10 @@ public class CraftSelectorGUI {
         ItemStack item = new ItemStack(mat, 1);
         if (name != null) {
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(name);
-            item.setItemMeta(meta);
+            if (meta != null) {
+                meta.setDisplayName(name);
+                item.setItemMeta(meta);
+            }
         }
         inv.setItem(slot, item);
     }

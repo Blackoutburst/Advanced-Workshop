@@ -7,19 +7,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 public class ScanWand  implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (sender instanceof Player player) {
             ItemStack stack = new ItemStack(Material.BLAZE_ROD);
             ItemMeta meta = stack.getItemMeta();
+            if (meta != null)
+                meta.setDisplayName("§6Scan wand");
 
-            meta.setDisplayName("§6Scan wand");
             stack.setItemMeta(meta);
 
-            ((Player)sender).getInventory().addItem(stack);
+            player.getInventory().addItem(stack);
         }
         return true;
     }

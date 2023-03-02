@@ -7,6 +7,7 @@ public class EntityDamage {
 
     public static void execute(EntityDamageEvent event) {
         if (event.getEntityType() != EntityType.PLAYER) return;
+
         event.setCancelled(true);
     }
 }

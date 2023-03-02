@@ -24,13 +24,11 @@ public class CountdownDisplay extends BukkitRunnable {
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, (seconds == 0 ? 1 : 0), 0.8f);
             return;
         }
-        char color = 'e';
-
-        switch (seconds) {
-            case 5: case 4: color = 'e'; break; // yellow
-            case 3: case 2: case 1: color = 'c'; break; // red
-            default: color = 'a'; break; // green
-        }
+        char color = switch (seconds) {
+            case 5, 4 -> 'e'; // yellow
+            case 3, 2, 1 -> 'c'; // red
+            default -> 'a'; // green
+        };
 
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 0.8f);
 

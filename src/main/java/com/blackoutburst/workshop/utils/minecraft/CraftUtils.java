@@ -4,10 +4,10 @@ import com.blackoutburst.workshop.core.Craft;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.game.GameOptions;
 import com.blackoutburst.workshop.utils.files.CraftFileUtils;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.File;
 import java.util.*;
 
 public class CraftUtils {
@@ -42,7 +42,7 @@ public class CraftUtils {
         int bagSize = gameoptions.getBagSize();
 
         switch (type) {
-            case 'N': case 'B': {
+            case 'N', 'B' -> {
                 List<Craft> bags = new ArrayList<>();
 
                 if (wsplayer.getCraftList() == null) {
@@ -60,9 +60,8 @@ public class CraftUtils {
 
                 finalCraftList.addAll(tempCraftList);
                 finalCraftList.addAll(bag);
-                break;
             }
-            case 'R': {
+            case 'R' -> {
                 if (wsplayer.getCraftList() == null) {
                     for (int i = 0; i < 10; i++) {
                         int n = rng.nextInt(craftAmount);
@@ -79,7 +78,6 @@ public class CraftUtils {
 
                     finalCraftList.add(validCrafts.get(n));
                 }
-                break;
             }
         }
         wsplayer.setCraftList(finalCraftList);

@@ -1,25 +1,23 @@
 package com.blackoutburst.workshop.utils.files;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
 public class MapFileUtils {
 
     public static File getMapFile(String mapName, char type) {
-        switch (type) {
-            case 'D': return new File("./plugins/Workshop/maps/" + mapName + "/deco.yml");
-            case 'L': return new File("./plugins/Workshop/maps/" + mapName + "/logic.yml");
-            case 'C': return new File("./plugins/Workshop/maps/" + mapName + "/craft.yml");
-            default: return null;
-        }
+        return switch (type) {
+            case 'D' -> new File("./plugins/Workshop/maps/" + mapName + "/deco.yml");
+            case 'L' -> new File("./plugins/Workshop/maps/" + mapName + "/logic.yml");
+            case 'C' -> new File("./plugins/Workshop/maps/" + mapName + "/craft.yml");
+            default -> null;
+        };
     }
 
     public static Location[] getDecoNormalKeys(File f, World world) {
@@ -131,21 +129,19 @@ public class MapFileUtils {
         String section;
         String resourceType = "";
         switch (type) {
-            case 'S':
-                section = "Signs.";
-                break;
-            case 'P':
+            case 'S' -> section = "Signs.";
+            case 'P' -> {
                 section = "Resources.";
                 resourceType = "Priority";
-                break;
-            case 'B':
+            }
+            case 'B' -> {
                 section = "Resources.";
                 resourceType = "Both";
-                break;
-            default:
+            }
+            default -> {
                 section = "Resources.";
                 resourceType = "Regular";
-                break;
+            }
         }
 
 
@@ -190,27 +186,32 @@ public class MapFileUtils {
 
     public static ConfigurationSection getConfigSection(File f, Location location, char type) {
         YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
-        if (type == 'L') {
-            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
-            String path = "Resources." + locationString;
-            return file.getConfigurationSection(path);
+
+        switch (type) {
+            case 'L' -> {
+                String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+                String path = "Resources." + locationString;
+                return file.getConfigurationSection(path);
+            }
+            case 'R' -> {
+                String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+                String path = "Normal." + locationString;
+                return file.getConfigurationSection(path);
+            }
+            case 'P' -> {
+                String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+                String path = "Needed." + locationString;
+                return file.getConfigurationSection(path);
+            }
+            case 'S' -> {
+                String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+                String path = "Signs." + locationString;
+                return file.getConfigurationSection(path);
+            }
+            default -> {
+                return null;
+            }
         }
-        if (type == 'R') {
-            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
-            String path = "Normal." + locationString;
-            return file.getConfigurationSection(path);
-        }
-        if (type == 'P') {
-            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
-            String path = "Needed." + locationString;
-            return file.getConfigurationSection(path);
-        }
-        if (type == 'S') {
-            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
-            String path = "Signs." + locationString;
-            return file.getConfigurationSection(path);
-        }
-        return null;
     }
 
     public static ConfigurationSection getConfigSection(ConfigurationSection c, String path) {

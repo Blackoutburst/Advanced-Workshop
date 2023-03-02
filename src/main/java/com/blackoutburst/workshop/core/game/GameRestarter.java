@@ -1,7 +1,6 @@
 package com.blackoutburst.workshop.core.game;
 
 import com.blackoutburst.workshop.core.WSPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class GameRestarter extends BukkitRunnable {

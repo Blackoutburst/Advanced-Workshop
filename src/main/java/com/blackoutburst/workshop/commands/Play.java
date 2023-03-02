@@ -12,16 +12,14 @@ import com.blackoutburst.workshop.utils.files.DBUtils;
 import com.blackoutburst.workshop.utils.map.MapUtils;
 import com.blackoutburst.workshop.utils.minecraft.CraftUtils;
 import com.blackoutburst.workshop.utils.misc.CountdownDisplay;
-import org.bukkit.Bukkit;
+
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.time.Duration;
-import java.time.Instant;
+import org.jetbrains.annotations.NotNull;
 
 public class Play implements CommandExecutor {
 
@@ -88,19 +86,19 @@ public class Play implements CommandExecutor {
         }
 
         switch (args[1]) {
-            case "time": {
+            case "time" -> {
                 if (args.length == 2) setTimeLimit(wsplayer, "");
                 if (args.length > 2) setTimeLimit(wsplayer, args[2]);
-            } break;
-            case "all": gameoptions.setCraftLimit(wsplayer.getCrafts().size()); break;
-            default: setCraftAmount(wsplayer, args[1]);
+            }
+            case "all" -> gameoptions.setCraftLimit(wsplayer.getCrafts().size());
+            default -> setCraftAmount(wsplayer, args[1]);
         }
     }
 
     private void setBagSize(WSPlayer wsplayer, GameOptions gameoptions) {
         switch (gameoptions.getRandomType()) {
-            case 'N': gameoptions.setBagSize(wsplayer.getCrafts().size()); break;
-            case 'R': gameoptions.setBagSize(10); break;
+            case 'N' -> gameoptions.setBagSize(wsplayer.getCrafts().size());
+            case 'R' -> gameoptions.setBagSize(10);
         }
     }
 
@@ -131,9 +129,8 @@ public class Play implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = ((Player) sender).getPlayer();
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (sender instanceof Player player) {
             WSPlayer wsplayer = WSPlayer.getFromPlayer(player);
             if (wsplayer == null || wsplayer.isInGame()) return true;
 

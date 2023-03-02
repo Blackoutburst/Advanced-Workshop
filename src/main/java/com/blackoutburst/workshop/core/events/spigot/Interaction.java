@@ -2,6 +2,7 @@ package com.blackoutburst.workshop.core.events.spigot;
 
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.minecraft.FurnaceUtils;
+
 import org.bukkit.Material;
 import org.bukkit.block.BlastFurnace;
 import org.bukkit.block.Furnace;
@@ -12,18 +13,24 @@ import org.bukkit.inventory.ItemStack;
 public class Interaction {
 
     private static void clickFurnace(PlayerInteractEvent event) {
+        if (event.getClickedBlock() == null) return;
+
         Furnace furnace = (Furnace) event.getClickedBlock().getState();
         furnace.getInventory().setFuel(new ItemStack(Material.COAL, 64));
 
         FurnaceUtils.instantSmelt(furnace);
     }
     private static void clickBlastFurnace(PlayerInteractEvent event) {
+        if (event.getClickedBlock() == null) return;
+
         BlastFurnace furnace = (BlastFurnace) event.getClickedBlock().getState();
         furnace.getInventory().setFuel(new ItemStack(Material.COAL, 64));
 
         FurnaceUtils.instantSmelt(furnace);
     }
     private static void clickSmoker(PlayerInteractEvent event) {
+        if (event.getClickedBlock() == null) return;
+
         Smoker furnace = (Smoker) event.getClickedBlock().getState();
         furnace.getInventory().setFuel(new ItemStack(Material.COAL, 64));
 

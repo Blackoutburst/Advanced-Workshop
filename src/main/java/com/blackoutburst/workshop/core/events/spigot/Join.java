@@ -7,11 +7,13 @@ import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.nms.NMSEntity;
 import com.blackoutburst.workshop.nms.NettyListener;
 import com.blackoutburst.workshop.utils.files.DBUtils;
+
 import org.bukkit.GameMode;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class Join {
 
+    @SuppressWarnings("unchecked")
     public static void execute(PlayerJoinEvent event) {
         int protocolVersion = Main.VIA_API.getPlayerVersion(event.getPlayer());
 

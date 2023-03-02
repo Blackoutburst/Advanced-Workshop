@@ -70,8 +70,10 @@ public class CraftGUI {
         ItemStack item = new ItemStack(mat, amount);
         if (name != null) {
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(name);
-            item.setItemMeta(meta);
+            if (meta != null) {
+                meta.setDisplayName(name);
+                item.setItemMeta(meta);
+            }
         }
         inv.setItem(slot, item);
     }

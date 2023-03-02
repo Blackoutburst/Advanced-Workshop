@@ -10,8 +10,10 @@ import com.blackoutburst.workshop.utils.files.LogicFileUtils;
 import com.blackoutburst.workshop.utils.minecraft.BlockUtils;
 import com.blackoutburst.workshop.utils.minecraft.EntityUtils;
 import com.blackoutburst.workshop.utils.misc.MiscUtils;
+
 import de.tr7zw.nbtapi.*;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -60,22 +62,18 @@ public class MapUtils {
                 BlockFace direction = sign.getDirection();
                 Location location = sign.getLocation();
                 switch (sign.getText()) {
-                    case "blaze": EntityUtils.spawnEntity(NMSEntityType.BLAZE, wsPlayer, location, direction, sign.getText(), area); break;
-                    case "chicken": EntityUtils.spawnEntity(NMSEntityType.CHICKEN, wsPlayer, location, direction, sign.getText(), area); break;
-                    case "hoglin": EntityUtils.spawnEntity(NMSEntityType.HOGLIN, wsPlayer, location, direction, sign.getText(), area); break;
-                    case "villager": EntityUtils.spawnEntity(NMSEntityType.VILLAGER, wsPlayer, location, direction, sign.getText(), area); break;
-                    case "witherskeleton": EntityUtils.spawnEntity(NMSEntityType.WITHER_SKELETON, wsPlayer, location, direction, sign.getText(), area); break;
-                    case "0":
-                    case "1":
-                    case "2":
-                    case "3":
-                    case "4":
-                    case "5":
-                    case "6":
-                    case "7":
-                    case "8":
-                    case "9":
-                        EntityUtils.spawnEntity(NMSEntityType.ITEM_FRAME, wsPlayer, location, direction, sign.getText(), area); break;
+                    case "blaze" ->
+                            EntityUtils.spawnEntity(NMSEntityType.BLAZE, wsPlayer, location, direction, sign.getText(), area);
+                    case "chicken" ->
+                            EntityUtils.spawnEntity(NMSEntityType.CHICKEN, wsPlayer, location, direction, sign.getText(), area);
+                    case "hoglin" ->
+                            EntityUtils.spawnEntity(NMSEntityType.HOGLIN, wsPlayer, location, direction, sign.getText(), area);
+                    case "villager" ->
+                            EntityUtils.spawnEntity(NMSEntityType.VILLAGER, wsPlayer, location, direction, sign.getText(), area);
+                    case "witherskeleton" ->
+                            EntityUtils.spawnEntity(NMSEntityType.WITHER_SKELETON, wsPlayer, location, direction, sign.getText(), area);
+                    case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ->
+                            EntityUtils.spawnEntity(NMSEntityType.ITEM_FRAME, wsPlayer, location, direction, sign.getText(), area);
                 }
             }
 

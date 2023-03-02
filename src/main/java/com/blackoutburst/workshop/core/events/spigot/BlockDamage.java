@@ -1,15 +1,12 @@
 package com.blackoutburst.workshop.core.events.spigot;
 
-import com.blackoutburst.workshop.core.blocks.DecoBlock;
 import com.blackoutburst.workshop.core.blocks.MaterialBlock;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.utils.map.DecoUtils;
 import com.blackoutburst.workshop.utils.minecraft.BlockUtils;
 import com.blackoutburst.workshop.utils.misc.EffectsUtils;
-import org.bukkit.Bukkit;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.ItemStack;

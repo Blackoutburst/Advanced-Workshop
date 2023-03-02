@@ -5,20 +5,21 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class SetUnlimitedCraft implements CommandExecutor {
 
     private boolean isUnlimited(String value) {
-        switch (value) {
-            case "yes": case "1": case "true": return true;
-            default: return false;
-        }
+        return switch (value) {
+            case "yes", "1", "true" -> true;
+            default -> false;
+        };
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            WSPlayer wsplayer = WSPlayer.getFromPlayer((Player) sender);
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (sender instanceof Player player) {
+            WSPlayer wsplayer = WSPlayer.getFromPlayer(player);
             if (wsplayer == null) return true;
 
             if (wsplayer.isInGame()) {

@@ -2,13 +2,10 @@ package com.blackoutburst.workshop.utils.files;
 
 import com.blackoutburst.workshop.core.Craft;
 import com.blackoutburst.workshop.utils.misc.MiscUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;

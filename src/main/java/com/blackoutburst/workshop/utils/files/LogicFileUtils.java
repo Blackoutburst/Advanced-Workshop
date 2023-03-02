@@ -1,8 +1,7 @@
 package com.blackoutburst.workshop.utils.files;
 
 import com.blackoutburst.workshop.core.blocks.LogicSign;
-import org.apache.commons.lang.ArrayUtils;
-import org.bukkit.Bukkit;
+
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
@@ -112,14 +111,14 @@ public class LogicFileUtils {
             String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
 
             ConfigurationSection items = (ConfigurationSection) logic.get("Resources." + locationString);
-            ItemStack[] itemStacks = new ItemStack[0];
+            List<ItemStack> itemStacks = new ArrayList<>();
 
             if (items.contains("Regular")) {
                 ConfigurationSection section = items.getConfigurationSection("Regular");
                 Set<String> indexes = section.getKeys(false);
                 for (String index : indexes) {
                     ItemStack item = section.getItemStack(index);
-                    itemStacks = (ItemStack[]) ArrayUtils.add(itemStacks, item);
+                    itemStacks.add(item);
                 }
             }
             if (items.contains("Priority")) {
@@ -127,10 +126,10 @@ public class LogicFileUtils {
                 Set<String> indexes = section.getKeys(false);
                 for (String index : indexes) {
                     ItemStack item = section.getItemStack(index);
-                    itemStacks = (ItemStack[]) ArrayUtils.add(itemStacks, item);
+                    itemStacks.add(item);
                 }
             }
-            allItems[i] = itemStacks;
+            allItems[i] = itemStacks.toArray(new ItemStack[0]);
         }
         return allItems;
     }

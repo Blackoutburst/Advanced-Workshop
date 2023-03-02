@@ -4,19 +4,16 @@ import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.game.EndGameLogic;
 import com.blackoutburst.workshop.core.game.GameOptions;
 import com.blackoutburst.workshop.core.WSPlayer;
+
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTItem;
-import org.apache.commons.lang.WordUtils;
-import org.bukkit.Bukkit;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -92,7 +89,7 @@ public class MiscUtils {
 
         if (name.length() < 10) return "";
         String filteredName = name.substring(10).replace("_", " ");
-        filteredName = WordUtils.capitalize(filteredName);
+        filteredName = StringUtils.capitalize(filteredName);
 
         return filteredName;
     }

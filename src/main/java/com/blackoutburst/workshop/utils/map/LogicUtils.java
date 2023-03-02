@@ -2,21 +2,20 @@ package com.blackoutburst.workshop.utils.map;
 
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.blocks.RandomItem;
-import com.blackoutburst.workshop.nms.NMSTitle;
 import com.blackoutburst.workshop.utils.files.LogicFileUtils;
+
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTContainer;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtapi.NBTList;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class LogicUtils {
 
@@ -61,7 +60,7 @@ public class LogicUtils {
                         if (sign.getLines().length == 0) continue;
                         String text = sign.getLine(0);
 
-                        BlockFace directionFacing = BlockFace.NORTH;
+                        BlockFace directionFacing;
 
                         if (sign.getBlock().getType() != Material.OAK_WALL_SIGN) {
                             org.bukkit.block.data.type.Sign signData = (org.bukkit.block.data.type.Sign) sign.getBlockData();

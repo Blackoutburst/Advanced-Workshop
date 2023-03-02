@@ -6,7 +6,7 @@ import com.blackoutburst.workshop.nms.NMSEntity;
 import com.blackoutburst.workshop.nms.NMSEntityType;
 import com.blackoutburst.workshop.nms.NMSEnumDirection;
 import com.blackoutburst.workshop.nms.NMSItemFrame;
-import org.bukkit.Bukkit;
+
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 
@@ -28,13 +28,12 @@ public class EntityUtils {
         double x = location.getBlockX() + area.getAnchor().getBlockX() + 0.5;
         double y = location.getBlockY() + area.getAnchor().getBlockY();
         double z = location.getBlockZ() + area.getAnchor().getBlockZ() + 0.5;
-        float yaw = 0;
-
-        switch (direction) {
-            case NORTH: yaw = 180; break;
-            case EAST: yaw = -90; break;
-            case WEST: yaw = 90; break;
-        }
+        float yaw = switch (direction) {
+            case NORTH -> 180;
+            case EAST -> -90;
+            case WEST -> 90;
+            default -> 0;
+        };
 
         if (type.equals(NMSEntityType.ITEM_FRAME)) {
             NMSItemFrame itemFrame = new NMSItemFrame(area.getAnchor().getWorld());
