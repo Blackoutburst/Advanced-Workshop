@@ -87,7 +87,6 @@ public class EntityUtils {
 
         Entity entity = world.spawnEntity(new Location(world, x, y, z, yaw, 0), type);
         entity.setCustomNameVisible(false);
-        entity.setCustomName(tag);
         entity.setPersistent(true);
         entity.setSilent(true);
         entity.setInvulnerable(true);
@@ -99,6 +98,7 @@ public class EntityUtils {
         }
 
         if (entity instanceof ItemFrame itemFrame) {
+            itemFrame.setCustomName(tag);
             itemFrame.setFacingDirection(direction);
             itemFrame.setFixed(true);
         }
