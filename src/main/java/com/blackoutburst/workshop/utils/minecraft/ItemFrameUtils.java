@@ -1,28 +1,30 @@
 package com.blackoutburst.workshop.utils.minecraft;
 
+import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.nms.NMSEntity;
-import com.blackoutburst.workshop.nms.NMSItemFrame;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemFrameUtils {
 
     public static void updateCraft(WSPlayer wsplayer) {
+        PlayArea area = wsplayer.getPlayArea();
         ItemStack outputItem = wsplayer.getCurrentCraft().getItemRequired();
 
-        for (NMSEntity entity : wsplayer.getEntities()) {
-            if (entity instanceof NMSItemFrame) {
-                NMSItemFrame itemFrame = (NMSItemFrame) entity;
-                if (itemFrame.getTag().equals("0") && entity.getOwner().getPlayer().getUniqueId().equals(wsplayer.getPlayer().getUniqueId())) {
+        for (Entity entity : area.getEntities()) {
+            if (entity.getCustomName() == null) continue;
+
+            if (entity instanceof ItemFrame itemFrame) {
+                if (itemFrame.getCustomName().equals("0")) {
                     itemFrame.setItem(outputItem);
                     continue;
                 }
 
-                if (itemFrame.getTag().matches("([1-9]+([.][1-9]+)?)?") && entity.getOwner().getPlayer().getUniqueId().equals(wsplayer.getPlayer().getUniqueId())) {
-                    int index = Integer.parseInt(itemFrame.getTag()) - 1;
+                if (itemFrame.getCustomName().matches("([1-9]+([.][1-9]+)?)?")) {
+                    int index = Integer.parseInt(itemFrame.getCustomName()) - 1;
                     ItemStack item = wsplayer.getCurrentCraft().getCraftingTable()[index];
-
                     itemFrame.setItem(item);
                 }
             }

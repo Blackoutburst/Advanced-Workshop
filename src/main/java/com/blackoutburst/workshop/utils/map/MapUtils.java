@@ -3,7 +3,6 @@ package com.blackoutburst.workshop.utils.map;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.*;
 import com.blackoutburst.workshop.core.blocks.*;
-import com.blackoutburst.workshop.nms.NMSEntityType;
 import com.blackoutburst.workshop.utils.files.DecoFileUtils;
 import com.blackoutburst.workshop.utils.files.MapFileUtils;
 import com.blackoutburst.workshop.utils.files.LogicFileUtils;
@@ -21,6 +20,7 @@ import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -63,17 +63,17 @@ public class MapUtils {
                 Location location = sign.getLocation();
                 switch (sign.getText()) {
                     case "blaze" ->
-                            EntityUtils.spawnEntity(NMSEntityType.BLAZE, wsPlayer, location, direction, sign.getText(), area);
+                            EntityUtils.spawnEntity(EntityType.BLAZE, location, direction, area, sign.getText());
                     case "chicken" ->
-                            EntityUtils.spawnEntity(NMSEntityType.CHICKEN, wsPlayer, location, direction, sign.getText(), area);
+                            EntityUtils.spawnEntity(EntityType.CHICKEN, location, direction, area, sign.getText());
                     case "hoglin" ->
-                            EntityUtils.spawnEntity(NMSEntityType.HOGLIN, wsPlayer, location, direction, sign.getText(), area);
+                            EntityUtils.spawnEntity(EntityType.HOGLIN, location, direction, area, sign.getText());
                     case "villager" ->
-                            EntityUtils.spawnEntity(NMSEntityType.VILLAGER, wsPlayer, location, direction, sign.getText(), area);
+                            EntityUtils.spawnEntity(EntityType.VILLAGER, location, direction, area, sign.getText());
                     case "witherskeleton" ->
-                            EntityUtils.spawnEntity(NMSEntityType.WITHER_SKELETON, wsPlayer, location, direction, sign.getText(), area);
+                            EntityUtils.spawnEntity(EntityType.WITHER_SKELETON, location, direction, area, sign.getText());
                     case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ->
-                            EntityUtils.spawnEntity(NMSEntityType.ITEM_FRAME, wsPlayer, location, direction, sign.getText(), area);
+                            EntityUtils.spawnEntity(EntityType.ITEM_FRAME, location, direction, area, sign.getText());
                 }
             }
 

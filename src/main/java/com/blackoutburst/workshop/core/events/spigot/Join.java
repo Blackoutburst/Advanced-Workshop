@@ -1,11 +1,8 @@
 package com.blackoutburst.workshop.core.events.spigot;
 
-import com.blackoutburst.workshop.ClientVersion;
+import com.blackoutburst.workshop.core.ClientVersion;
 import com.blackoutburst.workshop.Main;
-import com.blackoutburst.workshop.core.events.listeners.NMSListener;
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.nms.NMSEntity;
-import com.blackoutburst.workshop.nms.NettyListener;
 import com.blackoutburst.workshop.utils.files.DBUtils;
 
 import org.bukkit.GameMode;
@@ -23,8 +20,6 @@ public class Join {
         event.getPlayer().setGameMode(GameMode.ADVENTURE);
         DBUtils.saveData(event.getPlayer(), "name", event.getPlayer().getName(), String.class);
 
-        NettyListener.init(event.getPlayer(), new NMSListener());
-        NMSEntity.load(wsPlayer);
         event.getPlayer().teleport(Main.spawn);
     }
 }

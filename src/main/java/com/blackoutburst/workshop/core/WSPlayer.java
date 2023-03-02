@@ -1,6 +1,5 @@
 package com.blackoutburst.workshop.core;
 
-import com.blackoutburst.workshop.ClientVersion;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.blocks.DecoBlock;
 import com.blackoutburst.workshop.core.blocks.MaterialBlock;
@@ -9,7 +8,6 @@ import com.blackoutburst.workshop.core.game.GameOptions;
 import com.blackoutburst.workshop.core.game.GameRestarter;
 import com.blackoutburst.workshop.core.game.GameStarter;
 import com.blackoutburst.workshop.nms.NMSBoard;
-import com.blackoutburst.workshop.nms.NMSEntity;
 import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -60,8 +58,6 @@ public class WSPlayer {
     protected NMSBoard board;
 
     protected GameOptions gameOptions;
-
-    protected List<NMSEntity> entities = new ArrayList<>();
 
     public WSPlayer(Player player, ClientVersion clientVersion) {
         this.clientVersion = clientVersion;
@@ -197,10 +193,6 @@ public class WSPlayer {
 
     public void setJumpPadCooldown(int jumpPadCooldown) {
         this.jumpPadCooldown = jumpPadCooldown;
-    }
-
-    public List<NMSEntity> getEntities() {
-        return entities;
     }
 
     public boolean hasStored() { return hasStored; }

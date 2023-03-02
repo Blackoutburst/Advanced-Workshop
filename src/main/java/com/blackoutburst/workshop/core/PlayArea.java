@@ -1,10 +1,16 @@
 package com.blackoutburst.workshop.core;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayArea {
 
     protected boolean isBusy;
+
+    protected List<Entity> entities;
 
     protected boolean isLoading;
 
@@ -16,6 +22,7 @@ public class PlayArea {
     public PlayArea(String type, Location anchor) {
         this.type = type;
         this.anchor = anchor;
+        this.entities = new ArrayList<>();
     }
 
     public String getType() {
@@ -41,4 +48,8 @@ public class PlayArea {
     public boolean hasStarted() { return hasStarted; }
 
     public void setHasStarted(boolean hasStarted) { this.hasStarted = hasStarted; }
+
+    public List<Entity> getEntities() {
+        return entities;
+    }
 }

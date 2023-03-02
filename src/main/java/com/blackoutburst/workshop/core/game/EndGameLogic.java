@@ -21,6 +21,10 @@ public class EndGameLogic {
     private static void clearPlayer(WSPlayer wsplayer) {
         Player player = wsplayer.getPlayer();
 
+        ArmorUtils.removeArmor(player);
+        EntityUtils.clearEntity(wsplayer);
+
+        wsplayer.setPlayArea(null);
         wsplayer.setInGame(false);
         wsplayer.getGamestarter().cancel();
         wsplayer.getGameRestarter().cancel();
@@ -28,8 +32,6 @@ public class EndGameLogic {
         wsplayer.setCraftList(null);
         wsplayer.setWaiting(false);
 
-        ArmorUtils.removeArmor(player);
-        EntityUtils.clearEntity(wsplayer);
 
         player.sendMessage("§eThe game ended! §b(" + getEndMessage(wsplayer) + ")");
         player.setCanPickupItems(true);

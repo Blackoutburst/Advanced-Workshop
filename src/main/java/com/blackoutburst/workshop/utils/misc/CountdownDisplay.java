@@ -1,7 +1,6 @@
 package com.blackoutburst.workshop.utils.misc;
 
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.nms.NMSTitle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -31,8 +30,7 @@ public class CountdownDisplay extends BukkitRunnable {
         };
 
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 0.8f);
-
-        NMSTitle.send(player,"§" + color + seconds,"",0,20,0);
+        player.sendTitle("§" + color + seconds,"",0,20,0);
         seconds--;
     }
 }

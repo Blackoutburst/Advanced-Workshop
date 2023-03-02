@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -74,12 +75,17 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerEggThrowEvent(PlayerEggThrowEvent event) { EggThrow.execute(event); }
+    public void onEntityInteract(PlayerInteractEntityEvent event) {
+        PlayerInteractEntity.execute(event);
+    }
 
     @EventHandler
-    public void onWeatherChange(WeatherChangeEvent event) {
-        WeatherChange.execute(event);
+    public void onEntityInteract(EntityDamageByEntityEvent event) {
+        EntityDamageByEntity.execute(event);
     }
+
+    @EventHandler
+    public void onPlayerEggThrowEvent(PlayerEggThrowEvent event) { EggThrow.execute(event); }
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {

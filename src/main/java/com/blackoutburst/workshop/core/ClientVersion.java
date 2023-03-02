@@ -1,4 +1,4 @@
-package com.blackoutburst.workshop;
+package com.blackoutburst.workshop.core;
 
 public enum ClientVersion {
 
