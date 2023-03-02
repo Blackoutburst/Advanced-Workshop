@@ -10,10 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.time.Duration;
@@ -99,6 +96,11 @@ public class EntityUtils {
         if (entity instanceof LivingEntity livingEntity) {
             livingEntity.setCollidable(false);
             livingEntity.setAI(false);
+        }
+
+        if (entity instanceof ItemFrame itemFrame) {
+            itemFrame.setFacingDirection(direction);
+            itemFrame.setFixed(true);
         }
 
         area.getEntities().add(entity);

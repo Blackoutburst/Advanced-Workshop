@@ -30,7 +30,14 @@ public class ScoreboardUtils {
     public static void init(WSPlayer wsplayer) {
         Player player = wsplayer.getPlayer();
         Scoreboard scoreboard = wsplayer.getScoreBoard();
-        Objective objective = scoreboard.registerNewObjective(player.getName(), Criteria.DUMMY, "§6Workshop");
+        Objective objective;
+
+        if (scoreboard.getObjective(player.getName()) == null) {
+            objective = scoreboard.registerNewObjective(player.getName(), Criteria.DUMMY, "§6Workshop");
+        } else {
+            objective = scoreboard.getObjective(player.getName());
+        }
+
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         basic(wsplayer);
     }
