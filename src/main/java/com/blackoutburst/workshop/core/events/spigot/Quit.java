@@ -5,6 +5,7 @@ import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.utils.map.MapUtils;
 
+import com.blackoutburst.workshop.utils.minecraft.EntityUtils;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class Quit {
@@ -15,6 +16,7 @@ public class Quit {
 
         PlayArea area = wsPlayer.getPlayArea();
         if (area != null) {
+            EntityUtils.clearEntity(wsPlayer);
             area.setBusy(false);
             MapUtils.restoreArea(wsPlayer, true);
         }
