@@ -17,7 +17,9 @@ public class StringUtils {
     }
 
     public static String capitalize(String str) {
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
+        return Arrays.stream(str.split(" "))
+                .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
+                .collect(Collectors.joining(" "));
     }
 
     public static String formatItemName(String name) {
