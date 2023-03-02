@@ -96,8 +96,10 @@ public class EntityUtils {
         entity.setInvulnerable(true);
         entity.setGravity(true);
 
-        if (entity instanceof LivingEntity livingEntity)
+        if (entity instanceof LivingEntity livingEntity) {
+            livingEntity.setCollidable(false);
             livingEntity.setAI(false);
+        }
 
         area.getEntities().add(entity);
     }

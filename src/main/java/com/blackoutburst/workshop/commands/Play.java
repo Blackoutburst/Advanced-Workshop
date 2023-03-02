@@ -11,6 +11,7 @@ import com.blackoutburst.workshop.utils.map.DecoBlockLoader;
 import com.blackoutburst.workshop.utils.files.DBUtils;
 import com.blackoutburst.workshop.utils.map.MapUtils;
 import com.blackoutburst.workshop.utils.minecraft.CraftUtils;
+import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
 import com.blackoutburst.workshop.utils.misc.CountdownDisplay;
 
 import org.bukkit.GameMode;
@@ -72,7 +73,8 @@ public class Play implements CommandExecutor {
         wsplayer.setNextRound(false);
         wsplayer.getPlayer().setCanPickupItems(false);
         wsplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
-        wsplayer.getBoard().set(14, "Map: §e" + area.getType());
+
+        ScoreboardUtils.startGame(wsplayer);
 
         CraftUtils.loadCraft(wsplayer, area.getType());
         MapUtils.loadMaterials(wsplayer, area.getType());

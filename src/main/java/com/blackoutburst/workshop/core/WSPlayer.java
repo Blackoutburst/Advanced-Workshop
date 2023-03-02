@@ -7,10 +7,12 @@ import com.blackoutburst.workshop.core.blocks.NeededBlock;
 import com.blackoutburst.workshop.core.game.GameOptions;
 import com.blackoutburst.workshop.core.game.GameRestarter;
 import com.blackoutburst.workshop.core.game.GameStarter;
-import com.blackoutburst.workshop.nms.NMSBoard;
 import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Criteria;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,15 +57,16 @@ public class WSPlayer {
 
     protected int currentCraftIndex = 0;
 
-    protected NMSBoard board;
+    protected Scoreboard scoreboard;
 
     protected GameOptions gameOptions;
 
     public WSPlayer(Player player, ClientVersion clientVersion) {
         this.clientVersion = clientVersion;
         this.player = player;
-        this.board = new NMSBoard(player, "§6Workshop");
-        ScoreboardUtils.basic(this);
+        this.scoreboard = player.getScoreboard();
+
+        ScoreboardUtils.init(this);
 
         gameOptions = new GameOptions(this);
     }
@@ -155,8 +158,8 @@ public class WSPlayer {
         this.inventoryType = inventoryType;
     }
 
-    public NMSBoard getBoard() {
-        return board;
+    public Scoreboard getScoreBoard() {
+        return scoreboard;
     }
 
     public GameOptions getGameOptions() {
