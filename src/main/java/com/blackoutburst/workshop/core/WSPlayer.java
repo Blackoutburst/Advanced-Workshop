@@ -206,4 +206,6 @@ public class WSPlayer {
     public GameRestarter getGameRestarter() { return gameRestarter; }
 
     public void setGameRestarter(GameRestarter gameRestarter) { this.gameRestarter = gameRestarter; }
+
+    public ClientVersion getClientVersion() { return clientVersion; }
 }
