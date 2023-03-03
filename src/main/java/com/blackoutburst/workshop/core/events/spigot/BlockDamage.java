@@ -21,16 +21,17 @@ public class BlockDamage {
 
         if (materialBlock == null) return;
 
-        if (!(BlockUtils.canBreak(materialBlock,player))) {
+        if (!(BlockUtils.canBreak(materialBlock, wsplayer))) {
             return;
         }
 
-        player.getInventory().addItem(new ItemStack(materialBlock.getType(), 1));
-
-        // GameUtils.supportIterator(block.getLocation(), wsplayer, '0');
+        player.getInventory().addItem(new ItemStack(materialBlock.getType()));
 
         EffectsUtils.breakBlock(block);
-        block.setType(Material.AIR);
+        block.setType(Material.AIR, false);
+        BlockUtils.supportIterator(wsplayer, block);
+        block.setType(Material.STRUCTURE_VOID, true); // temp replacement
+        block.setType(Material.AIR, true);
     }
 
     public static void execute(BlockDamageEvent event) {

@@ -125,7 +125,7 @@ public class MapUtils {
         try {
             Player player = wsplayer.getPlayer();
             World world = player.getWorld();
-            Location anchor = player.getLocation();
+            Location anchor = player.getLocation().getBlock().getLocation();
 
             File decoFile = MapFileUtils.getMapFile(name, 'D');
             Location[] keys = MapFileUtils.getDecoNormalKeys(decoFile, world);
