@@ -33,7 +33,7 @@ public class ItemFrameUtils {
                 ItemStack item = wsplayer.getCurrentCraft().getCraftingTable()[index];
 
                 if (item.getType() == Material.AIR && usePanes) {
-                    itemFrame.setItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE));
+                    itemFrame.setItem(new ItemStack(Material.BARRIER));
                 }
                 else {
                     itemFrame.setItem(item);

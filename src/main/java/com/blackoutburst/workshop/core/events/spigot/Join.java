@@ -18,6 +18,8 @@ public class Join {
         DBUtils.createPlayerData(event.getPlayer());
         Main.players.add(wsPlayer);
         event.getPlayer().setGameMode(GameMode.ADVENTURE);
+        if (protocolVersion <= ClientVersion.V1_8_9.getProtocolVersion())
+            event.getPlayer().setResourcePack("https://drive.google.com/u/0/uc?id=1MuvVMDCtaaPsjuGgWBBwagdGr6vqVGNb&export=download");
         DBUtils.saveData(event.getPlayer(), "name", event.getPlayer().getName(), String.class);
 
         event.getPlayer().teleport(Main.spawn);
