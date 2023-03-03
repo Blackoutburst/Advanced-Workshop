@@ -26,12 +26,14 @@ public class BlockUtils {
         return null;
     }
 
-    public static boolean canBreak(MaterialBlock materialBlock, Player player) {
-        if (WSPlayer.getFromPlayer(player).isWaiting()) return false;
+    public static boolean canBreak(MaterialBlock materialBlock, WSPlayer wsplayer) {
+        if (wsplayer.isWaiting()) return false;
+        Player player = wsplayer.getPlayer();
         if (materialBlock.getTools().length == 0) return true;
 
         for (ItemStack tool : materialBlock.getTools()) {
             if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+
                 return false;
             }
             if (player.getInventory().getItemInMainHand().getType() == tool.getType()) {
@@ -63,7 +65,7 @@ public class BlockUtils {
             checkBlock.setType(Material.AIR, false);
             EffectsUtils.breakBlock(checkBlock);
             MaterialBlock matBlock = getMaterialBlock(wsplayer, location);
-            if (matBlock != null && canBreak(matBlock, player)) {
+            if (matBlock != null && canBreak(matBlock, wsplayer)) {
                 ItemStack item = new ItemStack(matBlock.getType());
                 player.getInventory().addItem(item);
             }
