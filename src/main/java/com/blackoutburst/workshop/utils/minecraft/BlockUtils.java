@@ -3,8 +3,13 @@ package com.blackoutburst.workshop.utils.minecraft;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.blocks.MaterialBlock;
 
+import com.blackoutburst.workshop.utils.misc.EffectsUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -35,5 +40,35 @@ public class BlockUtils {
             }
         }
         return false;
+    }
+
+    public static void supportIterator(WSPlayer wsplayer, Block supporter) {
+        Player player = wsplayer.getPlayer();
+
+        BlockFace[] directions = {
+                BlockFace.UP,
+                BlockFace.NORTH,
+                BlockFace.EAST,
+                BlockFace.SOUTH,
+                BlockFace.WEST,
+                BlockFace.DOWN
+        };
+
+        for (BlockFace direction : directions) {
+            Block checkBlock = supporter.getRelative(direction);
+            Location location = checkBlock.getLocation();
+            BlockData checkData = checkBlock.getBlockData();
+            boolean isSupported = checkData.isSupported(checkBlock);
+            if (isSupported) continue;
+
+            checkBlock.setType(Material.AIR, false);
+            EffectsUtils.breakBlock(checkBlock);
+            MaterialBlock matBlock = getMaterialBlock(wsplayer, location);
+            if (matBlock != null && canBreak(matBlock, player)) {
+                ItemStack item = new ItemStack(matBlock.getType());
+                player.getInventory().addItem(item);
+            }
+            supportIterator(wsplayer, checkBlock);
+        }
     }
 }
