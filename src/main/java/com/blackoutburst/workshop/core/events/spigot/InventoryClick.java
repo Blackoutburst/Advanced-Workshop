@@ -71,7 +71,6 @@ public class InventoryClick {
             ItemStack[] results = contents.toArray(new ItemStack[0]);
             inv.setContents(results);
         }
-
         hotbarItem.setAmount(hotbarItemAmount + clickedItemAmount);
         clickedItem.setAmount(0);
     }
