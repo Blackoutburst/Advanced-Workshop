@@ -103,7 +103,9 @@ public class MapUtils {
         List<DecoBlock> decoBlocks = wsplayer.getDecoBlocks();
         List<Material> inventories = Arrays.asList(
                 Material.CHEST, Material.TRAPPED_CHEST, Material.FURNACE,
-                Material.DISPENSER, Material.DROPPER, Material.BREWING_STAND, Material.HOPPER);
+                Material.DISPENSER, Material.DROPPER, Material.BREWING_STAND,
+                Material.HOPPER, Material.BARREL, Material.SHULKER_BOX,
+                Material.BLAST_FURNACE, Material.SMOKER);
 
         for (DecoBlock i : decoBlocks) {
 

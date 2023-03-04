@@ -71,12 +71,12 @@ public class MiscUtils {
                 case 120 -> timeType = ".2mCrafts";
                 case 300 -> timeType = ".5mCrafts";
                 default -> {
-                    EndGameLogic.endGame(wsplayer);
+                    EndGameLogic.endGame(wsplayer, true);
                     return true;
                 }
             }
 
-            EndGameLogic.endGame(wsplayer, timeType);
+            EndGameLogic.endGame(wsplayer, true, timeType);
             return true;
         }
         return false;

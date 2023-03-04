@@ -53,7 +53,7 @@ public class RoundLogic {
         GameOptions gameoptions = wsplayer.getGameOptions();
 
         if (!gameoptions.isUnlimitedCrafts() && wsplayer.getCurrentCraftIndex() >= gameoptions.getCraftLimit()) {
-            EndGameLogic.endGame(wsplayer);
+            EndGameLogic.endGame(wsplayer, true);
             return true;
         }
         int craftIndex = wsplayer.getCurrentCraftIndex();
