@@ -27,7 +27,7 @@ public class L implements CommandExecutor {
 
             wsplayer.getTimers().setMapEnd(Instant.now());
 
-            EndGameLogic.endGame(wsplayer);
+            EndGameLogic.endGame(wsplayer,false);
         }
         return true;
     }
