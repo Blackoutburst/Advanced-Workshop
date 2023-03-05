@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
 
@@ -91,4 +92,10 @@ public class EventListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         PlayerMove.execute(event);
     }
+
+    @EventHandler
+    public void onInventoryOpenEvent(InventoryOpenEvent event) {
+        InventoryOpen.execute(event);
+    }
+
 }

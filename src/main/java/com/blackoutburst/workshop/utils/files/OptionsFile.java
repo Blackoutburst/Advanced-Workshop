@@ -41,7 +41,7 @@ public class OptionsFile {
         char rngType = options.getString("rngType").charAt(0);
         float timeLimit = (float) options.getDouble("timeLimit");
         boolean unlimitedCrafts = options.getBoolean("unlimitedCrafts");
-        boolean showNonPBs = options.getBoolean("ShowNonPBs");
+        boolean showNonPBs = options.getBoolean("showNonPBs");
 
         return new GameOptions(craftLimit, unlimitedCrafts, rngType, bagSize, timeLimit, countDownTime, showNonPBs);
     }
