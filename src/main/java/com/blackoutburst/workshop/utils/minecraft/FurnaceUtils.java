@@ -49,6 +49,7 @@ public class FurnaceUtils {
                         case LAPIS_ORE -> fastCook(furnace, stack, Material.LAPIS_LAZULI);
                         case NETHER_QUARTZ_ORE -> fastCook(furnace, stack, Material.QUARTZ);
                         case REDSTONE_ORE -> fastCook(furnace, stack, Material.REDSTONE);
+                        default -> fastCook(furnace, stack, stack.getType());
                     }
                 }
                 count++;
