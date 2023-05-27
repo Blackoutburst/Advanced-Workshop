@@ -98,4 +98,9 @@ public class EventListener implements Listener {
         InventoryOpen.execute(event);
     }
 
+    @EventHandler
+    public void onTakeBookEvent(PlayerTakeLecternBookEvent event) {
+        TakeBook.execute(event);
+    }
+
 }

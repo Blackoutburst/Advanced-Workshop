@@ -32,14 +32,18 @@ public class RoundLogic {
         }
         player.getInventory().clear();
         if (player.getItemOnCursor().getAmount() != 0) wsplayer.setHasStored(true);
+        //Instant a = Instant.now();
         player.sendMessage("§eYou need to craft a §r" + wsplayer.getCurrentCraft().getName());
 
         ArmorUtils.setArmor(player);
         ScoreboardUtils.startRound(wsplayer);
         ItemFrameUtils.updateCraft(wsplayer);
 
+        //Bukkit.broadcastMessage("Duration"+Duration.between(Instant.now(),a));
 
         MapUtils.restoreArea(wsplayer, false);
+
+        //Bukkit.broadcastMessage("Duration"+Duration.between(Instant.now(),a));
 
         wsplayer.setWaiting(false);
         wsplayer.getTimers().setRoundBegin(Instant.now());

@@ -32,11 +32,14 @@ public class EntityUtils {
     }
 
     public static void villager(WSPlayer wsPlayer, Player player) {
-        if (!player.getInventory().containsAtLeast(wsPlayer.getCurrentCraft().getItemRequired(), 1)) {
+        Material required = wsPlayer.getCurrentCraft().getItemRequired().getType();
+        if (!player.getInventory().contains(required)) {
             player.sendMessage("§cThat's not quite right. I need " + wsPlayer.getCurrentCraft().getName());
             return;
         }
 
+        if (wsPlayer.isWaiting()) return;
+        wsPlayer.setWaiting(true);
         wsPlayer.setNextRound(true);
         EffectsUtils.playLevelUPSound(player);
         wsPlayer.getTimers().setRoundEnd(Instant.now());
