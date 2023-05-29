@@ -16,14 +16,12 @@ public class MapFileUtils {
             case 'D' -> new File("./plugins/Workshop/maps/" + mapName + "/deco.yml");
             case 'L' -> new File("./plugins/Workshop/maps/" + mapName + "/logic.yml");
             case 'C' -> new File("./plugins/Workshop/maps/" + mapName + "/craft.yml");
+            case 'M' -> new File("./plugins/Workshop/maps/" + mapName + "/meta.yml");
             default -> null;
         };
     }
 
     public static Location[] getDecoNormalKeys(File f, World world) {
-
-        Instant fileReadStart = Instant.now();
-
         YamlConfiguration file = YamlConfiguration.loadConfiguration(f);
         List<String> xKeys = new ArrayList<>();
         ConfigurationSection blocks = file.getConfigurationSection("Normal");
