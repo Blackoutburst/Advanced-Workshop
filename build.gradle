@@ -46,11 +46,20 @@ artifacts {
 configurations {
     priority
     sourceSets.main.compileClasspath = configurations.priority + sourceSets.main.compileClasspath
+    provided
+    // Make compile extend from our provided configuration so that things added to bundled end up on the compile classpath
+    compile.extendsFrom(provided)
 }
 
 dependencies {
     implementation 'org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT'
     implementation 'com.viaversion:viaversion-api:4.5.1'
-    implementation files('lib/item-nbt-api-plugin-2.11.1.jar')
+    implementation files('lib/item-nbt-api-plugin-2.11.2.jar')
     implementation 'org.jetbrains:annotations:20.1.0'
+    implementation files('lib/ArmorEquipEvent.jar')
+    provided files('lib/ArmorEquipEvent.jar')
+}
+
+jar {
+    from configurations.provided.asFileTree.files.collect { zipTree(it) }
 }

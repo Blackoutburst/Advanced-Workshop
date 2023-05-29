@@ -6,6 +6,8 @@ import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.events.listeners.EventListener;
 import com.blackoutburst.workshop.utils.map.MapUtils;
+import com.blackoutburst.workshop.utils.minecraft.ArmorUtils;
+import com.jeff_media.armorequipevent.ArmorEquipEvent;
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.ViaAPI;
 import org.bukkit.Location;
@@ -67,6 +69,7 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         new File("./plugins/Workshop").mkdirs();
         new File("./plugins/Workshop/playerData").mkdirs();
+        ArmorEquipEvent.registerListener(this);
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         registerCommands();
         MapUtils.loadPlayAreas();

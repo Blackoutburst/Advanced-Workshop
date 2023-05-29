@@ -16,11 +16,6 @@ import java.util.List;
 
 public class InventoryClick {
 
-    private static void preventArmorClick(InventoryClickEvent event, WSPlayer wsplayer) {
-        if (wsplayer != null && wsplayer.isInGame() && event.getSlotType().equals(InventoryType.SlotType.ARMOR))
-            event.setCancelled(true);
-    }
-
 
     // TODO not working properly
     private static void preventCraftingTableUse(InventoryClickEvent event, WSPlayer wsplayer) {
@@ -44,7 +39,6 @@ public class InventoryClick {
         }
 
         oldHotkeyBehaviour(event, (Player) event.getWhoClicked());
-        preventArmorClick(event, wsplayer);
         preventCraftingTableUse(event, wsplayer);
     }
 

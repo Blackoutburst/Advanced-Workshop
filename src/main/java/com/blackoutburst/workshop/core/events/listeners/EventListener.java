@@ -1,6 +1,8 @@
 package com.blackoutburst.workshop.core.events.listeners;
 
+import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.events.spigot.*;
+import com.jeff_media.armorequipevent.ArmorEquipEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -101,6 +103,11 @@ public class EventListener implements Listener {
     @EventHandler
     public void onTakeBookEvent(PlayerTakeLecternBookEvent event) {
         TakeBook.execute(event);
+    }
+
+    @EventHandler
+    public void onArmorEquip(ArmorEquipEvent event) {
+        ArmorEquip.execute(event);
     }
 
 }
