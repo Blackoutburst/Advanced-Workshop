@@ -52,6 +52,7 @@ public class InventoryClick {
         if (!event.getClick().isKeyboardClick()) return;
 
         int hotbarSlot = event.getHotbarButton();
+        if (event.getSlot() == hotbarSlot) return;
         ItemStack clickedItem = event.getCurrentItem();
         ItemStack hotbarItem = null;
         if (hotbarSlot != -1) {
