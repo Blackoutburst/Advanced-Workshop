@@ -1,6 +1,6 @@
 main: com.blackoutburst.workshop.Main
 name: Workshop
-version: 2.0.7
+version: 2.1.0
 api-version: 1.13
 author: Blackoutburst & Skye
 description: Party Game Workshop Practice
@@ -71,6 +71,9 @@ commands:
   shownonpbs:
     description: Enables/disables showing difference to PB for non-PBing games
     usage: /shownonpbs
+  editmap:
+    description: Allows you to edit the data of a map
+    usage: /editmap
 
   permissions:
     workshop.admin:

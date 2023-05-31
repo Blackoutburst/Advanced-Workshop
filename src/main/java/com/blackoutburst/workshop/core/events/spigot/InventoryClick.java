@@ -4,6 +4,7 @@ import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.guis.CraftGUI;
 import com.blackoutburst.workshop.guis.CraftSelectorGUI;
 
+import com.blackoutburst.workshop.guis.MapMetaGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -36,6 +37,7 @@ public class InventoryClick {
             case CraftSelectorGUI.NAME ->
                     event.setCancelled(CraftSelectorGUI.click(event.getClickedInventory(),
                             event.getSlot(), (Player) event.getWhoClicked(), event.getView().getTitle()));
+            case MapMetaGUI.NAME -> event.setCancelled(MapMetaGUI.click(event));
         }
 
         oldHotkeyBehaviour(event, (Player) event.getWhoClicked());
@@ -46,7 +48,9 @@ public class InventoryClick {
         if (!event.getClick().isKeyboardClick()) return;
 
         int hotbarSlot = event.getHotbarButton();
-        if (event.getSlot() == hotbarSlot) return;
+        Inventory clickedInv = event.getClickedInventory();
+        if (clickedInv == null) return;
+        if (event.getSlot() == hotbarSlot && clickedInv.getType() == InventoryType.PLAYER) return;
         ItemStack clickedItem = event.getCurrentItem();
         ItemStack hotbarItem = null;
         if (hotbarSlot != -1) {

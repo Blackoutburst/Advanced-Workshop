@@ -63,6 +63,7 @@ public class Main extends JavaPlugin {
         getCommand("listmaps").setExecutor(new ListMaps());
         getCommand("deletemap").setExecutor(new DeleteMap());
         getCommand("shownonpbs").setExecutor(new ShowNonPbs());
+        getCommand("editmap").setExecutor(new EditMap());
     }
 
     @Override

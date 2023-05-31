@@ -4,6 +4,7 @@ import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.blocks.RandomItem;
 import com.blackoutburst.workshop.utils.files.LogicFileUtils;
 
+import com.blackoutburst.workshop.utils.files.MapFileUtils;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTContainer;
 import de.tr7zw.nbtapi.NBTItem;
@@ -17,10 +18,13 @@ import org.bukkit.block.Sign;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.File;
+
 public class LogicUtils {
 
     public static void scan(WSPlayer wsplayer, String name) {
         LogicFileUtils.deleteFile(name);
+        File logicFile = MapFileUtils.getMapFile(name, 'L');
 
         int x1 = wsplayer.getScanWand1().getBlockX();
         int y1 = wsplayer.getScanWand1().getBlockY();
@@ -50,10 +54,10 @@ public class LogicUtils {
                     Location relLoc = new Location(world, relX, relY, relZ);
 
                     if (b.getType().equals(Material.DROPPER)) {
-                        resourceScan(b,relLoc,"R", name);
+                        resourceScan(b,relLoc,"R", logicFile);
                     }
                     if (b.getType().equals(Material.DISPENSER)) {
-                        resourceScan(b,relLoc,"P", name);
+                        resourceScan(b,relLoc,"P", logicFile);
                     }
                     if (b.getType().equals(Material.OAK_SIGN) || b.getType().equals(Material.OAK_WALL_SIGN)) {
                         Sign sign = (Sign) b.getState();
@@ -71,14 +75,14 @@ public class LogicUtils {
                             directionFacing = signData.getFacing();
                         }
 
-                        LogicFileUtils.saveFileSigns(name, relLoc, text, directionFacing);
+                        LogicFileUtils.saveFileSigns(logicFile, relLoc, text, directionFacing);
                     }
                 }
             }
         }
     }
 
-    private static void resourceScan(Block b, Location relLoc, String type, String mapName) {
+    private static void resourceScan(Block b, Location relLoc, String type, File logicFile) {
         ItemStack[] items;
         InventoryHolder container = (InventoryHolder) b.getState();
         items = container.getInventory().getContents();
@@ -91,14 +95,14 @@ public class LogicUtils {
                 ItemStack item = randomItem.GetItem();
 
                 if (type.equals("R")) {
-                    LogicFileUtils.saveFileItems(mapName, relLoc, item, i, "Regular");
+                    LogicFileUtils.saveFileItems(logicFile, relLoc, item, i, "Regular");
                 }
                 if (type.equals("P")) {
-                    LogicFileUtils.saveFileItems(mapName, relLoc, item, i, "Priority");
+                    LogicFileUtils.saveFileItems(logicFile, relLoc, item, i, "Priority");
                 }
             }
         } else {
-            LogicFileUtils.saveFileItems(mapName, relLoc, new ItemStack(Material.AIR), 0, "Regular");
+            LogicFileUtils.saveFileItems(logicFile, relLoc, new ItemStack(Material.AIR), 0, "Regular");
         }
 
         for (int i = 1; i < items.length; i++) {
@@ -108,9 +112,8 @@ public class LogicUtils {
                 for (int j = 0; j < SlotTools.length; j++) {
                     ItemStack item = SlotTools[j].GetItem();
 
-                    LogicFileUtils.saveFileTools(mapName, relLoc, item, j, i);
+                    LogicFileUtils.saveFileTools(logicFile, relLoc, item, j, i);
                 }
-
             }
         }
     }
@@ -134,6 +137,6 @@ public class LogicUtils {
                 return randomItems;
             }
         }
-        return new RandomItem[]{new RandomItem(item,false)};
+        return new RandomItem[]{ new RandomItem(item,false) };
     }
 }

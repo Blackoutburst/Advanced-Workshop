@@ -51,10 +51,8 @@ public class GameOptions {
     }
 
     public void save(WSPlayer player) {
-        GameOptions gameOptions = new GameOptions(this.defaultCraftLimit, this.unlimitedCrafts, this.randomType,
-                                                    this.bagSize, this.defaultTimeLimit, this.countDownTime, this.showNonPBs);
         UUID uuid = player.getPlayer().getUniqueId();
-        OptionsFile.save(uuid, gameOptions);
+        OptionsFile.save(uuid, this);
     }
 
     private void load(WSPlayer player) {
