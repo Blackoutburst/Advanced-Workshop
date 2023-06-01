@@ -3,6 +3,7 @@ package com.blackoutburst.workshop.core.events.spigot;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.guis.*;
 
+import com.blackoutburst.workshop.utils.minecraft.CraftUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -41,6 +42,13 @@ public class InventoryClick {
 
         oldHotkeyBehaviour(event, (Player) event.getWhoClicked());
         preventCraftingTableUse(event, wsplayer);
+        if (wsplayer == null) return;
+
+        if (wsplayer.isInGame() && !wsplayer.isWaiting() && wsplayer.getGameOptions().isHypixelSaysMode() &&
+                event.getClickedInventory() != null && event.getClickedInventory().getType() == InventoryType.FURNACE &&
+                event.getSlotType() == InventoryType.SlotType.RESULT) {
+            CraftUtils.checkCraft(event.getCurrentItem(), wsplayer);
+        }
     }
 
     public static void oldHotkeyBehaviour(InventoryClickEvent event, Player player) {
