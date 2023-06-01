@@ -34,7 +34,10 @@ public class RoundLogic {
         player.getInventory().clear();
         if (wsplayer.getGameOptions().isHypixelSaysMode()) {
             ItemStack[] inv = wsplayer.getMapMeta().getInventoryContents();
-            player.getInventory().setContents(inv);
+            ItemStack[] finalInv = new ItemStack[36];
+            System.arraycopy(inv, 27, finalInv, 0, 9);
+            System.arraycopy(inv, 0, finalInv, 9, 27);
+            player.getInventory().setContents(finalInv);
         }
         if (player.getItemOnCursor().getAmount() != 0) wsplayer.setHasStored(true);
         player.sendMessage("§eYou need to craft a §r" + wsplayer.getCurrentCraft().getName());

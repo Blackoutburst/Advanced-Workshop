@@ -55,6 +55,8 @@ public class CraftUtils {
                     break;
                 }
 
+                System.out.println(wsplayer.getCraftList());
+
                 List<Craft> tempCraftList = wsplayer.getCraftList().subList(bagSize, bagSize * 2);
                 List<Craft> bag = generateBag(wsplayer);
 
