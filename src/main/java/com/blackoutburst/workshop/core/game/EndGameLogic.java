@@ -11,7 +11,9 @@ import com.blackoutburst.workshop.utils.misc.PBUtils;
 import com.blackoutburst.workshop.utils.misc.StringUtils;
 
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -34,6 +36,8 @@ public class EndGameLogic {
 
 
         player.sendMessage("§eThe game ended! §b(" + getEndMessage(wsplayer) + ")");
+        player.getInventory().clear();
+        player.setItemOnCursor(new ItemStack(Material.AIR));
         player.setCanPickupItems(true);
         player.setGameMode(GameMode.ADVENTURE);
         player.teleport(Main.spawn);

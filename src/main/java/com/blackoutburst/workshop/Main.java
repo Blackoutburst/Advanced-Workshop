@@ -7,6 +7,7 @@ import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.events.listeners.EventListener;
 import com.blackoutburst.workshop.utils.map.MapUtils;
 import com.blackoutburst.workshop.utils.minecraft.ArmorUtils;
+import com.blackoutburst.workshop.utils.minecraft.EntityUtils;
 import com.jeff_media.armorequipevent.ArmorEquipEvent;
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.ViaAPI;
@@ -83,5 +84,11 @@ public class Main extends JavaPlugin {
                 Updater.update();
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0L, 0L);
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        EntityUtils.clearAllEntities();
     }
 }

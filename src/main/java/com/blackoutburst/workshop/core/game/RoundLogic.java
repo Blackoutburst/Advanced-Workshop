@@ -8,11 +8,16 @@ import com.blackoutburst.workshop.utils.minecraft.CraftUtils;
 import com.blackoutburst.workshop.utils.minecraft.ItemFrameUtils;
 import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class RoundLogic {
 
@@ -34,9 +39,29 @@ public class RoundLogic {
         player.getInventory().clear();
         if (wsplayer.getGameOptions().isHypixelSaysMode()) {
             ItemStack[] inv = wsplayer.getMapMeta().getInventoryContents();
+            List<ItemStack> shuffledInv = new ArrayList<>(Arrays.stream(inv).toList());
+            List<ItemStack> airList = new ArrayList<>();
+            for (int i = 0; i < shuffledInv.size(); i++) {
+                if (shuffledInv.get(i).getType() == Material.AIR) {
+                    airList.add(shuffledInv.get(i));
+                }
+            }
+            shuffledInv.removeAll(airList);
+            Collections.shuffle(shuffledInv);
+
+            ItemStack[] shuffledInvArray = shuffledInv.toArray(new ItemStack[0]);
             ItemStack[] finalInv = new ItemStack[36];
-            System.arraycopy(inv, 27, finalInv, 0, 9);
-            System.arraycopy(inv, 0, finalInv, 9, 27);
+
+            if (shuffledInvArray.length > 27) {
+                System.arraycopy(shuffledInvArray, 27, finalInv, 0, 9);
+            }
+            else {
+                ItemStack[] airArray = Collections.nCopies(9, new ItemStack(Material.AIR)).toArray(new ItemStack[0]);
+                System.arraycopy(airArray, 0, finalInv, 0, 9);
+            }
+            System.arraycopy(shuffledInvArray, 0, finalInv, 9, Integer.min(shuffledInvArray.length, 27));
+
+
             player.getInventory().setContents(finalInv);
         }
         if (player.getItemOnCursor().getAmount() != 0) wsplayer.setHasStored(true);
@@ -67,7 +92,7 @@ public class RoundLogic {
         int craftIndex = wsplayer.getCurrentCraftIndex();
         int bagSize = wsplayer.getGameOptions().getBagSize();
 
-        if (craftIndex == bagSize) {
+        if (craftIndex % bagSize == 0) {
             CraftUtils.updateCraftList(wsplayer);
         }
 
