@@ -215,4 +215,10 @@ public class MapFileUtils {
     public static ConfigurationSection getConfigSection(ConfigurationSection c, String path) {
         return c.getConfigurationSection(path);
     }
+
+    public static File[] getAllMaps() {
+        File f = new File("./plugins/Workshop/maps/");
+        return f.listFiles();
+    }
+
 }

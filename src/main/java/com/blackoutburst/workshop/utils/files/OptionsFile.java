@@ -21,6 +21,7 @@ public class OptionsFile {
             options.set("timeLimit", (double) gameOptions.getDefaultTimeLimit());
             options.set("unlimitedCrafts", gameOptions.isUnlimitedCrafts());
             options.set("showNonPBs", gameOptions.isShowNonPBs());
+            options.set("hypixelSaysMode", gameOptions.isHypixelSaysMode());
 
             options.save(file);
 
@@ -42,7 +43,8 @@ public class OptionsFile {
         float timeLimit = (float) options.getDouble("timeLimit");
         boolean unlimitedCrafts = options.getBoolean("unlimitedCrafts");
         boolean showNonPBs = options.getBoolean("showNonPBs");
+        boolean hypixelSaysMods = options.getBoolean("hypixelSaysMode");
 
-        return new GameOptions(craftLimit, unlimitedCrafts, rngType, bagSize, timeLimit, countDownTime, showNonPBs);
+        return new GameOptions(craftLimit, unlimitedCrafts, rngType, bagSize, timeLimit, countDownTime, showNonPBs, hypixelSaysMods);
     }
 }

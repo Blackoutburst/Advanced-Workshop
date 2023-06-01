@@ -1,6 +1,7 @@
 package com.blackoutburst.workshop.commands;
 
 import com.blackoutburst.workshop.core.WSPlayer;
+import com.blackoutburst.workshop.utils.misc.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,13 +9,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ShowNonPbs implements CommandExecutor {
-
-    private boolean isYes(String value) {
-        return switch (value) {
-            case "yes", "1", "true" -> true;
-            default -> false;
-        };
-    }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
@@ -31,7 +25,7 @@ public class ShowNonPbs implements CommandExecutor {
                 return true;
             }
 
-            wsplayer.getGameOptions().setShowNonPBs(isYes(args[0]));
+            wsplayer.getGameOptions().setShowNonPBs(StringUtils.isYes(args[0]));
 
             wsplayer.getPlayer().sendMessage("§aYou " + (wsplayer.getGameOptions().isShowNonPBs() ? "§eenabled" : "§edisabled") + " §ashowing non-pb times");
         }

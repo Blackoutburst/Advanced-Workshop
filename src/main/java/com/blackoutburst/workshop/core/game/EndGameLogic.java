@@ -58,7 +58,7 @@ public class EndGameLogic {
     private static void checkTimes(WSPlayer wsplayer, boolean endedNaturally, String... timeTypes) {
         GameOptions gameoptions = wsplayer.getGameOptions();
 
-        if (gameoptions.isTimeLimited() && endedNaturally) {
+        if (gameoptions.isTimeLimited() && endedNaturally && !gameoptions.hypixelSaysMode) {
             if (timeTypes.length > 0) {
                 PBUtils.craftPB(wsplayer, timeTypes[0]);
             }
@@ -66,23 +66,43 @@ public class EndGameLogic {
         }
         wsplayer.getTimers().setMapEnd(Instant.now());
 
-        if (wsplayer.getCurrentCraftIndex() == 5 && gameoptions.getRandomType() == 'N' && endedNaturally) {
+        if (wsplayer.getCurrentCraftIndex() == 5 && gameoptions.getRandomType() == 'N'
+                && gameoptions.hypixelSaysMode && endedNaturally) {
+            if (PBUtils.hypixelSaysRegularPB(wsplayer)) return;
+        }
+
+        if (wsplayer.getCurrentCraftIndex() == 5 && gameoptions.getRandomType() == 'N'
+                && !gameoptions.hypixelSaysMode && endedNaturally) {
             if (PBUtils.regularPB(wsplayer)) return;
         }
 
         if (wsplayer.getCurrentCraftIndex() == wsplayer.getCrafts().size()
-                && gameoptions.getRandomType() == 'N' && endedNaturally) {
+                && gameoptions.getRandomType() == 'N' && endedNaturally && gameoptions.hypixelSaysMode) {
+            if (PBUtils.hypixelSaysAllCraftPB(wsplayer)) return;
+        }
+
+        if (wsplayer.getCurrentCraftIndex() == wsplayer.getCrafts().size()
+                && gameoptions.getRandomType() == 'N' && endedNaturally && !gameoptions.hypixelSaysMode) {
             if (PBUtils.allCraftPB(wsplayer)) return;
         }
 
         if (gameoptions.isShowNonPBs() && wsplayer.getCurrentCraftIndex() == wsplayer.getCrafts().size()
-                && gameoptions.getRandomType() == 'N' && endedNaturally) {
+                && gameoptions.getRandomType() == 'N' && endedNaturally && !gameoptions.hypixelSaysMode) {
             PBUtils.nonPB(wsplayer, 'A');
         }
         if (gameoptions.isShowNonPBs() && wsplayer.getCurrentCraftIndex() == 5
-                && gameoptions.getRandomType() == 'N' && endedNaturally) {
+                && gameoptions.getRandomType() == 'N' && endedNaturally && !gameoptions.hypixelSaysMode) {
             PBUtils.nonPB(wsplayer, 'R');
         }
+        if (gameoptions.isShowNonPBs() && wsplayer.getCurrentCraftIndex() == wsplayer.getCrafts().size()
+                && gameoptions.getRandomType() == 'N' && endedNaturally && gameoptions.hypixelSaysMode) {
+            PBUtils.nonPB(wsplayer, 'a');
+        }
+        if (gameoptions.isShowNonPBs() && wsplayer.getCurrentCraftIndex() == 5
+                && gameoptions.getRandomType() == 'N' && endedNaturally && gameoptions.hypixelSaysMode) {
+            PBUtils.nonPB(wsplayer, 'r');
+        }
+
     }
 
     public static void endGame(WSPlayer wsplayer, boolean endedNaturally, String... timeTypes) {

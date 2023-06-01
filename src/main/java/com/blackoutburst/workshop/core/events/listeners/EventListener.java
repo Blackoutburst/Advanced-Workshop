@@ -1,6 +1,5 @@
 package com.blackoutburst.workshop.core.events.listeners;
 
-import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.events.spigot.*;
 import com.jeff_media.armorequipevent.ArmorEquipEvent;
 import org.bukkit.event.EventHandler;
@@ -13,9 +12,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.event.weather.WeatherChangeEvent;
 
 public class EventListener implements Listener {
 
@@ -106,8 +105,10 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onArmorEquip(ArmorEquipEvent event) {
-        ArmorEquip.execute(event);
-    }
+    public void onArmorEquip(ArmorEquipEvent event) { ArmorEquip.execute(event); }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) { InventoryClose.execute(event); }
+
 
 }

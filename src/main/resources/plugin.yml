@@ -74,6 +74,9 @@ commands:
   editmap:
     description: Allows you to edit the data of a map
     usage: /editmap
+  hypixelsaysmode:
+    description: Turns on hypixel says crafting mode, items appear in inventory
+    usage: /hypixelsaysmode
 
   permissions:
     workshop.admin:

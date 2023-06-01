@@ -64,6 +64,7 @@ public class Main extends JavaPlugin {
         getCommand("deletemap").setExecutor(new DeleteMap());
         getCommand("shownonpbs").setExecutor(new ShowNonPbs());
         getCommand("editmap").setExecutor(new EditMap());
+        getCommand("hypixelsaysmode").setExecutor(new HypixelSaysMode());
     }
 
     @Override

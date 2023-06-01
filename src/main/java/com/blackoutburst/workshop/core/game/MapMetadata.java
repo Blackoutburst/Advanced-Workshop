@@ -18,6 +18,13 @@ public class MapMetadata {
 		this.icon = icon;
 	}
 
+	public MapMetadata(ItemStack[] armorContents, ItemStack offHand, ItemStack icon) {
+		this.inventoryContents = null;
+		this.armorContents = armorContents;
+		this.offHand = offHand;
+		this.icon = icon;
+	}
+
 	public ItemStack getIcon() {
 		return icon;
 	}

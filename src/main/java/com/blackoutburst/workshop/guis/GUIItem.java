@@ -15,6 +15,16 @@ public class GUIItem {
 		this.name = name;
 	}
 
+	public GUIItem(ItemStack item) {
+		this.item = item;
+		this.name = null;
+	}
+
+	public GUIItem(ItemStack item, String name) {
+		this.item = item;
+		this.name = name;
+	}
+
 	public ItemStack getItem() {
 		return item;
 	}

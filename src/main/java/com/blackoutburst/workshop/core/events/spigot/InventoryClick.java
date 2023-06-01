@@ -1,11 +1,8 @@
 package com.blackoutburst.workshop.core.events.spigot;
 
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.guis.CraftGUI;
-import com.blackoutburst.workshop.guis.CraftSelectorGUI;
+import com.blackoutburst.workshop.guis.*;
 
-import com.blackoutburst.workshop.guis.MapMetaGUI;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -37,7 +34,9 @@ public class InventoryClick {
             case CraftSelectorGUI.NAME ->
                     event.setCancelled(CraftSelectorGUI.click(event.getClickedInventory(),
                             event.getSlot(), (Player) event.getWhoClicked(), event.getView().getTitle()));
-            case MapMetaGUI.NAME -> event.setCancelled(MapMetaGUI.click(event));
+            case MapMetaGUI.NAME        -> event.setCancelled(MapMetaGUI.click(event));
+            case InventorySetupGUI.NAME -> event.setCancelled(InventorySetupGUI.click(event));
+            case MapSelector.NAME       -> event.setCancelled(MapSelector.click(event));
         }
 
         oldHotkeyBehaviour(event, (Player) event.getWhoClicked());

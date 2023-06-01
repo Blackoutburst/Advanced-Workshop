@@ -7,12 +7,11 @@ import com.blackoutburst.workshop.core.blocks.NeededBlock;
 import com.blackoutburst.workshop.core.game.GameOptions;
 import com.blackoutburst.workshop.core.game.GameRestarter;
 import com.blackoutburst.workshop.core.game.GameStarter;
+import com.blackoutburst.workshop.core.game.MapMetadata;
 import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Criteria;
-import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
@@ -61,6 +60,14 @@ public class WSPlayer {
     protected Scoreboard scoreboard;
 
     protected GameOptions gameOptions;
+
+    protected int GUIDepth = 0;
+
+    protected boolean isEditing = false;
+
+    protected int mapSelectorLine = 0;
+
+    protected MapMetadata mapMeta;
 
     public WSPlayer(Player player, ClientVersion clientVersion) {
         this.clientVersion = clientVersion;
@@ -208,4 +215,25 @@ public class WSPlayer {
     public void setGameRestarter(GameRestarter gameRestarter) { this.gameRestarter = gameRestarter; }
 
     public ClientVersion getClientVersion() { return clientVersion; }
+
+    public int getGUIDepth() { return GUIDepth;}
+
+    public void incrementGUIDepth() { this.GUIDepth += 1; }
+
+    public void decrementGUIDepth() { this.GUIDepth -= 1; }
+
+    public void setGUIDepth(int depth) { this.GUIDepth = depth; }
+
+    public boolean isEditing() { return isEditing; }
+
+    public void setEditing(boolean editing) { isEditing = editing; }
+
+    public int getMapSelectorLine() { return mapSelectorLine; }
+
+    public void setMapSelectorLine(int mapSelectorLine) { this.mapSelectorLine = mapSelectorLine; }
+
+    public MapMetadata getMapMeta() { return mapMeta; }
+
+    public void setMapMeta(MapMetadata mapMeta) { this.mapMeta = mapMeta; }
+
 }

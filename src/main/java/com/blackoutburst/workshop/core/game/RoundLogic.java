@@ -10,6 +10,7 @@ import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
 
 import java.time.Instant;
 
@@ -31,19 +32,19 @@ public class RoundLogic {
             player.getOpenInventory().getTopInventory().clear();
         }
         player.getInventory().clear();
+        if (wsplayer.getGameOptions().isHypixelSaysMode()) {
+            ItemStack[] inv = wsplayer.getMapMeta().getInventoryContents();
+            player.getInventory().setContents(inv);
+        }
         if (player.getItemOnCursor().getAmount() != 0) wsplayer.setHasStored(true);
-        //Instant a = Instant.now();
         player.sendMessage("§eYou need to craft a §r" + wsplayer.getCurrentCraft().getName());
 
-        ArmorUtils.setArmor(player);
+        ArmorUtils.setArmor(player, wsplayer.getMapMeta());
+        player.getInventory().setItemInOffHand(wsplayer.getMapMeta().getOffHand());
         ScoreboardUtils.startRound(wsplayer);
         ItemFrameUtils.updateCraft(wsplayer);
 
-        //Bukkit.broadcastMessage("Duration"+Duration.between(Instant.now(),a));
-
         MapUtils.restoreArea(wsplayer, false);
-
-        //Bukkit.broadcastMessage("Duration"+Duration.between(Instant.now(),a));
 
         wsplayer.setWaiting(false);
         wsplayer.getTimers().setRoundBegin(Instant.now());

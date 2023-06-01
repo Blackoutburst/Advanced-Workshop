@@ -3,12 +3,15 @@ package com.blackoutburst.workshop.utils.minecraft;
 import com.blackoutburst.workshop.core.Craft;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.guis.CraftSelectorGUI;
+import com.blackoutburst.workshop.guis.GUIItem;
+import com.blackoutburst.workshop.guis.MapMetaGUI;
 import com.blackoutburst.workshop.utils.files.CraftFileUtils;
 import com.blackoutburst.workshop.utils.misc.MiscUtils;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class GUIUtils {
     //
@@ -41,6 +44,7 @@ public class GUIUtils {
         if (!removed) {
             p.getPlayer().sendMessage("§cThis craft doesn't exist");
             CraftUtils.loadCraft(p, p.getInventoryType());
+            p.decrementGUIDepth(); p.decrementGUIDepth();
             CraftSelectorGUI.open(p, 0);
             return;
         }
@@ -48,6 +52,7 @@ public class GUIUtils {
         p.getPlayer().sendMessage("§aCraft deleted successfully");
 
         CraftUtils.loadCraft(p, p.getInventoryType());
+        p.decrementGUIDepth(); p.decrementGUIDepth();
         CraftSelectorGUI.open(p, 0);
     }
 
@@ -88,6 +93,24 @@ public class GUIUtils {
         }
 
         CraftUtils.loadCraft(p, p.getInventoryType());
+        p.decrementGUIDepth(); p.decrementGUIDepth();
         CraftSelectorGUI.open(p, 0);
     }
+
+    public static void setItems(Inventory inv, GUIItem[] items) {
+        for (int i = 0; i < items.length; i++) {
+            GUIItem item = items[i];
+            ItemStack itemStack = item.getItem();
+            String name = item.getName();
+            if (name != null) {
+                ItemMeta meta = itemStack.getItemMeta();
+                if (meta != null) {
+                    meta.setDisplayName(name);
+                    itemStack.setItemMeta(meta);
+                }
+            }
+            inv.setItem(i, itemStack);
+        }
+    }
+
 }

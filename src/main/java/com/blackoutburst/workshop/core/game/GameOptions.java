@@ -27,6 +27,8 @@ public class GameOptions {
 
     protected int countDownTime;
 
+    protected boolean hypixelSaysMode;
+
     public GameOptions(WSPlayer player) {
         this.defaultCraftLimit = 5;
         this.unlimitedCrafts = false;
@@ -36,11 +38,12 @@ public class GameOptions {
         this.defaultTimeLimit = 60.0f;
         this.countDownTime = 5;
         this.showNonPBs = false;
+        this.hypixelSaysMode = false;
         load(player);
     }
 
-    public GameOptions(int defaultCraftLimit, boolean unlimitedCrafts, char rngType,
-                       int bagSize, float defaultTimeLimit, int countDownTime, boolean showNonPBs) {
+    public GameOptions(int defaultCraftLimit, boolean unlimitedCrafts, char rngType, int bagSize,
+                       float defaultTimeLimit, int countDownTime, boolean showNonPBs, boolean hypixelSaysMode) {
         this.defaultCraftLimit = defaultCraftLimit;
         this.unlimitedCrafts = unlimitedCrafts;
         this.randomType = rngType;
@@ -48,6 +51,7 @@ public class GameOptions {
         this.defaultTimeLimit = defaultTimeLimit;
         this.countDownTime = countDownTime;
         this.showNonPBs = showNonPBs;
+        this.hypixelSaysMode = hypixelSaysMode;
     }
 
     public void save(WSPlayer player) {
@@ -66,6 +70,7 @@ public class GameOptions {
         this.defaultTimeLimit = gameOptions.getDefaultTimeLimit();
         this.countDownTime = gameOptions.getCountDownTime();
         this.showNonPBs = gameOptions.isShowNonPBs();
+        this.hypixelSaysMode = gameOptions.isHypixelSaysMode();
     }
 
     public int getCraftLimit() {
@@ -115,4 +120,8 @@ public class GameOptions {
     public boolean isShowNonPBs() { return showNonPBs; }
 
     public void setShowNonPBs(boolean showNonPBs) { this.showNonPBs = showNonPBs; }
+
+    public boolean isHypixelSaysMode() { return hypixelSaysMode; }
+
+    public void setHypixelSaysMode(boolean hypixelSaysMode) { this.hypixelSaysMode = hypixelSaysMode; }
 }
