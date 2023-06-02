@@ -12,7 +12,7 @@ public class PBUtils {
     public static void craftPB(WSPlayer wsplayer, String timeType) {
         GameOptions gameoptions = wsplayer.getGameOptions();
 
-        int timeLimit = (int) gameoptions.getTimeLimit();
+        int timeLimit = gameoptions.getTimeLimit().intValue();
 
         Integer craftPB = DBUtils.getData(wsplayer.getPlayer(), wsplayer.getPlayArea().getType() + timeType, Integer.class);
         if (craftPB == null) craftPB = Integer.MIN_VALUE;
@@ -78,6 +78,44 @@ public class PBUtils {
 
         if (currentDuration != Double.MAX_VALUE && (duration < currentDuration)) {
             Webhook.send("**"+ wsplayer.getPlayer().getName() + "** got a new PB on the map **" + wsplayer.getPlayArea().getType() + "**!\\nTime: **" +StringUtils.ROUND.format( duration) + "s**\\nImprovement: **" + StringUtils.ROUND.format(duration - currentDuration) + "s**");
+            wsplayer.getPlayer().sendMessage("§d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s" + ")");
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean craft10PB(WSPlayer wsplayer) {
+        Timers timers = wsplayer.getTimers();
+
+        Float duration = Duration.between(timers.getMapBegin(), timers.getMapEnd()).toMillis() / 1000.0f;
+
+        Double currentDuration = DBUtils.getData(wsplayer.getPlayer(), wsplayer.getPlayArea().getType() + ".time10", Double.class);
+        if (currentDuration == null) currentDuration = Double.MAX_VALUE;
+
+        if (duration < currentDuration)
+            DBUtils.saveData(wsplayer.getPlayer(), wsplayer.getPlayArea().getType() + ".time10", duration, Float.class);
+
+        if (currentDuration != Double.MAX_VALUE && (duration < currentDuration)) {
+            Webhook.send("**"+ wsplayer.getPlayer().getName() + "** got a new PB on the map **" + wsplayer.getPlayArea().getType() + "**for 10 crafts!\\nTime: **" +StringUtils.ROUND.format( duration) + "s**\\nImprovement: **" + StringUtils.ROUND.format(duration - currentDuration) + "s**");
+            wsplayer.getPlayer().sendMessage("§d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s" + ")");
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean craft15PB(WSPlayer wsplayer) {
+        Timers timers = wsplayer.getTimers();
+
+        Float duration = Duration.between(timers.getMapBegin(), timers.getMapEnd()).toMillis() / 1000.0f;
+
+        Double currentDuration = DBUtils.getData(wsplayer.getPlayer(), wsplayer.getPlayArea().getType() + ".time15", Double.class);
+        if (currentDuration == null) currentDuration = Double.MAX_VALUE;
+
+        if (duration < currentDuration)
+            DBUtils.saveData(wsplayer.getPlayer(), wsplayer.getPlayArea().getType() + ".time15", duration, Float.class);
+
+        if (currentDuration != Double.MAX_VALUE && (duration < currentDuration)) {
+            Webhook.send("**"+ wsplayer.getPlayer().getName() + "** got a new PB on the map **" + wsplayer.getPlayArea().getType() + "**for 15 crafts!\\nTime: **" +StringUtils.ROUND.format( duration) + "s**\\nImprovement: **" + StringUtils.ROUND.format(duration - currentDuration) + "s**");
             wsplayer.getPlayer().sendMessage("§d§lPB! (" + StringUtils.ROUND.format(duration - currentDuration) + "s" + ")");
             return true;
         }

@@ -38,6 +38,7 @@ public class InventoryClick {
             case MapMetaGUI.NAME        -> event.setCancelled(MapMetaGUI.click(event));
             case InventorySetupGUI.NAME -> event.setCancelled(InventorySetupGUI.click(event));
             case MapSelector.NAME       -> event.setCancelled(MapSelector.click(event));
+            case MapTypeGUI.NAME        -> event.setCancelled(MapTypeGUI.click(event));
         }
 
         oldHotkeyBehaviour(event, (Player) event.getWhoClicked());

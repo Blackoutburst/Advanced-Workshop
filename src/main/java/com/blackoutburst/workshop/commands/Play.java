@@ -15,6 +15,7 @@ import com.blackoutburst.workshop.utils.minecraft.CraftUtils;
 import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
 import com.blackoutburst.workshop.utils.misc.CountdownDisplay;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class Play implements CommandExecutor {
 
     private static void setCraftAmount(WSPlayer wsplayer, String value) {
-        if (!value.matches("[0-9]+")) {
+        if (!value.matches("[-+]?[0-9]+")) {
             wsplayer.getPlayer().sendMessage("§cInvalid craft amount provided, using your current settings.");
             return;
         }
@@ -106,7 +107,8 @@ public class Play implements CommandExecutor {
         }
     }
 
-    private static void startGame(WSPlayer wsplayer, GameOptions gameoptions, PlayArea area) {
+    private static void startGame(WSPlayer wsplayer, PlayArea area) {
+        GameOptions gameoptions = wsplayer.getGameOptions();
         int start_delay = gameoptions.getCountDownTime();
 
         BukkitRunnable displayCountdown = new CountdownDisplay(start_delay, wsplayer);
@@ -134,6 +136,7 @@ public class Play implements CommandExecutor {
 
     public static void searchGame(WSPlayer WSP, String mapName, String... args) {
         GameOptions gameoptions = WSP.getGameOptions();
+        WSP.setDefaultGameOptions(gameoptions);
 
         for (PlayArea area : Main.playAreas) {
             if (area.isBusy()) continue;
@@ -146,11 +149,39 @@ public class Play implements CommandExecutor {
 
             CraftUtils.updateCraftList(WSP);
 
-            startGame(WSP, gameoptions, area);
+            startGame(WSP, area);
             return;
         }
 
         WSP.getPlayer().sendMessage("No game available");
+    }
+
+    public static void searchGame(WSPlayer WSP, String mapName, GameOptions options, Boolean allCrafts) {
+        WSP.setDefaultGameOptions(WSP.getGameOptions());
+        WSP.getGameOptions().load(options);
+        GameOptions gameoptions = WSP.getGameOptions();
+
+        for (PlayArea area : Main.playAreas) {
+            if (area.isBusy()) continue;
+            if (mapName != null && !mapName.equals(area.getType())) continue;
+            area.setBusy(true);
+
+            initPlayer(WSP, area);
+            if (allCrafts) {
+                gameoptions.setCraftLimit(WSP.getCrafts().size());
+            }
+            setBagSize(WSP, gameoptions);
+
+            CraftUtils.updateCraftList(WSP);
+
+
+            startGame(WSP, area);
+            return;
+        }
+
+        WSP.getPlayer().sendMessage("No game available");
+
+
     }
 
 

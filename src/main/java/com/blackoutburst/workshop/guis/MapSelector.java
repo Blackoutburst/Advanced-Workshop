@@ -112,7 +112,7 @@ public class MapSelector {
 		String mapName = itemMeta.getDisplayName();
 
 		if (!WSP.isEditing()) {
-			Play.searchGame(WSP, mapName);
+			MapTypeGUI.open(WSP, mapName);
 			return true;
 		}
 

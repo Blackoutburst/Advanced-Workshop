@@ -80,6 +80,16 @@ public class EndGameLogic {
             if (PBUtils.regularPB(wsplayer)) return;
         }
 
+        if (wsplayer.getCurrentCraftIndex() == 10 && gameoptions.getRandomType() == 'N'
+                && !gameoptions.hypixelSaysMode && endedNaturally) {
+            if (PBUtils.craft10PB(wsplayer)) return;
+        }
+
+        if (wsplayer.getCurrentCraftIndex() == 15 && gameoptions.getRandomType() == 'N'
+                && !gameoptions.hypixelSaysMode && endedNaturally) {
+            if (PBUtils.craft15PB(wsplayer)) return;
+        }
+
         if (wsplayer.getCurrentCraftIndex() == wsplayer.getCrafts().size()
                 && gameoptions.getRandomType() == 'N' && endedNaturally && gameoptions.hypixelSaysMode) {
             if (PBUtils.hypixelSaysAllCraftPB(wsplayer)) return;
@@ -112,6 +122,7 @@ public class EndGameLogic {
     public static void endGame(WSPlayer wsplayer, boolean endedNaturally, String... timeTypes) {
         checkTimes(wsplayer, endedNaturally, timeTypes);
 
+        wsplayer.getGameOptions().load(wsplayer.getDefaultGameOptions());
         ScoreboardUtils.endGame(wsplayer);
         MapUtils.restoreArea(wsplayer, true);
         wsplayer.getDecoBlocks().clear();

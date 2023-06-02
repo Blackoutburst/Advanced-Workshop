@@ -69,6 +69,8 @@ public class WSPlayer {
 
     protected MapMetadata mapMeta;
 
+    protected GameOptions defaultGameOptions;
+
     public WSPlayer(Player player, ClientVersion clientVersion) {
         this.clientVersion = clientVersion;
         this.player = player;
@@ -235,5 +237,11 @@ public class WSPlayer {
     public MapMetadata getMapMeta() { return mapMeta; }
 
     public void setMapMeta(MapMetadata mapMeta) { this.mapMeta = mapMeta; }
+
+    public void setDefaultGameOptions(GameOptions defaultGameOptions) { this.defaultGameOptions = defaultGameOptions; }
+
+    public GameOptions getDefaultGameOptions() { return defaultGameOptions; }
+
+
 
 }
