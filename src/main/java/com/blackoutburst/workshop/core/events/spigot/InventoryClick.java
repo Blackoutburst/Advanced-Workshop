@@ -1,10 +1,9 @@
 package com.blackoutburst.workshop.core.events.spigot;
 
 import com.blackoutburst.workshop.core.WSPlayer;
-import com.blackoutburst.workshop.guis.CraftGUI;
-import com.blackoutburst.workshop.guis.CraftSelectorGUI;
+import com.blackoutburst.workshop.guis.*;
 
-import org.bukkit.Bukkit;
+import com.blackoutburst.workshop.utils.minecraft.CraftUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -15,11 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InventoryClick {
-
-    private static void preventArmorClick(InventoryClickEvent event, WSPlayer wsplayer) {
-        if (wsplayer != null && wsplayer.isInGame() && event.getSlotType().equals(InventoryType.SlotType.ARMOR))
-            event.setCancelled(true);
-    }
 
 
     // TODO not working properly
@@ -41,17 +35,30 @@ public class InventoryClick {
             case CraftSelectorGUI.NAME ->
                     event.setCancelled(CraftSelectorGUI.click(event.getClickedInventory(),
                             event.getSlot(), (Player) event.getWhoClicked(), event.getView().getTitle()));
+            case MapMetaGUI.NAME        -> event.setCancelled(MapMetaGUI.click(event));
+            case InventorySetupGUI.NAME -> event.setCancelled(InventorySetupGUI.click(event));
+            case MapSelector.NAME       -> event.setCancelled(MapSelector.click(event));
+            case MapTypeGUI.NAME        -> event.setCancelled(MapTypeGUI.click(event));
         }
 
         oldHotkeyBehaviour(event, (Player) event.getWhoClicked());
-        preventArmorClick(event, wsplayer);
         preventCraftingTableUse(event, wsplayer);
+        if (wsplayer == null) return;
+
+        if (wsplayer.isInGame() && !wsplayer.isWaiting() && wsplayer.getGameOptions().isHypixelSaysMode() &&
+                event.getClickedInventory() != null && event.getClickedInventory().getType() == InventoryType.FURNACE &&
+                event.getSlotType() == InventoryType.SlotType.RESULT) {
+            CraftUtils.checkCraft(event.getCurrentItem(), wsplayer);
+        }
     }
 
     public static void oldHotkeyBehaviour(InventoryClickEvent event, Player player) {
         if (!event.getClick().isKeyboardClick()) return;
 
         int hotbarSlot = event.getHotbarButton();
+        Inventory clickedInv = event.getClickedInventory();
+        if (clickedInv == null) return;
+        if (event.getSlot() == hotbarSlot && clickedInv.getType() == InventoryType.PLAYER) return;
         ItemStack clickedItem = event.getCurrentItem();
         ItemStack hotbarItem = null;
         if (hotbarSlot != -1) {

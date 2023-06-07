@@ -5,9 +5,14 @@ import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.game.GameOptions;
 import com.blackoutburst.workshop.utils.files.CraftFileUtils;
 
+import com.blackoutburst.workshop.utils.misc.EffectsUtils;
+import com.blackoutburst.workshop.utils.misc.StringUtils;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 public class CraftUtils {
@@ -100,4 +105,29 @@ public class CraftUtils {
         Collections.shuffle(bag);
         return bag.subList(0, bag.size() - extra);
     }
+
+    public static void checkCraft(ItemStack item, WSPlayer WSP) {
+        Player player = WSP.getPlayer();
+        if (WSP.isWaiting()) return;
+        if (!WSP.getGameOptions().isHypixelSaysMode()) return;
+
+        Material required = WSP.getCurrentCraft().getItemRequired().getType();
+        if (item.getType() != required) {
+            player.sendMessage("§cThat's not quite right. I need " + WSP.getCurrentCraft().getName());
+            return;
+        }
+
+        WSP.setWaiting(true);
+        WSP.setNextRound(true);
+        EffectsUtils.playLevelUPSound(player);
+        WSP.getTimers().setRoundEnd(Instant.now());
+
+        Float duration = Duration.between(WSP.getTimers().getRoundBegin(), WSP.getTimers().getRoundEnd()).toMillis() / 1000.0f;
+        String roundTime = StringUtils.ROUND.format(duration) + "s";
+
+        player.sendMessage("§ePerfect! Just what I needed. §b(" + roundTime + ") ");
+
+        WSP.setHasStored(false);
+    }
+
 }

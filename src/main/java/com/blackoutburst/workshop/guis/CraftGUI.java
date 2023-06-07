@@ -47,11 +47,14 @@ public class CraftGUI {
 
     public static void open(WSPlayer p, Craft craft) {
         Inventory inv = Main.getPlugin(Main.class).getServer().createInventory(null, 54, NAME);
+        int depth = p.getGUIDepth();
 
         for (int i = 0; i < 54; i++) {
             if (isAir(i)) continue;
             setItem(inv, Material.GRAY_STAINED_GLASS_PANE, 1, "§r", i);
         }
+
+        setItem(inv, Material.BARRIER, 1, "§cExit", 0);
 
         setItem(inv, Material.GREEN_TERRACOTTA, 1, "§aSave", 46);
         setItem(inv, Material.GREEN_TERRACOTTA, 1, "§aSave", 47);
@@ -64,6 +67,8 @@ public class CraftGUI {
         }
 
         p.getPlayer().openInventory(inv);
+
+        p.setGUIDepth(depth + 1);
     }
 
     private static void setItem(Inventory inv, Material mat, int amount, String name, int slot) {
@@ -93,6 +98,11 @@ public class CraftGUI {
         if (slot == 49 || slot == 50) {
             GUIUtils.deleteCraft(inv, wsplayer);
             return true;
+        }
+
+        if (slot == 0) {
+            wsplayer.decrementGUIDepth(); wsplayer.decrementGUIDepth();
+            CraftSelectorGUI.open(wsplayer, 0);
         }
 
         return !isAir(slot);

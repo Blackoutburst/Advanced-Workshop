@@ -1,6 +1,6 @@
 main: com.blackoutburst.workshop.Main
 name: Workshop
-version: 2.0.6
+version: 2.2.0
 api-version: 1.13
 author: Blackoutburst & Skye
 description: Party Game Workshop Practice
@@ -71,6 +71,12 @@ commands:
   shownonpbs:
     description: Enables/disables showing difference to PB for non-PBing games
     usage: /shownonpbs
+  editmap:
+    description: Allows you to edit the data of a map
+    usage: /editmap
+  hypixelsaysmode:
+    description: Turns on hypixel says crafting mode, items appear in inventory
+    usage: /hypixelsaysmode
 
   permissions:
     workshop.admin:

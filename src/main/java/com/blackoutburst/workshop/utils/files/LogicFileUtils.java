@@ -32,6 +32,20 @@ public class LogicFileUtils {
             e.printStackTrace();
         }
     }
+
+    public static void saveFileItems(File f, Location location, ItemStack item, int index, String type) {
+        try {
+            YamlConfiguration logic = YamlConfiguration.loadConfiguration(f);
+            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+            logic.set("Resources." + locationString + "." + type + "." + index, item);
+            logic.save(f);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void saveFileTools(String mapName, Location location, ItemStack item, int index, int toolNum) {
         try {
             File mapFolder = new File("./plugins/Workshop/maps/" + mapName);
@@ -48,6 +62,20 @@ public class LogicFileUtils {
             e.printStackTrace();
         }
     }
+
+    public static void saveFileTools(File f, Location location, ItemStack item, int index, int toolNum) {
+        try {
+            YamlConfiguration logic = YamlConfiguration.loadConfiguration(f);
+            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+            logic.set("Resources." + locationString + ".Tools." + index + "." + toolNum, item);
+            logic.save(f);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void saveFileSigns(String mapName, Location location, String text, BlockFace direction) {
         try {
             File mapFolder = new File("./plugins/Workshop/maps/" + mapName);
@@ -61,6 +89,19 @@ public class LogicFileUtils {
             logic.set("Signs." + locationString + ".direction", direction.toString());
             logic.save(logicFile);
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveFileSigns(File f, Location location, String text, BlockFace direction) {
+        try {
+            YamlConfiguration logic = YamlConfiguration.loadConfiguration(f);
+            String locationString = location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+            logic.set("Signs." + locationString + ".text", text);
+            logic.set("Signs." + locationString + ".direction", direction.toString());
+            logic.save(f);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -97,6 +138,7 @@ public class LogicFileUtils {
             }
             allItemStacks[i] = itemStacks;
         }
+
         return allItemStacks;
     }
 

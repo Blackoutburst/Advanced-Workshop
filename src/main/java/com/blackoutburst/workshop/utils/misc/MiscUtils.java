@@ -62,7 +62,7 @@ public class MiscUtils {
         GameOptions gameoptions = wsplayer.getGameOptions();
 
         if ((Duration.between(wsplayer.getTimers().getMapBegin(), Instant.now()).toMillis() / 1000.0f) > gameoptions.getTimeLimit()) {
-            int timeLimit = (int) gameoptions.getTimeLimit();
+            int timeLimit = gameoptions.getTimeLimit().intValue();
             String timeType;
 
             switch (timeLimit) {
@@ -92,4 +92,8 @@ public class MiscUtils {
 
         return filteredName;
     }
+
+
+
+
 }

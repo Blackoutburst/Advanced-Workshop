@@ -7,6 +7,7 @@ import com.blackoutburst.workshop.core.game.GameStarter;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.game.RoundLogic;
+import com.blackoutburst.workshop.guis.MapSelector;
 import com.blackoutburst.workshop.utils.map.DecoBlockLoader;
 import com.blackoutburst.workshop.utils.files.DBUtils;
 import com.blackoutburst.workshop.utils.map.MapUtils;
@@ -14,6 +15,7 @@ import com.blackoutburst.workshop.utils.minecraft.CraftUtils;
 import com.blackoutburst.workshop.utils.minecraft.ScoreboardUtils;
 import com.blackoutburst.workshop.utils.misc.CountdownDisplay;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,8 +26,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class Play implements CommandExecutor {
 
-    private void setCraftAmount(WSPlayer wsplayer, String value) {
-        if (!value.matches("[0-9]+")) {
+    private static void setCraftAmount(WSPlayer wsplayer, String value) {
+        if (!value.matches("[-+]?[0-9]+")) {
             wsplayer.getPlayer().sendMessage("§cInvalid craft amount provided, using your current settings.");
             return;
         }
@@ -40,7 +42,7 @@ public class Play implements CommandExecutor {
         wsplayer.getGameOptions().setCraftLimit(limit);
     }
 
-    private void setTimeLimit(WSPlayer wsplayer, String value) {
+    private static void setTimeLimit(WSPlayer wsplayer, String value) {
         GameOptions gameoptions = wsplayer.getGameOptions();
 
         if (!value.matches("([0-9]+([.][0-9]+)?)?")) {
@@ -64,7 +66,7 @@ public class Play implements CommandExecutor {
 
     }
 
-    private void initPlayer(WSPlayer wsplayer, PlayArea area) {
+    private static void initPlayer(WSPlayer wsplayer, PlayArea area) {
         wsplayer.getPlayer().sendMessage("§eThe game is about to start!");
         wsplayer.setPlayArea(area);
         wsplayer.setCurrentCraftIndex(0);
@@ -79,9 +81,10 @@ public class Play implements CommandExecutor {
         CraftUtils.loadCraft(wsplayer, area.getType());
         MapUtils.loadMaterials(wsplayer, area.getType());
         MapUtils.readSigns(wsplayer, area.getType());
+        MapUtils.readMapMeta(wsplayer, area.getType());
     }
 
-    private void setGameLimits(WSPlayer wsplayer, GameOptions gameoptions, String[] args) {
+    private static void setGameLimits(WSPlayer wsplayer, GameOptions gameoptions, String[] args) {
         if (args.length < 2) {
             gameoptions.setCraftLimit(gameoptions.getDefaultCraftLimit());
             return;
@@ -97,14 +100,15 @@ public class Play implements CommandExecutor {
         }
     }
 
-    private void setBagSize(WSPlayer wsplayer, GameOptions gameoptions) {
+    private static void setBagSize(WSPlayer wsplayer, GameOptions gameoptions) {
         switch (gameoptions.getRandomType()) {
             case 'N' -> gameoptions.setBagSize(wsplayer.getCrafts().size());
             case 'R' -> gameoptions.setBagSize(10);
         }
     }
 
-    private void startGame(WSPlayer wsplayer, GameOptions gameoptions, PlayArea area) {
+    private static void startGame(WSPlayer wsplayer, PlayArea area) {
+        GameOptions gameoptions = wsplayer.getGameOptions();
         int start_delay = gameoptions.getCountDownTime();
 
         BukkitRunnable displayCountdown = new CountdownDisplay(start_delay, wsplayer);
@@ -130,30 +134,71 @@ public class Play implements CommandExecutor {
         restarter.runTaskTimer(Main.getPlugin(Main.class), start_delay * 20L + 1, 1);
     }
 
+    public static void searchGame(WSPlayer WSP, String mapName, String... args) {
+        GameOptions gameoptions = WSP.getGameOptions();
+        WSP.setDefaultGameOptions(gameoptions);
+
+        for (PlayArea area : Main.playAreas) {
+            if (area.isBusy()) continue;
+            if (mapName != null && !mapName.equals(area.getType())) continue;
+            area.setBusy(true);
+
+            initPlayer(WSP, area);
+            setGameLimits(WSP, gameoptions, args);
+            setBagSize(WSP, gameoptions);
+
+            CraftUtils.updateCraftList(WSP);
+
+            startGame(WSP, area);
+            return;
+        }
+
+        WSP.getPlayer().sendMessage("No game available");
+    }
+
+    public static void searchGame(WSPlayer WSP, String mapName, GameOptions options, Boolean allCrafts) {
+        WSP.setDefaultGameOptions(WSP.getGameOptions());
+        WSP.getGameOptions().load(options);
+        GameOptions gameoptions = WSP.getGameOptions();
+
+        for (PlayArea area : Main.playAreas) {
+            if (area.isBusy()) continue;
+            if (mapName != null && !mapName.equals(area.getType())) continue;
+            area.setBusy(true);
+
+            initPlayer(WSP, area);
+            if (allCrafts) {
+                gameoptions.setCraftLimit(WSP.getCrafts().size());
+            }
+            setBagSize(WSP, gameoptions);
+
+            CraftUtils.updateCraftList(WSP);
+
+
+            startGame(WSP, area);
+            return;
+        }
+
+        WSP.getPlayer().sendMessage("No game available");
+
+
+    }
+
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             WSPlayer wsplayer = WSPlayer.getFromPlayer(player);
             if (wsplayer == null || wsplayer.isInGame()) return true;
 
-            GameOptions gameoptions = wsplayer.getGameOptions();
-
-            for (PlayArea area : Main.playAreas) {
-                if (area.isBusy()) continue;
-                if (args.length > 0 && !args[0].equals(area.getType())) continue;
-                area.setBusy(true);
-
-                initPlayer(wsplayer, area);
-                setGameLimits(wsplayer, gameoptions, args);
-                setBagSize(wsplayer, gameoptions);
-
-                CraftUtils.updateCraftList(wsplayer);
-
-                startGame(wsplayer, gameoptions, area);
+            if (args.length == 0) {
+                wsplayer.setEditing(false);
+                MapSelector.open(wsplayer, 0);
                 return true;
             }
 
-            player.sendMessage("No game available");
+            searchGame(wsplayer, args[0], args);
+
         }
 
         return true;

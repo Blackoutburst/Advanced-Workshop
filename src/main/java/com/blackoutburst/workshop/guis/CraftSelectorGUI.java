@@ -3,6 +3,7 @@ package com.blackoutburst.workshop.guis;
 import com.blackoutburst.workshop.core.Craft;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.WSPlayer;
+import com.blackoutburst.workshop.core.game.MapMetadata;
 import com.blackoutburst.workshop.utils.misc.MiscUtils;
 
 import org.bukkit.Material;
@@ -30,6 +31,7 @@ public class CraftSelectorGUI {
     }
 
     public static void open(WSPlayer player, int p) {
+        int depth = player.getGUIDepth();
         page = p;
 
         Inventory inv = Main.getPlugin(Main.class).getServer().createInventory(null, 54, NAME);
@@ -47,9 +49,13 @@ public class CraftSelectorGUI {
             setItem(inv, Material.GRAY_STAINED_GLASS_PANE, "§r", i);
         }
 
+        setItem(inv, Material.BARRIER, "§cExit", 46);
+        setItem(inv, Material.BARRIER, "§cExit", 47);
         setItem(inv, Material.GREEN_TERRACOTTA, "§aAdd recipe", 48);
         setItem(inv, Material.GREEN_TERRACOTTA, "§aAdd recipe", 49);
         setItem(inv, Material.GREEN_TERRACOTTA, "§aAdd recipe", 50);
+        setItem(inv, Material.BARRIER, "§cExit", 51);
+        setItem(inv, Material.BARRIER, "§cExit", 52);
 
         if (page > 0)
             setItem(inv, Material.ARROW, "§ePrevious Page", 45);
@@ -59,6 +65,8 @@ public class CraftSelectorGUI {
         }
 
         player.getPlayer().openInventory(inv);
+
+        player.setGUIDepth(depth+1);
     }
 
     private static void setItem(Inventory inv, Material mat, String name, int slot) {
@@ -86,12 +94,14 @@ public class CraftSelectorGUI {
 
         if (slot == 53 && wsplayer.getCrafts().size() > 36 * (page + 1)) {
             page++;
+            wsplayer.decrementGUIDepth();
             open(wsplayer, page);
             return true;
         }
 
         if (slot == 45 && page > 0) {
             page--;
+            wsplayer.decrementGUIDepth();
             open(wsplayer, page);
             return true;
         }
@@ -99,6 +109,16 @@ public class CraftSelectorGUI {
         if (slot == 48 || slot == 49 || slot == 50) {
             CraftGUI.open(wsplayer, null);
             return true;
+        }
+
+        if ((slot == 46 || slot == 47 || slot == 51 || slot == 52)) {
+            if (wsplayer.getGUIDepth() == 1) {
+                p.closeInventory();
+                return true;
+            }
+
+            wsplayer.decrementGUIDepth(); wsplayer.decrementGUIDepth();
+            MapMetaGUI.open(wsplayer, wsplayer.getInventoryType());
         }
 
         return true;

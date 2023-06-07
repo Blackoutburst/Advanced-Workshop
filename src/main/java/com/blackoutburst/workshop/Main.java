@@ -6,6 +6,9 @@ import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 import com.blackoutburst.workshop.core.events.listeners.EventListener;
 import com.blackoutburst.workshop.utils.map.MapUtils;
+import com.blackoutburst.workshop.utils.minecraft.ArmorUtils;
+import com.blackoutburst.workshop.utils.minecraft.EntityUtils;
+import com.jeff_media.armorequipevent.ArmorEquipEvent;
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.ViaAPI;
 import org.bukkit.Location;
@@ -61,12 +64,15 @@ public class Main extends JavaPlugin {
         getCommand("listmaps").setExecutor(new ListMaps());
         getCommand("deletemap").setExecutor(new DeleteMap());
         getCommand("shownonpbs").setExecutor(new ShowNonPbs());
+        getCommand("editmap").setExecutor(new EditMap());
+        getCommand("hypixelsaysmode").setExecutor(new HypixelSaysMode());
     }
 
     @Override
     public void onEnable() {
         new File("./plugins/Workshop").mkdirs();
         new File("./plugins/Workshop/playerData").mkdirs();
+        ArmorEquipEvent.registerListener(this);
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         registerCommands();
         MapUtils.loadPlayAreas();
@@ -78,5 +84,11 @@ public class Main extends JavaPlugin {
                 Updater.update();
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0L, 0L);
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        EntityUtils.clearAllEntities();
     }
 }

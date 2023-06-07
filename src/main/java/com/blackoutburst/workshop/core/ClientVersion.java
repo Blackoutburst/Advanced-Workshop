@@ -2,6 +2,8 @@ package com.blackoutburst.workshop.core;
 
 public enum ClientVersion {
 
+    V1_20(763),
+    V1_19_4(762),
     V1_19_3(761),
     V1_19_2(760),
     V1_19_1(759),

@@ -1,5 +1,6 @@
 package com.blackoutburst.workshop.utils.minecraft;
 
+import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.PlayArea;
 import com.blackoutburst.workshop.core.WSPlayer;
 
@@ -16,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 
 public class EntityUtils {
 
@@ -32,17 +34,24 @@ public class EntityUtils {
     }
 
     public static void villager(WSPlayer wsPlayer, Player player) {
-        if (!player.getInventory().containsAtLeast(wsPlayer.getCurrentCraft().getItemRequired(), 1)) {
+        Material required = wsPlayer.getCurrentCraft().getItemRequired().getType();
+        if (wsPlayer.isWaiting()) return;
+        if (!player.getInventory().contains(required)) {
             player.sendMessage("§cThat's not quite right. I need " + wsPlayer.getCurrentCraft().getName());
             return;
         }
 
+        if (wsPlayer.getGameOptions().isHypixelSaysMode()) return;
+
+
+        wsPlayer.setWaiting(true);
         wsPlayer.setNextRound(true);
         EffectsUtils.playLevelUPSound(player);
         wsPlayer.getTimers().setRoundEnd(Instant.now());
 
         Float duration = Duration.between(wsPlayer.getTimers().getRoundBegin(), wsPlayer.getTimers().getRoundEnd()).toMillis() / 1000.0f;
         String roundTime = StringUtils.ROUND.format(duration) + "s";
+
 
         Double currentDuration = DBUtils.getData(player, wsPlayer.getPlayArea().getType() + "." + "crafts" + "." + wsPlayer.getCurrentCraft().getName(), Double.class);
         if (currentDuration == null)
@@ -70,6 +79,13 @@ public class EntityUtils {
     public static void clearEntity(WSPlayer wsplayer) {
         PlayArea area = wsplayer.getPlayArea();
         area.getEntities().forEach(Entity::remove);
+    }
+
+    public static void clearAllEntities() {
+        List<PlayArea> areas = Main.playAreas;
+        for (PlayArea area : areas) {
+            area.getEntities().forEach(Entity::remove);
+        }
     }
 
     public static void spawnEntity(EntityType type, Location location, BlockFace direction, PlayArea area, String tag) {

@@ -3,9 +3,11 @@ package com.blackoutburst.workshop.utils.map;
 import com.blackoutburst.workshop.Main;
 import com.blackoutburst.workshop.core.*;
 import com.blackoutburst.workshop.core.blocks.*;
+import com.blackoutburst.workshop.core.game.MapMetadata;
 import com.blackoutburst.workshop.utils.files.DecoFileUtils;
 import com.blackoutburst.workshop.utils.files.MapFileUtils;
 import com.blackoutburst.workshop.utils.files.LogicFileUtils;
+import com.blackoutburst.workshop.utils.files.MetaFileUtils;
 import com.blackoutburst.workshop.utils.minecraft.BlockUtils;
 import com.blackoutburst.workshop.utils.minecraft.EntityUtils;
 import com.blackoutburst.workshop.utils.misc.MiscUtils;
@@ -261,4 +263,11 @@ public class MapUtils {
             e.printStackTrace();
         }
     }
+
+    public static void readMapMeta(WSPlayer WSP, String mapName) {
+        File mapFile = MapFileUtils.getMapFile(mapName, 'M');
+        MapMetadata meta = MetaFileUtils.load(mapFile);
+        WSP.setMapMeta(meta);
+    }
+
 }

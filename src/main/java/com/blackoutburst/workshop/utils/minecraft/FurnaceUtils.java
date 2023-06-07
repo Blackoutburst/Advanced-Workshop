@@ -10,8 +10,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class FurnaceUtils {
 
     private static void fastCook(Furnace furnace, ItemStack stack, Material output) {
-        furnace.getInventory().setSmelting(new ItemStack(Material.AIR));
         furnace.getInventory().setResult(new ItemStack(output, stack.getAmount()));
+        furnace.getInventory().setSmelting(new ItemStack(Material.AIR));
     }
 
     public static void instantSmelt(Furnace furnace) {
@@ -49,6 +49,8 @@ public class FurnaceUtils {
                         case LAPIS_ORE -> fastCook(furnace, stack, Material.LAPIS_LAZULI);
                         case NETHER_QUARTZ_ORE -> fastCook(furnace, stack, Material.QUARTZ);
                         case REDSTONE_ORE -> fastCook(furnace, stack, Material.REDSTONE);
+                        case STONE -> fastCook(furnace, stack, Material.SMOOTH_STONE);
+                        case STONE_BRICKS -> fastCook(furnace, stack, Material.CRACKED_STONE_BRICKS);
                         default -> fastCook(furnace, stack, stack.getType());
                     }
                 }

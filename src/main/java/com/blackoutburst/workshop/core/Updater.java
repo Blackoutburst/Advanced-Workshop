@@ -46,7 +46,7 @@ public class Updater {
         }
 
         String remainingTime = "§eN/A";
-        if (gameoptions.isTimeLimited()) {
+        if (gameoptions.isTimeLimited() && !wsPlayer.isWaiting()) {
             float time = Duration.between(wsPlayer.getTimers().getMapBegin(), Instant.now()).toMillis() / 1000.0f;
             remainingTime = "§b" + StringUtils.ROUND.format(gameoptions.getTimeLimit() - time);
         }
@@ -68,7 +68,7 @@ public class Updater {
             updateTimes(wsPlayer);
 
             if (gameoptions.isTimeLimited() && MiscUtils.checkTimeLimit(wsPlayer)) continue;
-            if (wsPlayer.isWaiting()) continue;
+            //if (wsPlayer.isWaiting()) continue;
 
 
             if (wsPlayer.isNextRound()) {
